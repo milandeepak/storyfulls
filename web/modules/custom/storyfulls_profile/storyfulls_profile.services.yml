@@ -1,0 +1,4 @@
+services:
+  storyfulls_profile.book_rating:
+    class: Drupal\storyfulls_profile\Service\BookRatingService
+    arguments: ['@entity_type.manager', '@cache.default']

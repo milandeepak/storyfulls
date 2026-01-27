@@ -1,0 +1,292 @@
+/**
+ * @file
+ * Book Review Modal styles.
+ */
+
+/* Custom Modal Overlay */
+.custom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.custom-modal-overlay.show {
+  opacity: 1;
+}
+
+/* Custom Modal Container */
+.custom-modal-container {
+  position: relative;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.custom-modal-overlay.show .custom-modal-container {
+  transform: scale(1);
+}
+
+/* Modal Close Button */
+.custom-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 28px;
+  line-height: 1;
+  color: #666;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.custom-modal-close:hover {
+  background: rgba(0, 0, 0, 0.2);
+  color: #333;
+}
+
+/* Modal Content */
+.custom-modal-content {
+  padding: 2rem;
+}
+
+
+/* Review form styling */
+#book-review-form-wrapper {
+  font-family: 'Roboto', sans-serif;
+}
+
+.review-form-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #2C3E50;
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.review-form-error {
+  background: #fee;
+  border-left: 4px solid #e53e3e;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  color: #c53030;
+  font-size: 15px;
+  margin-bottom: 1rem;
+}
+
+#book-review-form-wrapper .form-item {
+  margin-bottom: 1.5rem;
+}
+
+#book-review-form-wrapper label {
+  display: block;
+  font-weight: 600;
+  color: #2C3E50;
+  margin-bottom: 0.5rem;
+  font-size: 15px;
+}
+
+#book-review-form-wrapper .form-required {
+  color: #e53e3e;
+  margin-left: 0.25rem;
+}
+
+/* Star rating select */
+.review-rating-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #cbd5e0;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: 'Roboto', sans-serif;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.review-rating-select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.review-rating-select.selected {
+  border-color: #48bb78;
+}
+
+/* Review text area */
+.review-text-area {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #cbd5e0;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 120px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.review-text-area:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.review-text-area::placeholder {
+  color: #a0aec0;
+}
+
+#book-review-form-wrapper .description {
+  font-size: 13px;
+  color: #718096;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* Form buttons */
+#book-review-form-wrapper .form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #e0e0e0;
+}
+
+.review-submit-btn {
+  flex: 1;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.review-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.review-submit-btn:active {
+  transform: translateY(0);
+}
+
+.review-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.review-cancel-btn {
+  flex: 0 0 auto;
+  background: white;
+  color: #718096;
+  border: 2px solid #cbd5e0;
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.review-cancel-btn:hover {
+  background: #f7fafc;
+  border-color: #a0aec0;
+}
+
+/* Error messages */
+#book-review-form-wrapper .form-item--error-message {
+  color: #e53e3e;
+  font-size: 13px;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+#book-review-form-wrapper .form-item.error input,
+#book-review-form-wrapper .form-item.error select,
+#book-review-form-wrapper .form-item.error textarea {
+  border-color: #e53e3e;
+}
+
+/* Loading state */
+.review-submit-btn.is-loading::after {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-left: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spinner 0.6s linear infinite;
+}
+
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Modal backdrop */
+.ui-widget-overlay {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ui-dialog.book-review-modal {
+    width: 95% !important;
+    margin: 1rem;
+  }
+
+  .ui-dialog.book-review-modal .ui-dialog-content {
+    padding: 1.5rem;
+  }
+
+  .review-form-title {
+    font-size: 18px;
+  }
+
+  #book-review-form-wrapper .form-actions {
+    flex-direction: column;
+  }
+
+  .review-cancel-btn {
+    flex: 1;
+  }
+}

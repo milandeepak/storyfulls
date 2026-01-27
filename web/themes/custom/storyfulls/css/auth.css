@@ -1,0 +1,1688 @@
+/* Login and Registration Page Styles */
+.user-login-page,
+.user-register-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #FFF9E6 0%, #FFF4D6 50%, #FFE8CC 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.auth-container,
+.login-container {
+  max-width: 1200px;
+  width: 100%;
+  background: transparent;
+  border-radius: 24px;
+  box-shadow: none;
+  overflow: visible;
+}
+
+/* Tabs */
+.auth-tabs {
+  display: flex;
+  border-bottom: 2px solid #E0E0E0;
+  background: #F8F9FA;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 1.5rem;
+  text-align: center;
+  font-family: 'Roboto Slab', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #666;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 3px solid transparent;
+}
+
+.auth-tab:hover {
+  color: #4DD0E1;
+}
+
+.auth-tab.active {
+  color: #4DD0E1;
+  background: #fff;
+  border-bottom-color: #4DD0E1;
+}
+
+/* Account Type Selection */
+.account-type-selection {
+  padding: 3rem;
+}
+
+.account-type-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.account-type-card {
+  background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 3px solid transparent;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.account-type-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 24px rgba(77, 208, 225, 0.3);
+  border-color: #4DD0E1;
+  text-decoration: none;
+  color: inherit;
+}
+
+.account-type-card.librarian {
+  background: linear-gradient(135deg, #E8EAF6 0%, #C5CAE9 100%);
+}
+
+.account-type-card h3 {
+  font-family: 'Roboto Slab', serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: #2C3E50;
+  margin-bottom: 1rem;
+}
+
+.account-type-card p {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Form Container */
+.auth-form-container {
+  padding: 3rem;
+}
+
+.form-section {
+  margin-bottom: 2rem;
+}
+
+.form-section-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: #2C3E50;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #E0E0E0;
+}
+
+/* Multi-step Form */
+.form-steps {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  padding: 1rem 0;
+  border-bottom: 2px solid #E0E0E0;
+}
+
+.form-step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.5rem;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #999;
+}
+
+.form-step.active {
+  color: #4DD0E1;
+}
+
+.form-step.completed {
+  color: #4CAF50;
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #E0E0E0;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.form-step.active .step-number {
+  background: #4DD0E1;
+}
+
+.form-step.completed .step-number {
+  background: #4CAF50;
+}
+
+/* Form Fields */
+.form-item {
+  margin-bottom: 1.5rem;
+}
+
+.form-item label {
+  display: block;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2C3E50;
+  margin-bottom: 0.5rem;
+}
+
+.form-item .description {
+  font-size: 12px;
+  color: #666;
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+.form-item input[type="text"],
+.form-item input[type="email"],
+.form-item input[type="password"],
+.form-item input[type="date"],
+.form-item select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #E0E0E0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.form-item input:focus,
+.form-item select:focus {
+  outline: none;
+  border-color: #4DD0E1;
+  box-shadow: 0 0 0 3px rgba(77, 208, 225, 0.1);
+}
+
+.form-item input.error {
+  border-color: #E74C3C;
+}
+
+/* Checkbox and Radio */
+.form-item input[type="checkbox"],
+.form-item input[type="radio"] {
+  width: auto;
+  margin-right: 0.5rem;
+}
+
+.form-checkbox,
+.form-radio {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+/* ================================================
+   STYLED CHECKBOXES
+   (Managed by Parents & Show Profile to Public)
+   ================================================ */
+
+/* Wrapper for checkbox fields */
+.toggle-switch-wrapper {
+  grid-column: 1 / -1;
+  margin-bottom: 1rem;
+}
+
+/* The form-item inside wrapper */
+.toggle-switch-wrapper .form-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: #fff;
+  border: 2px solid #E0E0E0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  margin: 0;
+  min-height: 60px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.toggle-switch-wrapper .form-item:hover {
+  border-color: #4DD0E1;
+  box-shadow: 0 2px 8px rgba(77, 208, 225, 0.15);
+}
+
+/* The Actual Input - Invisible overlay for full-card clickability */
+.toggle-switch-wrapper .form-item input[type="checkbox"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  z-index: 10;
+  cursor: pointer;
+}
+
+/* Label styling - Text on Left */
+.toggle-switch-wrapper .form-item label {
+  font-family: 'Roboto', sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  color: #2C3E50 !important;
+  margin: 0 !important;
+  cursor: pointer;
+  flex: 1;
+  pointer-events: none; /* Let clicks pass to the input overlay */
+  z-index: 1;
+  padding-right: 40px; /* Prevent text from overlapping checkbox */
+}
+
+/* === CUSTOM CHECKBOX VISUALS === */
+
+/* The Checkbox Box - Aligned with padding */
+.toggle-switch-wrapper .form-item label::after {
+  content: '';
+  position: absolute;
+  right: 1.25rem; /* Match container padding */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  background-color: #fff;
+  border: 2px solid #CBD5E0;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+/* The Checkmark - Centered in the box */
+.toggle-switch-wrapper .form-item label::before {
+  content: '';
+  position: absolute;
+  /* 1.25rem (right) + 9px (offset) */
+  right: calc(1.25rem + 9px); 
+  top: 50%;
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2.5px 2.5px 0;
+  transform: translateY(-60%) rotate(45deg);
+  opacity: 0;
+  z-index: 2;
+  transition: opacity 0.2s ease;
+}
+
+/* === CHECKED STATE === */
+
+/* Change Checkbox Background Color */
+.toggle-switch-wrapper .form-item:has(input[type="checkbox"]:checked) label::after {
+  background-color: #4DD0E1; /* Teal */
+  border-color: #4DD0E1;
+  box-shadow: 0 2px 4px rgba(77, 208, 225, 0.3);
+}
+
+/* Show Checkmark */
+.toggle-switch-wrapper .form-item:has(input[type="checkbox"]:checked) label::before {
+  opacity: 1;
+}
+
+/* Checked state - card highlight */
+.toggle-switch-wrapper .form-item:has(input[type="checkbox"]:checked) {
+  border-color: #4DD0E1;
+  background: rgba(77, 208, 225, 0.05);
+}
+
+/* Toggle Knob */
+.toggle-switch-wrapper .form-item input[type="checkbox"]::before {
+  content: none;
+}
+
+/* Checked State - Toggle Track turns teal */
+.toggle-switch-wrapper .form-item input[type="checkbox"]:checked {
+  background: transparent;
+}
+
+/* Checked State - Toggle Knob moves right */
+.toggle-switch-wrapper .form-item input[type="checkbox"]:checked::before {
+  content: none;
+}
+
+/* Focus state for accessibility */
+.toggle-switch-wrapper .form-item input[type="checkbox"]:focus {
+  outline: none;
+}
+
+/* Checked state - card highlight */
+.toggle-switch-wrapper .form-item:has(input[type="checkbox"]:checked) {
+  border-color: #4DD0E1;
+  background: rgba(77, 208, 225, 0.05);
+}
+
+/* Hide any nested form-checkbox wrapper */
+.toggle-switch-wrapper .form-checkbox {
+  display: contents;
+}
+
+/* Password Strength */
+.password-strength {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.password-strength.weak {
+  background: #FFEBEE;
+  color: #C62828;
+}
+
+.password-strength.medium {
+  background: #FFF3E0;
+  color: #F57C00;
+}
+
+.password-strength.strong {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+/* Password Match Indicator */
+.password-match {
+  margin-top: 0.5rem;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.password-match.match {
+  color: #2E7D32;
+}
+
+.password-match.no-match {
+  color: #C62828;
+}
+
+/* Favorites - Dynamic Fields */
+.favorites-section-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2C3E50;
+  margin: 2rem 0 1rem 0;
+  padding-bottom: 0.5rem;
+}
+
+.favorite-authors-wrapper,
+.favorite-books-wrapper {
+  margin-bottom: 2rem;
+}
+
+.favorite-field-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.favorite-field-item.ui-sortable-helper {
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+.favorite-field-item.ui-sortable-placeholder {
+  background: #E3F2FD;
+  border: 2px dashed #4DD0E1;
+  border-radius: 8px;
+  visibility: visible !important;
+  height: 60px;
+}
+
+.drag-handle {
+  color: #999;
+  font-size: 24px;
+  cursor: move;
+  user-select: none;
+  line-height: 1;
+  padding: 0.5rem 0;
+  display: flex;
+  align-items: center;
+}
+
+.drag-handle:hover {
+  color: #4DD0E1;
+}
+
+.favorite-field-item input[type="text"] {
+  flex: 1;
+  padding: 0.875rem 1rem;
+  border: 2px solid #E0E0E0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.favorite-field-item input[type="text"]:focus {
+  outline: none;
+  border-color: #4DD0E1;
+  box-shadow: 0 0 0 3px rgba(77, 208, 225, 0.1);
+}
+
+.remove-favorite-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #fff;
+  color: #CCC;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  line-height: 1;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.remove-favorite-btn:hover {
+  background: #FFEBEE;
+  color: #E74C3C;
+}
+
+/* Drag to re-order tooltip */
+.draggable-item:hover .drag-handle::after {
+  content: 'Drag to re-order';
+  position: absolute;
+  left: 50px;
+  background: #2C3E50;
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  font-family: 'Roboto', sans-serif;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* Autocomplete dropdown styling */
+.ui-autocomplete {
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #fff;
+  border: 2px solid #E0E0E0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ui-autocomplete .ui-menu-item {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.ui-autocomplete .ui-menu-item-wrapper {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  color: #2C3E50;
+  border-bottom: 1px solid #F5F5F5;
+  display: block;
+}
+
+.ui-autocomplete .ui-menu-item-wrapper:hover,
+.ui-autocomplete .ui-menu-item-wrapper.ui-state-active {
+  background: #E3F2FD;
+  color: #1976D2;
+  border-bottom-color: #E3F2FD;
+}
+
+.ui-autocomplete .ui-menu-item:last-child .ui-menu-item-wrapper {
+  border-bottom: none;
+}
+
+/* Genre Checkboxes - Single Column List - DISABLED, using 3-column layout below */
+.field--name-field-favorite-genres {
+  margin-top: 2rem;
+}
+
+/* Custom Header for Genre Section */
+.field--name-field-favorite-genres > label,
+.field--name-field-favorite-genres .fieldset-legend {
+  font-family: 'Roboto Slab', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+/* Remove default fieldset border from Genre section */
+.field--name-field-favorite-genres fieldset,
+.field--name-field-favorite-genres .fieldset-wrapper {
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Ensure legend/label is still visible and styled */
+.field--name-field-favorite-genres legend {
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .account-type-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .genre-checkboxes {
+    grid-template-columns: 1fr;
+  }
+  
+  .auth-form-container {
+    padding: 2rem 1.5rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+  
+  /* Login page responsive */
+  .login-two-column {
+    grid-template-columns: 1fr;
+  }
+  
+  .login-image-side {
+    display: none; /* Hide image on mobile */
+  }
+  
+  .login-form-side {
+    padding: 2rem 1.5rem;
+  }
+  
+  .login-welcome h2 {
+    font-size: 24px;
+  }
+  
+  .login-welcome p {
+    font-size: 16px;
+  }
+}
+
+/* ================================================
+   LOGIN PAGE STYLES
+   ================================================ */
+
+/* Login Form Specific - Two Column Layout */
+.login-two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 500px;
+  gap: 0;
+}
+
+.login-image-side {
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-image-side img {
+  max-width: 100%;
+  max-height: 450px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  position: relative;
+  z-index: 1;
+}
+
+.login-form-side {
+  padding: 3rem 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: transparent;
+}
+
+.login-welcome {
+  text-align: left;
+  margin-bottom: 2rem;
+}
+
+.login-welcome h2 {
+  font-family: 'Roboto Slab', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.login-welcome p {
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  color: #666;
+  margin: 0;
+  font-weight: 400;
+}
+
+.login-form {
+  max-width: 100%;
+}
+
+.login-form .form-item label {
+  font-family: 'Roboto Slab', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.login-form .form-item input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid #E0E0E0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  background: #fff;
+  transition: all 0.3s ease;
+}
+
+.login-form .form-item input:focus {
+  outline: none;
+  border-color: #FFB6D9; /* Pink focus */
+  box-shadow: 0 0 0 3px rgba(255, 182, 217, 0.2);
+}
+
+.login-form .form-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.login-form .form-actions input[type="submit"] {
+  background: #fff;
+  color: #2C3E50;
+  border: none;
+  padding: 0.75rem 2.5rem;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: 'Roboto Slab', serif;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-form .form-actions input[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.login-footer-text {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  color: #666;
+}
+
+.login-footer-text a {
+  color: #9575CD; /* Light purple */
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* ================================================
+   REGISTRATION PAGE STYLES - REDESIGN
+   ================================================ */
+
+/* Registration page background */
+.user-register-page {
+  background-image: url('/themes/custom/storyfulls/images/createnewaccountbg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align to left */
+}
+
+.register-container {
+  width: 800px; /* Explicit fixed width */
+  max-width: 90vw; /* Responsive constraint */
+  margin-left: 5%; /* Position towards left */
+  background: rgba(255, 228, 225, 0.85); /* Translucent Pink */
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0; /* Prevent shrinking in flex container */
+}
+
+/* Register Tabs */
+.register-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: none;
+  background: transparent;
+}
+
+.register-tab {
+  flex: 1; /* Equal width */
+  text-align: center;
+  padding: 0.75rem 1.5rem;
+  font-family: 'Roboto Slab', serif;
+  font-size: 18px;
+  font-weight: 700;
+  background: rgba(255, 182, 217, 0.3); /* Translucent Pink */
+  color: #2C3E50;
+  border: 1px solid rgba(255, 182, 217, 0.5);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.register-tab:hover {
+  background: rgba(255, 182, 217, 0.5);
+}
+
+.register-tab.active {
+  background: #FFB6D9; /* Solid Pink for active */
+  color: #fff;
+  border-color: #FFB6D9;
+  box-shadow: 0 4px 12px rgba(255, 182, 217, 0.4);
+}
+
+/* Page Title */
+.register-page-title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.register-page-title h1 {
+  font-family: 'Roboto Slab', serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: #2C3E50;
+  margin: 0;
+}
+
+/* Form Layout - My Details */
+#my-details-panel .register-form-container > div { /* Target the internal form wrapper */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+/* Full width fields */
+#my-details-panel .form-item-field-user-role,
+#my-details-panel .form-item-mail,
+#my-details-panel .form-item-name,
+#my-details-panel .form-item-field-managed-by-parents,
+#my-details-panel .form-item-field-show-profile-to-public {
+  grid-column: 1 / -1;
+}
+
+/* Hide User Role field from register page */
+#my-details-panel .form-item-field-user-role,
+#step-1 .form-item-field-user-role,
+#step-1 .field--name-field-user-role {
+  display: none !important;
+}
+
+/* Ensure checkboxes appear before the Next button */
+#my-details-panel .form-item-field-managed-by-parents {
+  order: 90;
+}
+
+#my-details-panel .form-item-field-show-profile-to-public {
+  order: 91;
+}
+
+/* Side by Side Fields */
+/* First Name & Last Name */
+#my-details-panel .form-item-field-first-name { grid-column: 1; }
+#my-details-panel .form-item-field-last-name { grid-column: 2; }
+
+/* Password & Confirm */
+#my-details-panel .form-item-pass-pass1 { grid-column: 1; }
+#my-details-panel .form-item-pass-pass2 { grid-column: 2; }
+
+/* Birthdate & Gender */
+#my-details-panel .form-item-field-date-of-birth { grid-column: 1; }
+#my-details-panel .form-item-field-gender { grid-column: 2; }
+
+/* City & Country */
+#my-details-panel .form-item-field-city { grid-column: 1; }
+#my-details-panel .form-item-field-country { grid-column: 2; }
+
+/* Input Styling */
+.register-form-container .form-item input[type="text"],
+.register-form-container .form-item input[type="email"],
+.register-form-container .form-item input[type="password"],
+.register-form-container .form-item input[type="date"],
+.register-form-container .form-item select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: #fff;
+  border: 1px solid #2C3E50;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  color: #333;
+}
+
+.register-form-container .form-item label {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #2C3E50;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* Next Button */
+.btn-next-step {
+  grid-column: 1 / -1;
+  width: 100%;
+  max-width: 200px;
+  margin-top: 2rem; /* More space above the button */
+  padding: 0.75rem 2rem;
+  background: #fff;
+  color: #2C3E50;
+  font-family: 'Roboto Slab', serif;
+  font-size: 20px;
+  font-weight: 800;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+  order: 100; /* Ensure Next button appears last */
+}
+
+.btn-next-step:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+/* My List Panel */
+#my-list-panel .form-item {
+  margin-bottom: 2rem;
+}
+
+/* Custom Favorites UI */
+.custom-favorites-wrapper {
+  margin-bottom: 2.5rem;
+}
+
+.custom-favorites-wrapper h3 {
+  font-family: 'Roboto Slab', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin-bottom: 1rem;
+}
+
+.draggable-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.draggable-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #fff;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  padding: 0.25rem 0.5rem;
+  transition: all 0.2s;
+}
+
+.draggable-item:hover {
+  border-color: #4DD0E1;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.drag-handle {
+  cursor: move;
+  color: #999;
+  font-size: 20px;
+  padding: 0.5rem;
+  user-select: none;
+}
+
+.draggable-item input[type="text"] {
+  flex: 1;
+  border: none;
+  padding: 0.5rem;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  outline: none;
+  background: transparent;
+}
+
+.draggable-item .item-status-icon::after {
+  content: '○'; /* Empty circle default */
+  color: #ccc;
+  font-size: 18px;
+}
+
+/* Autocomplete styling override */
+.ui-autocomplete {
+  z-index: 10000;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+#my-list-panel .form-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid rgba(44, 62, 80, 0.1);
+}
+
+/* Style the Create new account submit button */
+.register-form-wrapper .form-actions input[type="submit"],
+.register-form-wrapper .form-actions button[type="submit"],
+#my-list-panel .form-actions input[type="submit"],
+#my-list-panel .form-actions button[type="submit"],
+#step-2 .form-actions input[type="submit"],
+#step-2 .form-actions button[type="submit"] {
+  width: auto;
+  max-width: 300px;
+  padding: 0.875rem 3rem;
+  background: #fff;
+  color: #2C3E50;
+  font-family: 'Roboto Slab', serif;
+  font-size: 20px;
+  font-weight: 800;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  margin: 0 auto;
+}
+
+.register-form-wrapper .form-actions input[type="submit"]:hover,
+.register-form-wrapper .form-actions button[type="submit"]:hover,
+#my-list-panel .form-actions input[type="submit"]:hover,
+#my-list-panel .form-actions button[type="submit"]:hover,
+#step-2 .form-actions input[type="submit"]:hover,
+#step-2 .form-actions button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+/* Hide the Show profile to public field from My List tab (Step 2) */
+#my-list-panel .form-item-field-public-profile,
+#step-2 .form-item-field-public-profile,
+#my-list-panel .field--name-field-public-profile,
+#step-2 .field--name-field-public-profile {
+  display: none !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .register-container {
+    margin-left: 0;
+    max-width: 100%;
+  }
+  
+  #my-details-panel .register-form-container > div {
+    grid-template-columns: 1fr;
+  }
+  
+  #my-details-panel .form-item {
+    grid-column: 1 / -1 !important;
+  }
+  
+  /* Mobile-optimized toggle switches */
+  .toggle-switch-wrapper .form-item {
+    padding: 0.875rem 1rem;
+  }
+  
+  .toggle-switch-wrapper .form-item label {
+    font-size: 14px !important;
+  }
+  
+  .toggle-switch-wrapper .form-item input[type="checkbox"] {
+    width: 46px;
+    height: 24px;
+  }
+  
+  .toggle-switch-wrapper .form-item input[type="checkbox"]::before {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .toggle-switch-wrapper .form-item input[type="checkbox"]:checked::before {
+    left: 24px;
+  }
+}
+
+/* ========================================
+   Role Selection Page Styles
+   ======================================== */
+
+.role-selection-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #FFF9E6 0%, #FFF4D6 50%, #FFE8CC 100%);
+  font-family: 'Roboto', sans-serif;
+  padding: 4rem 2rem;
+}
+
+.role-selection-main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.role-selection-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+.role-selection-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.role-selection-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin: 0 0 1rem 0;
+}
+
+.role-selection-subtitle {
+  font-size: 18px;
+  color: #666;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Role Cards */
+.role-cards-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.role-card {
+  position: relative;
+  display: block;
+  background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+  border-radius: 20px;
+  padding: 3rem 2rem;
+  text-decoration: none;
+  transition: all 0.4s ease;
+  border: 3px solid transparent;
+  min-height: 500px;
+  cursor: pointer;
+}
+
+.role-card-reader {
+  background: linear-gradient(135deg, #E3F2FD 0%, #90CAF9 100%);
+}
+
+.role-card-librarian {
+  background: linear-gradient(135deg, #E1F5FE 0%, #81D4FA 100%);
+}
+
+.role-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+  border-color: #4DD0E1;
+}
+
+.role-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+}
+
+.role-card-icon {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 2rem;
+  color: #0277BD;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+.role-card:hover .role-card-icon {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.role-card-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin: 0 0 1.5rem 0;
+  letter-spacing: 0.5px;
+}
+
+.role-card-description {
+  font-size: 18px;
+  color: #37474F;
+  line-height: 1.6;
+  margin: 0 0 2rem 0;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.role-card-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+  flex-grow: 1;
+}
+
+.role-card-features li {
+  font-size: 16px;
+  color: #455A64;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  font-weight: 500;
+}
+
+.role-card-features li:last-child {
+  border-bottom: none;
+}
+
+.role-card-features li::before {
+  content: '✓';
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background: #4DD0E1;
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  margin-right: 0.75rem;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.role-card-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  background: #4DD0E1;
+  color: #fff;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: 'Roboto Slab', serif;
+  transition: all 0.3s ease;
+  margin-top: auto;
+}
+
+.role-card:hover .role-card-button {
+  background: #26C6DA;
+  transform: scale(1.05);
+}
+
+.role-card-button svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+.role-card:hover .role-card-button svg {
+  transform: translateX(4px);
+}
+
+/* Footer */
+.role-selection-footer {
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 2px solid #E0E0E0;
+}
+
+.role-selection-footer p {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+}
+
+.login-link {
+  color: #4DD0E1;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.login-link:hover {
+  color: #26C6DA;
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .role-selection-page {
+    padding: 2rem 1rem;
+  }
+
+  .role-selection-container {
+    padding: 2rem 1.5rem;
+  }
+
+  .role-selection-title {
+    font-size: 32px;
+  }
+
+  .role-selection-subtitle {
+    font-size: 16px;
+  }
+
+  .role-cards-wrapper {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .role-card {
+    padding: 2rem 1.5rem;
+    min-height: 400px;
+  }
+
+  .role-card-title {
+    font-size: 28px;
+  }
+
+  .role-card-description {
+    font-size: 16px;
+  }
+
+  .role-card-features li {
+    font-size: 15px;
+  }
+
+  .role-card-button {
+    padding: 0.875rem 1.75rem;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .role-selection-title {
+    font-size: 28px;
+  }
+
+  .role-card-icon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .role-card-title {
+    font-size: 24px;
+  }
+}
+
+/* Registration Steps - Hide step 2 by default */
+.user-register-form .register-step {
+  display: none;
+}
+
+.user-register-form .register-step:first-of-type {
+  display: block;
+}
+
+/* Override when tabs trigger visibility */
+.user-register-form #step-1 {
+  display: block;
+}
+
+.user-register-form #step-2 {
+  display: none;
+}
+
+/* Registration Favorites - Simple Style */
+.reg-favorites-section {
+  margin-bottom: 2.5rem;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 12px;
+  border: 2px solid #E0E0E0;
+}
+
+.reg-favorites-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #2C3E50;
+  margin: 0 0 1.5rem 0;
+}
+
+.reg-favorite-field {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+/* Reset Drupal's form-item wrapper inside favorite fields */
+.reg-favorite-field .form-item {
+  flex: 1;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure both Drupal-rendered and JS-rendered inputs have same styling */
+.reg-favorite-field input.reg-favorite-input,
+.reg-favorite-field .form-item input.reg-favorite-input {
+  width: 100%;
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid #E0E0E0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.reg-favorite-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid #E0E0E0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.reg-favorite-input:focus,
+.reg-favorite-field .form-item input.reg-favorite-input:focus {
+  outline: none;
+  border-color: #4DD0E1;
+  box-shadow: 0 0 0 3px rgba(77, 208, 225, 0.1);
+}
+
+.reg-remove-btn {
+  width: 36px;
+  height: 36px;
+  background: #E74C3C;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.reg-remove-btn:hover {
+  background: #C0392B;
+  transform: scale(1.1);
+}
+
+.reg-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #4DD0E1;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+  z-index: 10; /* Ensure button is clickable */
+  position: relative; /* Context for z-index */
+}
+
+/* Genre Checkboxes - Beautiful 3 Column Layout */
+.form-item-field-favorite-genres .form-checkboxes,
+#step-2 .form-checkboxes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.form-item-field-favorite-genres .form-item,
+#step-2 .form-checkboxes .form-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: #fff;
+  border: 2px solid #E0E0E0;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  margin: 0;
+  position: relative;
+}
+
+.form-item-field-favorite-genres .form-item:hover,
+#step-2 .form-checkboxes .form-item:hover {
+  border-color: #4DD0E1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(77, 208, 225, 0.2);
+  background: rgba(77, 208, 225, 0.05);
+}
+
+/* Hide the default checkbox */
+.form-item-field-favorite-genres .form-item input[type="checkbox"],
+#step-2 .form-checkboxes .form-item input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+}
+
+/* Custom checkbox appearance */
+.form-item-field-favorite-genres .form-item label,
+#step-2 .form-checkboxes .form-item label {
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #2C3E50;
+  cursor: pointer;
+  margin: 0;
+  padding-left: 36px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  line-height: 1.3;
+}
+
+/* Custom checkbox circle */
+.form-item-field-favorite-genres .form-item label::before,
+#step-2 .form-checkboxes .form-item label::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #CBD5E0;
+  border-radius: 6px;
+  background: #fff;
+  transition: all 0.3s ease;
+}
+
+/* Checkmark icon */
+.form-item-field-favorite-genres .form-item label::after,
+#step-2 .form-checkboxes .form-item label::after {
+  content: '';
+  position: absolute;
+  left: 9px;
+  top: 50%;
+  width: 6px;
+  height: 12px;
+  border: solid #fff;
+  border-width: 0 2.5px 2.5px 0;
+  transform: translateY(-55%) rotate(45deg);
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+/* Checked state - checkbox */
+.form-item-field-favorite-genres .form-item input[type="checkbox"]:checked + label::before,
+#step-2 .form-checkboxes .form-item input[type="checkbox"]:checked + label::before {
+  background: linear-gradient(135deg, #4DD0E1 0%, #26C6DA 100%);
+  border-color: #4DD0E1;
+  box-shadow: 0 2px 8px rgba(77, 208, 225, 0.4);
+}
+
+/* Checked state - checkmark visible */
+.form-item-field-favorite-genres .form-item input[type="checkbox"]:checked + label::after,
+#step-2 .form-checkboxes .form-item input[type="checkbox"]:checked + label::after {
+  opacity: 1;
+}
+
+/* Checked state - card styling */
+.form-item-field-favorite-genres .form-item:has(input[type="checkbox"]:checked),
+#step-2 .form-checkboxes .form-item:has(input[type="checkbox"]:checked) {
+  border-color: #4DD0E1;
+  background: linear-gradient(135deg, rgba(77, 208, 225, 0.08) 0%, rgba(38, 198, 218, 0.05) 100%);
+  box-shadow: 0 2px 8px rgba(77, 208, 225, 0.15);
+}
+
+/* Focus state for accessibility */
+.form-item-field-favorite-genres .form-item input[type="checkbox"]:focus + label::before,
+#step-2 .form-checkboxes .form-item input[type="checkbox"]:focus + label::before {
+  box-shadow: 0 0 0 3px rgba(77, 208, 225, 0.3);
+}
+
+/* Responsive Genre Grid */
+@media (max-width: 992px) {
+  .form-item-field-favorite-genres .form-checkboxes,
+  #step-2 .form-checkboxes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .form-item-field-favorite-genres .form-checkboxes,
+  #step-2 .form-checkboxes {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-item-field-favorite-genres .form-item label,
+  #step-2 .form-checkboxes .form-item label {
+    font-size: 14px;
+  }
+}
+
+
+.reg-add-btn:hover {
+  background: #26C6DA;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(77, 208, 225, 0.3);
+}
+
+.reg-hint {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  background: #E3F2FD;
+  border-radius: 8px;
+  border-left: 4px solid #4DD0E1;
+}
+
+/* Genre Section Styling */
+.favorites-section-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin: 2rem 0 0 0;
+  padding-bottom: 1rem;
+}
+
+/* Wrap genre checkboxes in styled container */
+#step-2 > div > .form-checkboxes,
+#step-2 .form-item-field-favorite-genres,
+.form-item-field-favorite-genres {
+  margin-bottom: 2.5rem;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 12px;
+  border: 2px solid #E0E0E0;
+}

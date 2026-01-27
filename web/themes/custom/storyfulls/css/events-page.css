@@ -1,0 +1,190 @@
+/* Events Page Styles */
+
+.events-page-wrapper {
+  background: white;
+  min-height: 100vh;
+  padding-bottom: 4rem;
+}
+
+/* Banner */
+.events-banner {
+  position: relative;
+  width: 100%;
+  margin-bottom: 2rem;
+  margin-top: -160px; /* Increased to ensure full overlap behind nav */
+  z-index: 0; 
+}
+
+.events-banner-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Container */
+.events-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Filter Bar */
+.events-filter-bar {
+  margin-bottom: 2rem;
+}
+
+.location-dropdown {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid #7F8C8D;
+  border-radius: 8px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  color: #2C3E50;
+  background: white;
+  cursor: pointer;
+  min-width: 150px;
+}
+
+/* Grid */
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+/* Card */
+.event-card {
+  background: #F3E5F5; /* Light purple/pink from image */
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+.event-card-image-wrapper {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.event-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.event-card-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+}
+
+.event-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #000;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.event-description {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+  flex: 1;
+  /* Line Clamping */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Details Row (Yellow Box) */
+.event-details-row {
+  background: #FFF9C4; /* Light yellow */
+  border-radius: 50px; /* Pill shape */
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.event-detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-label {
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #333;
+}
+
+.detail-value {
+  font-family: 'Roboto', sans-serif;
+  font-size: 13px;
+  color: #555;
+}
+
+.event-view-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.event-view-btn img {
+  width: 40px;
+  height: 40px;
+  display: block;
+}
+
+.event-view-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .events-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .events-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .events-banner-content h1 {
+    font-size: 32px;
+  }
+}
+
+/* Force header transparency on Events page */
+body.path-events .site-header--internal {
+  background-color: transparent !important;
+}
+
+body.path-events .header-wave {
+  /* Ensure wave is visible if needed, or adjust if it clashes */
+  z-index: 2; 
+}
+
+body.path-events .header-top {
+  /* Ensure nav is on top */
+  z-index: 10;
+}

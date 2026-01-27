@@ -1,0 +1,66 @@
+{#
+/**
+ * @file
+ * Template for Our Readers / Most Popular Reviewers page.
+ *
+ * Variables:
+ * - users: Array of user data with:
+ *   - uid: User ID
+ *   - name: Display name
+ *   - picture: Profile picture URL
+ *   - location: Country/City
+ *   - age: Age or 'Age not available'
+ *   - review_count: Number of reviews
+ *   - url: Link to user profile
+ */
+#}
+
+<div class="users-page">
+  <div class="users-page__header">
+    <h1 class="users-page__title">Our Readers</h1>
+    <p class="users-page__subtitle">Meet our community of book lovers and reviewers</p>
+  </div>
+
+  {% if users|length > 0 %}
+    <div class="users-grid">
+      {% for user in users %}
+        <a href="{{ user.url }}" class="user-card" title="View {{ user.name }}'s profile">
+          <div class="user-card__avatar-wrapper">
+            <img src="{{ user.picture }}" alt="{{ user.name }}" class="user-card__avatar" loading="lazy">
+          </div>
+          
+          <div class="user-card__info">
+            <h3 class="user-card__name">{{ user.name }}</h3>
+            
+            <p class="user-card__meta">
+              {% if user.location %}
+                <span class="user-card__location">{{ user.location }}</span>
+              {% endif %}
+              {% if user.location and user.age %}
+                <span class="user-card__separator">&bull;</span>
+              {% endif %}
+              {% if user.age %}
+                <span class="user-card__age">
+                  {% if user.age is same as('Age not available') %}
+                    Age not available
+                  {% else %}
+                    Age: {{ user.age }}
+                  {% endif %}
+                </span>
+              {% endif %}
+            </p>
+            
+            <p class="user-card__reviews">
+              <span class="user-card__review-icon">📚</span>
+              <span>{{ user.review_count }} review{{ user.review_count != 1 ? 's' : '' }}</span>
+            </p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="users-page__empty">
+      <p>No readers found yet. Be the first to join our community!</p>
+    </div>
+  {% endif %}
+</div>

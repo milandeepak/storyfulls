@@ -1,0 +1,129 @@
+{# Event detail page matching the specific design #}
+<article{{ attributes.addClass('event-detail-page-v2') }}>
+  
+  <div class="event-detail-container">
+    {# 1. Header Title #}
+    <h1 class="event-page-title text-center">{{ label }}</h1>
+
+    {# 2. Main Image Section with Floating Actions #}
+    <div class="event-hero-image-wrapper">
+      <img src="{{ event_meta.image_url }}" alt="{{ label }}" class="event-main-image">
+      
+      <div class="event-floating-actions">
+        <button class="action-btn btn-favorite" aria-label="Add to favorites">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+        </button>
+        <button class="action-btn btn-share" aria-label="Share">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+            <polyline points="16 6 12 2 8 6"></polyline>
+            <line x1="12" y1="2" x2="12" y2="15"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    {# 3. Two Column Layout #}
+    <div class="event-content-layout">
+      
+      {# LEFT COLUMN #}
+      <div class="event-left-column">
+        <h2 class="section-label">About this event</h2>
+        <div class="event-body-text">
+          {% if content.body|render %}
+             {{ content.body }}
+          {% else %}
+             {{ event_meta.description }}
+          {% endif %}
+        </div>
+
+        {% if event_meta.link_url %}
+          <div class="event-more-link">
+             Click <a href="{{ event_meta.link_url }}" target="_blank" class="event-website-link">website</a> for more details
+          </div>
+        {% endif %}
+      </div>
+
+      {# RIGHT COLUMN #}
+      <div class="event-right-column">
+        
+        {# Yellow Details Box #}
+        <div class="event-info-box yellow-box">
+          <div class="info-row">
+            <span class="info-label">Event Location</span> - <span class="info-value">{{ event_meta.location|default('Online') }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Event Date</span> - <span class="info-value">{{ event_meta.date_display }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Event Link</span> - <a href="{{ event_meta.link_url }}" target="_blank" class="info-link">{{ event_meta.link_url }}</a>
+          </div>
+        </div>
+
+        {# Green What You Get Box #}
+        {% if event_meta.what_you_get %}
+          <div class="what-you-get-section">
+            <h3 class="section-sublabel">What You Get</h3>
+            <div class="event-info-box green-box">
+              <ul class="benefit-list">
+                {% for item in event_meta.what_you_get %}
+                  <li>
+                    <span class="benefit-icon">📖</span>
+                    {{ item }}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        {% endif %}
+
+        {# Tags #}
+        {% if event_meta.tags %}
+          <div class="tags-section">
+            <h3 class="section-sublabel">Tags</h3>
+            <div class="tags-cloud">
+               {% for tag in event_meta.tags %}
+                 <span class="tag-pill">#{{ tag }}</span>
+               {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+
+  {# 4. Bottom Related Section #}
+  {% if related_events %}
+    <div class="related-events-wrapper">
+      <h2 class="related-title">You Might Also Like</h2>
+      <div class="related-grid">
+        {% for event in related_events %}
+           <div class="related-card">
+              <div class="rc-image">
+                 <img src="{{ event.image_url }}" alt="{{ event.title }}">
+              </div>
+              <div class="rc-content">
+                 <h4>{{ event.title }}</h4>
+                 <p class="rc-desc">{{ event.summary|striptags }}</p>
+                 <div class="rc-footer">
+                    <div class="rc-col">
+                       <div class="rc-label">Location</div>
+                       <div class="rc-val">{{ event.location|default("Online") }}</div>
+                    </div>
+                    <div class="rc-col">
+                       <div class="rc-label">Age</div>
+                       <div class="rc-val">{{ event.age|default("All ages") }}</div>
+                    </div>
+                    <a href="{{ event.url }}" class="rc-arrow-btn">➜</a>
+                 </div>
+              </div>
+           </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+</article>

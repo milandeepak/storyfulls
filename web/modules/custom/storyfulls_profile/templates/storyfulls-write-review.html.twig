@@ -1,0 +1,96 @@
+{#
+/**
+ * @file
+ * Theme implementation for the write review page.
+ *
+ * Available variables:
+ * - book_id: The book node ID.
+ * - book_title: The book title.
+ * - book_author: The book author name.
+ * - book_cover: The book cover image URL.
+ */
+#}
+
+<div class="write-review-page">
+  <div class="write-review-container">
+    
+    {# Book Details Section #}
+    <div class="review-book-details">
+      {% if book_cover %}
+        <div class="review-book-cover">
+          <img src="{{ book_cover }}" alt="{{ book_title }}" />
+        </div>
+      {% endif %}
+      <div class="review-book-info">
+        <h2 class="review-book-title">{{ book_title }}</h2>
+        {% if book_author %}
+          <p class="review-book-author">by {{ book_author }}</p>
+        {% endif %}
+      </div>
+    </div>
+
+    {# Review Form Section #}
+    <div class="review-form-section">
+      <h1 class="review-form-heading">Write Your Review</h1>
+      
+      <form action="/book/{{ book_id }}/submit-review" method="post" class="book-review-form" id="bookReviewForm">
+        
+        {# Star Rating Section #}
+        <div class="form-group rating-group">
+          <label for="rating" class="form-label">Rating</label>
+          <div class="star-rating" id="starRating">
+            <input type="hidden" name="rating" id="ratingInput" value="0" required>
+            <div class="stars">
+              <span class="star" data-value="1">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                </svg>
+              </span>
+              <span class="star" data-value="2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                </svg>
+              </span>
+              <span class="star" data-value="3">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                </svg>
+              </span>
+              <span class="star" data-value="4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                </svg>
+              </span>
+              <span class="star" data-value="5">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                </svg>
+              </span>
+            </div>
+            <p class="rating-error" id="ratingError" style="display: none;">Please select a rating</p>
+          </div>
+        </div>
+
+        {# Review Text Section #}
+        <div class="form-group">
+          <label for="review_text" class="form-label">Your Review</label>
+          <textarea 
+            name="review_text" 
+            id="reviewText" 
+            class="form-textarea" 
+            rows="8" 
+            placeholder="Share your thoughts about this book..."
+            required
+          ></textarea>
+          <p class="form-help-text">Tell us what you thought about the book. What did you like? What did you learn?</p>
+        </div>
+
+        {# Submit Button #}
+        <div class="form-actions">
+          <button type="submit" class="btn-submit-review">Submit Review</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>

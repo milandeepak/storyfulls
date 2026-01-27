@@ -1,0 +1,6 @@
+storyfulls_banners.admin:
+  title: 'Manage Banners'
+  route_name: entity.page_banner.collection
+  description: 'Manage page banners for Events, Blog, and Books pages'
+  parent: system.admin_content
+  weight: 10

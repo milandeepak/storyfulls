@@ -1,0 +1,7 @@
+storyfulls_events.events_page:
+  path: '/events'
+  defaults:
+    _controller: '\Drupal\storyfulls_events\Controller\EventsController::content'
+    _title: 'Events'
+  requirements:
+    _permission: 'access content'

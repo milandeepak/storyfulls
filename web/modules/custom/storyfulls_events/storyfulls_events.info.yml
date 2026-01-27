@@ -1,0 +1,9 @@
+name: 'Storyfulls Events'
+type: module
+description: 'Handles the Events page functionality.'
+core_version_requirement: ^10 || ^11
+package: 'Storyfulls'
+dependencies:
+  - node
+  - file
+  - image

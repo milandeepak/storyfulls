@@ -1,0 +1,239 @@
+{#
+/**
+ * @file
+ * Theme override for book nodes in full display mode.
+ */
+#}
+{{ attach_library('storyfulls/global-styling') }}
+<article{{ attributes.addClass('book-detail-page') }}>
+  
+  {# Page Title #}
+  <div class="book-detail-header">
+    <h1{{ title_attributes.addClass('book-detail-title') }}>{{ label }}</h1>
+    {% if rating_count > 0 %}
+      <div class="book-rating-summary">
+        <span class="rating-stars">{{ rating_stars }}</span>
+        <span class="rating-text">{{ rating_display }}</span>
+        <span class="rating-count">({{ rating_count }} {{ rating_count == 1 ? 'review' : 'reviews' }})</span>
+      </div>
+    {% else %}
+      <div class="book-rating-summary no-ratings">
+        <span class="rating-text">No ratings yet - be the first to review!</span>
+      </div>
+    {% endif %}
+  </div>
+
+  {# Main Content Area #}
+  <div class="book-detail-content">
+    
+    {# Left Column - Book Cover #}
+    <div class="book-cover-column">
+      {% if has_cover and cover_url %}
+        <img src="{{ cover_url }}" alt="{{ label }}" class="book-cover-image">
+      {% else %}
+        <div class="book-cover-placeholder">
+          <p>Book cover not uploaded yet</p>
+        </div>
+      {% endif %}
+    </div>
+
+    {# Middle Column - Description #}
+    <div class="book-description-column">
+      <h2 class="section-label">Description</h2>
+      {% if description %}
+        <div class="book-description">
+          {{ description|raw|nl2br }}
+        </div>
+      {% else %}
+        <p class="no-description">No description available for this book.</p>
+      {% endif %}
+
+      {# Buy on Amazon and Share Buttons #}
+      <div class="book-action-buttons">
+        {% if purchase_url %}
+          <a href="{{ purchase_url }}" target="_blank" rel="noopener" class="buy-amazon-btn">
+            <span class="btn-text">{{ purchase_title }}</span>
+            <span class="btn-icon">🛒</span>
+          </a>
+        {% endif %}
+        <button class="share-btn" onclick="shareBook()" title="Share this book">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    {# Right Column - Action Buttons #}
+    <div class="book-actions-column">
+      <button class="action-btn read-later-btn" data-book-id="{{ node.id() }}">
+        <span class="btn-icon">📖</span>
+        <span class="btn-text">Read Later</span>
+      </button>
+      <button class="action-btn already-read-btn" data-book-id="{{ node.id }}">
+        <span class="btn-icon">✓</span>
+        <span class="btn-text">Already Read</span>
+      </button>
+      <a href="/books" class="action-btn books-btn">
+        <span class="btn-icon">📚</span>
+        <span class="btn-text">Books</span>
+      </a>
+    </div>
+
+  </div>
+
+  {# More Details Section #}
+  <div class="book-more-details">
+    <h2 class="section-title">More Details</h2>
+    <div class="details-grid">
+      
+      {# Author #}
+      {% if author_label %}
+        <a href="{{ author_url }}" class="detail-card detail-card-link">
+          <div class="detail-icon">
+            <img src="/themes/custom/storyfulls/images/author-icon.png" alt="Author" onerror="this.style.display='none'">
+          </div>
+          <div class="detail-content">
+            <div class="detail-label">Author</div>
+            <div class="detail-value">{{ author_label }}</div>
+          </div>
+        </a>
+      {% endif %}
+
+      {# Illustrator #}
+      {% if illustrator_label %}
+        <a href="{{ illustrator_url }}" class="detail-card detail-card-link">
+          <div class="detail-icon">
+            <img src="/themes/custom/storyfulls/images/illustrator-icon.png" alt="Illustrator" onerror="this.style.display='none'">
+          </div>
+          <div class="detail-content">
+            <div class="detail-label">Illustrator</div>
+            <div class="detail-value">{{ illustrator_label }}</div>
+          </div>
+        </a>
+      {% endif %}
+
+      {# Age Group #}
+      {% if age_group_label %}
+        <div class="detail-card">
+          <div class="detail-icon">
+            <img src="/themes/custom/storyfulls/images/age-icon.png" alt="Age" onerror="this.style.display='none'">
+          </div>
+          <div class="detail-content">
+            <div class="detail-label">Age</div>
+            <div class="detail-value">{{ age_group_label }}</div>
+          </div>
+        </div>
+      {% endif %}
+
+      {# Genre #}
+      {% if genere_label %}
+        <div class="detail-card">
+          <div class="detail-icon">
+            <img src="/themes/custom/storyfulls/images/genre-icon.png" alt="Genre" onerror="this.style.display='none'">
+          </div>
+          <div class="detail-content">
+            <div class="detail-label">Genre</div>
+            <div class="detail-value">{{ genere_label }}</div>
+          </div>
+        </div>
+      {% endif %}
+
+      {# Publisher #}
+      {% if publisher_label %}
+        <div class="detail-card">
+          <div class="detail-icon">
+            <img src="/themes/custom/storyfulls/images/publisher-icon.png" alt="Publisher" onerror="this.style.display='none'">
+          </div>
+          <div class="detail-content">
+            <div class="detail-label">Publisher</div>
+            <div class="detail-value">{{ publisher_label }}</div>
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+  {# Tags Section #}
+  {% if tags|length > 0 %}
+    <div class="book-tags-section">
+      <h2 class="section-title">Tags</h2>
+      <div class="tags-list">
+        {% for tag in tags %}
+          <a href="/taxonomy/term/{{ tag.id }}" class="tag-item">{{ tag.name }}</a>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  {# Reviews Section #}
+  <div class="book-reviews-section">
+    <h2 class="section-title">Reviews ({{ review_count|default(0) }})</h2>
+    
+    {# Custom success message banner #}
+    {% if review_just_submitted %}
+      <div class="review-success-message">
+        <div class="success-content">
+          <strong>Review Submitted!</strong>
+          <p>Thank you for sharing your thoughts! Your review will appear below.</p>
+        </div>
+      </div>
+    {% endif %}
+    
+    {# Reviews list #}
+    <div class="reviews-list">
+      {% if reviews %}
+        {% for review in reviews %}
+          <div class="review-item">
+            <div class="review-author-info">
+              <strong class="review-author">{{ review.author_name }}</strong>
+              {% if review.rating %}
+                <div class="review-rating">
+                  {% for i in 1..5 %}
+                    <span class="star">{{ i <= review.rating ? '★' : '☆' }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+            <p class="review-text">{{ review.review_text }}</p>
+            <div class="review-date">{{ review.created|format_date('custom', 'F j, Y') }}</div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="no-reviews">No reviews yet. Be the first to review this book!</p>
+      {% endif %}
+    </div>
+    
+    {# Write Review Button Section #}
+    {% if user_is_logged_in and not user_already_reviewed %}
+      <div class="review-action-section">
+        <a href="{{ write_review_url }}" class="write-review-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="currentColor"/>
+          </svg>
+          Write a Review
+        </a>
+      </div>
+    {% elseif not user_is_logged_in %}
+      <div class="review-login-prompt">
+        <p>Please <a href="/user/login?destination={{ current_path }}">log in</a> to write a review.</p>
+      </div>
+    {% elseif user_already_reviewed %}
+      <div class="review-already-submitted">
+        <p>✓ You've already reviewed this book. Thank you for your feedback!</p>
+      </div>
+    {% endif %}
+  </div>
+
+  {# You Might Also Like Section - Will be implemented later with a custom view #}
+  {# 
+  <div class="book-recommendations-section">
+    <h2 class="section-title">You Might Also Like</h2>
+    <div class="recommendations-list">
+      <p class="no-recommendations">Related books coming soon!</p>
+    </div>
+  </div>
+  #}
+
+</article>

@@ -1,0 +1,19 @@
+<div class="manage-page">
+  <h1 class="page-title">Book of the Season</h1>
+  
+  <div class="book-selection">
+    <form method="post" action="/admin/dashboard/book-of-season">
+      <div class="form-group">
+        <label for="book">Select Book of the Season</label>
+        <select name="book" id="book" class="form-select">
+          <option value="">-- Select a book --</option>
+          {% for book in books %}
+            <option value="{{ book.nid }}" {% if book.selected %}selected{% endif %}>{{ book.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Set as Book of the Season</button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,495 @@
+<?php
+
+/**
+ * @file
+ * Storyfulls custom authentication module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\Core\Render\Markup;
+
+/**
+ * Implements hook_form_FORM_ID_alter() for user_login_form.
+ */
+function storyfulls_auth_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Add custom template suggestion
+  $form['#theme'] = 'user_login_form';
+  $form['#attached']['library'][] = 'storyfulls/auth';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for user_register_form.
+ */
+function storyfulls_auth_form_user_register_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Add custom template suggestion
+  $form['#theme'] = 'user_register_form';
+  $form['#attached']['library'][] = 'storyfulls/auth';
+  
+  // Get role from URL parameter
+  $request = \Drupal::request();
+  $role = $request->query->get('role');
+  
+  // If no role specified, redirect to role selection page
+  if (!$role || !in_array($role, ['young_reader', 'librarian'])) {
+    $response = new \Symfony\Component\HttpFoundation\RedirectResponse('/register');
+    $response->send();
+    return;
+  }
+  
+  // Hide and store user role in session for later
+  if (isset($form['field_user_role'])) {
+    $form['field_user_role']['#access'] = FALSE;
+    // Store the role in session so we can set it in hook_user_insert
+    $_SESSION['registration_role'] = $role;
+  }
+  
+  // Add role indicator
+  $role_label = $role == 'young_reader' ? 'Young Reader' : 'Librarian';
+  $form['role_display'] = [
+    '#type' => 'markup',
+    '#markup' => '<div style="background: #E3F2FD; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: center;">
+      <strong style="color: #1976D2; font-size: 18px;">Registering as: ' . $role_label . '</strong>
+      <div style="font-size: 12px; color: #666; margin-top: 0.25rem;">
+        <a href="/user/login" style="color: #4DD0E1;">Change account type</a>
+      </div>
+    </div>',
+    '#weight' => -100,
+  ];
+  
+  if ($role == 'librarian') {
+    // LIBRARIAN REGISTRATION - Single step, different fields
+    
+    // Show only librarian-specific fields
+    $librarian_fields = [
+      'field_librarian_name',
+      'account', // Email and password
+      'field_country',
+      'field_librarian_at',
+      'field_instagram',
+      'field_linkedin',
+      'field_social_others',
+      'field_about_me',
+      'field_book_recommendations',
+    ];
+    
+    // Hide all young reader fields
+    $hide_fields = [
+      'field_first_name',
+      'field_last_name',
+      'field_date_of_birth',
+      'field_gender',
+      'field_city',
+      'field_managed_by_parents',
+      'field_public_profile',
+      'field_favorite_authors',
+      'field_favorite_books',
+      'field_favorite_genres',
+    ];
+    
+    foreach ($hide_fields as $field) {
+      if (isset($form[$field])) {
+        $form[$field]['#access'] = FALSE;
+      }
+    }
+    
+    // Update submit button
+    $form['actions']['submit']['#value'] = t('Create new account');
+    $form['actions']['submit']['#attributes']['class'][] = 'btn';
+    $form['actions']['submit']['#attributes']['class'][] = 'btn-primary';
+    
+  } else {
+    // YOUNG READER REGISTRATION - Multi-step
+    
+    // Hide librarian-specific fields
+    $hide_fields = [
+      'field_librarian_name',
+      'field_librarian_at',
+      'field_instagram',
+      'field_linkedin',
+      'field_social_others',
+      'field_about_me',
+      'field_book_recommendations',
+    ];
+    
+    foreach ($hide_fields as $field) {
+      if (isset($form[$field])) {
+        $form[$field]['#access'] = FALSE;
+      }
+    }
+    
+    // Remove the step indicator - we're using tabs at the top instead
+    // $form['step_indicator'] removed
+    
+    // Organize fields into steps
+    $form['step_1'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['register-step'], 'id' => 'step-1'],
+      '#weight' => 0,
+    ];
+    
+    $form['step_2'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['register-step'], 'id' => 'step-2'],
+      '#weight' => 1,
+    ];
+    
+    // Move fields to step 1
+    $step1_fields = [
+      'field_first_name',
+      'field_last_name',
+      'account',
+      'field_date_of_birth',
+      'field_gender',
+      'field_city',
+      'field_country',
+      'field_managed_by_parents',
+      'field_public_profile',
+    ];
+    
+    foreach ($step1_fields as $field) {
+      if (isset($form[$field])) {
+        $form['step_1'][$field] = $form[$field];
+        unset($form[$field]);
+      }
+    }
+    
+    // Style the checkbox fields as toggle switches
+    if (isset($form['step_1']['field_managed_by_parents'])) {
+      $form['step_1']['field_managed_by_parents']['#prefix'] = '<div class="toggle-switch-wrapper">';
+      $form['step_1']['field_managed_by_parents']['#suffix'] = '</div>';
+      $form['step_1']['field_managed_by_parents']['widget']['value']['#title'] = 'Managed by Parents';
+    }
+    
+    if (isset($form['step_1']['field_public_profile'])) {
+      $form['step_1']['field_public_profile']['#prefix'] = '<div class="toggle-switch-wrapper">';
+      $form['step_1']['field_public_profile']['#suffix'] = '</div>';
+      $form['step_1']['field_public_profile']['widget']['value']['#title'] = 'Show profile to public';
+    }
+    
+    // Ensure password fields are visible and required
+    if (isset($form['step_1']['account'])) {
+      // Ensure mail field is visible and required
+      if (isset($form['step_1']['account']['mail'])) {
+        $form['step_1']['account']['mail']['#required'] = TRUE;
+      }
+      
+      // Ensure password field is visible and required
+      // Drupal's password_confirm widget already includes both password and confirm fields
+      if (isset($form['step_1']['account']['pass'])) {
+        $form['step_1']['account']['pass']['#required'] = TRUE;
+      }
+    }
+    
+    // Move favorites to step 2 - Simple approach without drag-and-drop
+    
+    // === FAVORITE AUTHORS SECTION ===
+    $form['step_2']['authors_wrapper_start'] = [
+      '#type' => 'markup',
+      '#markup' => '<div class="reg-favorites-section"><h3 class="reg-favorites-title">Favourite Children\'s Authors</h3><div id="authorsFieldsContainer">',
+      '#weight' => 0,
+    ];
+    
+    // Add first author field by default
+    $form['step_2']['favorite_author_0'] = [
+      '#type' => 'textfield',
+      '#title' => '',
+      '#autocomplete_route_name' => 'storyfulls_auth.author_autocomplete',
+      '#attributes' => [
+        'class' => ['reg-favorite-input', 'author-autocomplete-field'],
+        'placeholder' => 'Type author name...',
+        'data-field-index' => '0',
+      ],
+      '#prefix' => '<div class="reg-favorite-field" data-field-index="0">',
+      '#suffix' => '<button type="button" class="reg-remove-btn" style="display:none;" title="Remove"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button></div>',
+      '#weight' => 1,
+    ];
+    
+    $form['step_2']['authors_wrapper_end'] = [
+      '#type' => 'markup',
+      '#markup' => Markup::create('</div><button type="button" id="addAuthorBtn" class="reg-add-btn" style="pointer-events: auto; cursor: pointer; z-index: 100; position: relative;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Add Another Author</button><p class="reg-hint">You can add up to 5 favorite authors.</p></div>'),
+      '#weight' => 2,
+    ];
+    
+    // === FAVORITE BOOKS SECTION ===
+    $form['step_2']['books_wrapper_start'] = [
+      '#type' => 'markup',
+      '#markup' => '<div class="reg-favorites-section"><h3 class="reg-favorites-title">Favourite Children\'s Books</h3><div id="booksFieldsContainer">',
+      '#weight' => 10,
+    ];
+    
+    // Add first book field by default
+    $form['step_2']['favorite_book_0'] = [
+      '#type' => 'textfield',
+      '#title' => '',
+      '#autocomplete_route_name' => 'storyfulls_auth.book_autocomplete',
+      '#attributes' => [
+        'class' => ['reg-favorite-input', 'book-autocomplete-field'],
+        'placeholder' => 'Type book title...',
+        'data-field-index' => '0',
+      ],
+      '#prefix' => '<div class="reg-favorite-field" data-field-index="0">',
+      '#suffix' => '<button type="button" class="reg-remove-btn" style="display:none;" title="Remove"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button></div>',
+      '#weight' => 11,
+    ];
+    
+    $form['step_2']['books_wrapper_end'] = [
+      '#type' => 'markup',
+      '#markup' => Markup::create('</div><button type="button" id="addBookBtn" class="reg-add-btn" style="pointer-events: auto; cursor: pointer; z-index: 100; position: relative;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Add Another Book</button><p class="reg-hint">You can add up to 5 favorite books.</p></div>'),
+      '#weight' => 12,
+    ];
+    
+    // Add favorite genres (checkboxes only - filter to show only genre vocabulary)
+    if (isset($form['field_favorite_genres'])) {
+      $form['step_2']['favorite_genres_section'] = [
+        '#type' => 'markup',
+        '#markup' => '<h3 class="favorites-section-title">Favourite Genre of Books</h3>',
+        '#weight' => 20,
+      ];
+      
+      // Get only genre terms (vocabulary is 'genre' not 'genere')
+      $genre_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+      $genre_tree = $genre_storage->loadTree('genre', 0, NULL, FALSE);
+      
+      $genre_options = [];
+      foreach ($genre_tree as $term) {
+        $genre_options[$term->tid] = $term->name;
+      }
+      
+      // Replace the field with a custom checkboxes field
+      $form['step_2']['field_favorite_genres'] = [
+        '#type' => 'checkboxes',
+        '#title' => '',
+        '#options' => $genre_options,
+        '#weight' => 21,
+        '#default_value' => [],
+      ];
+      
+      // Hide original field
+      if (isset($form['field_favorite_genres'])) {
+        unset($form['field_favorite_genres']);
+      }
+    }
+    
+    // Hide the original fields if they exist
+    foreach (['field_favorite_authors', 'field_favorite_books'] as $field) {
+      if (isset($form[$field])) {
+        $form[$field]['#access'] = FALSE;
+      }
+    }
+    
+    // Add navigation buttons
+    $form['step_1']['next'] = [
+      '#type' => 'button',
+      '#value' => t('Next'),
+      '#attributes' => [
+        'class' => ['btn', 'btn-primary', 'btn-next-step'],
+        'type' => 'button', // Explicitly set type to prevent form submission
+      ],
+      '#weight' => 100,
+    ];
+    
+    $form['step_2']['back'] = [
+      '#type' => 'button',
+      '#value' => t('Back'),
+      '#attributes' => [
+        'class' => ['btn', 'btn-back', 'btn-prev-step'],
+        'type' => 'button', // Explicitly set type to prevent form submission
+      ],
+      '#weight' => -1,
+    ];
+    
+    // Move submit button to step 2
+    $form['step_2']['actions'] = $form['actions'];
+    $form['step_2']['actions']['submit']['#value'] = t('Create Account');
+    $form['step_2']['actions']['submit']['#attributes']['class'][] = 'btn';
+    $form['step_2']['actions']['submit']['#attributes']['class'][] = 'btn-primary';
+    unset($form['actions']);
+  }
+  
+  // Add submit handler to store favorites data in session for hook_user_insert
+  $form['#submit'][] = 'storyfulls_auth_user_register_submit';
+}
+
+/**
+ * Custom submit handler to store registration data for processing after user creation.
+ */
+function storyfulls_auth_user_register_submit(&$form, FormStateInterface $form_state) {
+  // Store favorites and other data in temp store for retrieval in hook_user_insert
+  $tempstore = \Drupal::service('tempstore.private')->get('storyfulls_auth');
+  
+  $registration_data = [
+    'favorite_authors' => [],
+    'favorite_books' => [],
+    'favorite_genres' => [],
+  ];
+  
+  // Collect favorite authors from form fields (favorite_author_0, favorite_author_1, etc.)
+  // We use getUserInput() because dynamically added JS fields are not in $form_state->getValues()
+  $input = $form_state->getUserInput();
+  
+  for ($i = 0; $i < 5; $i++) {
+    // Check both values and input to be safe (0 might be in values, 1-4 in input)
+    $author_value = isset($input['favorite_author_' . $i]) ? $input['favorite_author_' . $i] : $form_state->getValue('favorite_author_' . $i);
+    
+    if (!empty($author_value) && is_string($author_value)) {
+      $registration_data['favorite_authors'][] = trim($author_value);
+    }
+  }
+  
+  // Collect favorite books from form fields (favorite_book_0, favorite_book_1, etc.)
+  for ($i = 0; $i < 5; $i++) {
+    $book_value = isset($input['favorite_book_' . $i]) ? $input['favorite_book_' . $i] : $form_state->getValue('favorite_book_' . $i);
+    
+    if (!empty($book_value) && is_string($book_value)) {
+      $registration_data['favorite_books'][] = trim($book_value);
+    }
+  }
+  
+  // Collect favorite genres
+  $favorite_genres_value = $form_state->getValue('field_favorite_genres');
+  if (!empty($favorite_genres_value)) {
+    $selected_genres = array_filter($favorite_genres_value, function($value) {
+      return $value !== 0;
+    });
+    $registration_data['favorite_genres'] = array_values($selected_genres);
+  }
+  
+  // Store in tempstore with a unique key
+  $mail = $form_state->getValue(['account', 'mail']);
+  if ($mail) {
+    $tempstore->set('registration_' . $mail, $registration_data);
+  }
+}
+
+/**
+ * Implements hook_user_insert().
+ */
+function storyfulls_auth_user_insert($account) {
+  // Only process for new registrations, not admin-created users
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if ($route_name !== 'user.register') {
+    return;
+  }
+  
+  $user = \Drupal\user\Entity\User::load($account->id());
+  
+  if (!$user) {
+    return;
+  }
+  
+  // Assign Drupal role and field_user_role based on registration type
+  $request = \Drupal::request();
+  $role_param = $request->query->get('role');
+  
+  // Also check session as fallback
+  if (!$role_param && isset($_SESSION['registration_role'])) {
+    $role_param = $_SESSION['registration_role'];
+    unset($_SESSION['registration_role']);
+  }
+  
+  if ($role_param == 'young_reader') {
+    $user->addRole('young_reader');
+    if ($user->hasField('field_user_role')) {
+      $user->set('field_user_role', 'young_reader');
+    }
+  } elseif ($role_param == 'librarian') {
+    $user->addRole('librarian');
+    if ($user->hasField('field_user_role')) {
+      $user->set('field_user_role', 'librarian');
+    }
+  }
+  
+  // Randomly assign one of the 3 avatars
+  if ($user->hasField('field_avatar')) {
+    $avatars = ['elephantavatar.png', 'tigeravatar.png', 'rhinoavatar.png'];
+    $random_avatar = $avatars[array_rand($avatars)];
+    $user->set('field_avatar', $random_avatar);
+  }
+  
+  // Retrieve favorites data from tempstore
+  $tempstore = \Drupal::service('tempstore.private')->get('storyfulls_auth');
+  $registration_data = $tempstore->get('registration_' . $user->getEmail());
+  
+  if ($registration_data) {
+    // Save favorite authors
+    if (!empty($registration_data['favorite_authors'])) {
+      $favorite_authors = [];
+      foreach ($registration_data['favorite_authors'] as $author_name) {
+        $terms = \Drupal::entityTypeManager()
+          ->getStorage('taxonomy_term')
+          ->loadByProperties([
+            'name' => $author_name,
+            'vid' => 'author',
+          ]);
+        
+        if ($term = reset($terms)) {
+          $favorite_authors[] = ['target_id' => $term->id()];
+        }
+      }
+      
+      if (!empty($favorite_authors) && $user->hasField('field_favorite_authors')) {
+        $user->set('field_favorite_authors', $favorite_authors);
+      }
+    }
+    
+    // Save favorite books
+    if (!empty($registration_data['favorite_books'])) {
+      $favorite_books = [];
+      foreach ($registration_data['favorite_books'] as $book_title) {
+        $nodes = \Drupal::entityTypeManager()
+          ->getStorage('node')
+          ->loadByProperties([
+            'title' => $book_title,
+            'type' => 'book',
+          ]);
+        
+        if ($node = reset($nodes)) {
+          $favorite_books[] = ['target_id' => $node->id()];
+        }
+      }
+      
+      if (!empty($favorite_books) && $user->hasField('field_favorite_books')) {
+        $user->set('field_favorite_books', $favorite_books);
+      }
+    }
+    
+    // Save favorite genres
+    if (!empty($registration_data['favorite_genres'])) {
+      $genre_values = [];
+      foreach ($registration_data['favorite_genres'] as $tid) {
+        $genre_values[] = ['target_id' => $tid];
+      }
+      
+      if (!empty($genre_values) && $user->hasField('field_favorite_genres')) {
+        $user->set('field_favorite_genres', $genre_values);
+      }
+    }
+    
+    // Clean up tempstore
+    $tempstore->delete('registration_' . $user->getEmail());
+  }
+  
+  // Save the user with all updates
+  $user->save();
+}
+
+/**
+ * Implements hook_theme().
+ */
+function storyfulls_auth_theme($existing, $type, $theme, $path) {
+  return [
+    'role_selection_page' => [
+      'template' => 'role-selection-page',
+      'variables' => [],
+    ],
+    'page__user__login' => [
+      'template' => 'page--user--login',
+      'base hook' => 'page',
+    ],
+    'page__user__register' => [
+      'template' => 'page--user--register',
+      'base hook' => 'page',
+    ],
+  ];
+}

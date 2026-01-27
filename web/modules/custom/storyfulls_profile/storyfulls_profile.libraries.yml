@@ -1,0 +1,4 @@
+users_page:
+  css:
+    theme:
+      css/users-page.css: {}

@@ -1,0 +1,7 @@
+storyfulls_blogs.page:
+  path: '/blogs'
+  defaults:
+    _controller: '\Drupal\storyfulls_blogs\Controller\BlogsController::content'
+    _title: 'Blogs'
+  requirements:
+    _permission: 'access content'

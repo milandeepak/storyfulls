@@ -1,0 +1,44 @@
+{#
+/**
+ * @file
+ * Template for User Registration Page.
+ */
+#}
+{{ attach_library('storyfulls/auth') }}
+
+<!DOCTYPE html>
+<html{{ html_attributes }}>
+  <head>
+    <head-placeholder token="{{ placeholder_token }}">
+    <title>{{ head_title|safe_join(' | ') }}</title>
+    <css-placeholder token="{{ placeholder_token }}">
+    <js-placeholder token="{{ placeholder_token }}">
+  </head>
+  <body{{ attributes.addClass('user-register-page') }}>
+    <a href="#main-content" class="visually-hidden focusable">
+      {{ 'Skip to main content'|t }}
+    </a>
+    
+    <main id="main-content">
+      <div class="register-container">
+        {# Tab Navigation #}
+        <div class="register-tabs">
+          <button class="register-tab active" data-target="step-1">My Details</button>
+          <button class="register-tab" data-target="step-2">My List</button>
+        </div>
+        
+        {# Page Title #}
+        <div class="register-page-title">
+          <h1>Info of the young reader</h1>
+        </div>
+        
+        {# Form Container #}
+        <div class="register-form-wrapper">
+          {{ page.content }}
+        </div>
+      </div>
+    </main>
+
+    <js-bottom-placeholder token="{{ placeholder_token }}">
+  </body>
+</html>

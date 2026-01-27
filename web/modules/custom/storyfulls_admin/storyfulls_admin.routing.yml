@@ -1,0 +1,127 @@
+storyfulls_admin.dashboard:
+  path: '/admin/dashboard'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::dashboard'
+    _title: 'Admin Dashboard'
+  requirements:
+    _role: 'administrator'
+
+storyfulls_admin.manage_books:
+  path: '/admin/dashboard/manage-books'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::manageBooks'
+    _title: 'Manage Books'
+  requirements:
+    _role: 'administrator'
+
+storyfulls_admin.manage_blogs:
+  path: '/admin/dashboard/manage-blogs'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::manageBlogs'
+    _title: 'Manage Blogs'
+  requirements:
+    _role: 'administrator'
+
+storyfulls_admin.manage_age_group:
+  path: '/admin/dashboard/manage-age-group'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::manageAgeGroup'
+    _title: 'Manage Age Group'
+  requirements:
+    _role: 'administrator'
+
+storyfulls_admin.manage_genre:
+  path: '/admin/dashboard/manage-genre'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::manageGenre'
+    _title: 'Manage Genre'
+  requirements:
+    _role: 'administrator'
+
+storyfulls_admin.manage_tags:
+  path: '/admin/dashboard/manage-tags'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::manageTags'
+    _title: 'Manage Tags'
+  requirements:
+    _role: 'administrator'
+
+storyfulls_admin.manage_write_ups:
+  path: '/admin/dashboard/manage-write-ups'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::manageWriteUps'
+    _title: 'Manage Write Ups'
+  requirements:
+    _role: 'administrator'
+
+storyfulls_admin.manage_events:
+  path: '/admin/dashboard/manage-events'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::manageEvents'
+    _title: 'Manage Events'
+  requirements:
+    _role: 'administrator'
+
+storyfulls_admin.manage_announcement:
+  path: '/admin/dashboard/update-announcement'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::manageAnnouncement'
+    _title: 'Update Announcement'
+  requirements:
+    _role: 'administrator'
+
+storyfulls_admin.manage_users:
+  path: '/admin/dashboard/manage-users'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::manageUsers'
+    _title: 'Manage Users'
+  requirements:
+    _role: 'administrator'
+
+storyfulls_admin.manage_reviews:
+  path: '/admin/dashboard/manage-reviews'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::manageReviews'
+    _title: 'Manage Reviews'
+  requirements:
+    _role: 'administrator'
+
+storyfulls_admin.book_of_season:
+  path: '/admin/dashboard/book-of-season'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::bookOfSeason'
+    _title: 'Book of the Season'
+  requirements:
+    _role: 'administrator'
+
+storyfulls_admin.delete_book:
+  path: '/admin/dashboard/delete-book/{nid}'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::deleteBook'
+  requirements:
+    _role: 'administrator'
+    _csrf_token: 'TRUE'
+
+storyfulls_admin.delete_blog:
+  path: '/admin/dashboard/delete-blog/{nid}'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::deleteBlog'
+  requirements:
+    _role: 'administrator'
+    _csrf_token: 'TRUE'
+
+storyfulls_admin.delete_term:
+  path: '/admin/dashboard/delete-term/{tid}'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::deleteTerm'
+  requirements:
+    _role: 'administrator'
+    _csrf_token: 'TRUE'
+
+storyfulls_admin.delete_user:
+  path: '/admin/dashboard/delete-user/{uid}'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::deleteUser'
+  requirements:
+    _role: 'administrator'
+    _csrf_token: 'TRUE'

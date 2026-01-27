@@ -1,0 +1,70 @@
+storyfulls_young_writers.main:
+  path: '/young-writers'
+  defaults:
+    _controller: '\Drupal\storyfulls_young_writers\Controller\YoungWritersController::main'
+    _title: 'Young Writers Corner'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: TRUE
+
+storyfulls_young_writers.book_reviews:
+  path: '/young-writers/book-reviews'
+  defaults:
+    _controller: '\Drupal\storyfulls_young_writers\Controller\YoungWritersController::bookReviews'
+    _title: 'Book Reviews'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: TRUE
+
+storyfulls_young_writers.user_reviews:
+  path: '/young-writers/book-reviews/user/{user}'
+  defaults:
+    _controller: '\Drupal\storyfulls_young_writers\Controller\YoungWritersController::userReviews'
+    _title: 'User Reviews'
+  requirements:
+    _permission: 'access content'
+    user: \d+
+  options:
+    no_cache: TRUE
+
+storyfulls_young_writers.stories_poetry:
+  path: '/young-writers/stories-poetry'
+  defaults:
+    _controller: '\Drupal\storyfulls_young_writers\Controller\YoungWritersController::storiesPoetry'
+    _title: 'Stories & Poetry'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: TRUE
+
+storyfulls_young_writers.user_stories_poetry:
+  path: '/young-writers/stories-poetry/user/{user}'
+  defaults:
+    _controller: '\Drupal\storyfulls_young_writers\Controller\YoungWritersController::userStoriesPoetry'
+    _title: 'User Stories & Poetry'
+  requirements:
+    _permission: 'access content'
+    user: \d+
+  options:
+    no_cache: TRUE
+
+storyfulls_young_writers.junior_artists:
+  path: '/young-writers/junior-artists'
+  defaults:
+    _controller: '\Drupal\storyfulls_young_writers\Controller\YoungWritersController::juniorArtists'
+    _title: 'Junior Artists'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: TRUE
+
+storyfulls_young_writers.get_reviewers:
+  path: '/young-writers/api/get-reviewers'
+  defaults:
+    _controller: '\Drupal\storyfulls_young_writers\Controller\YoungWritersController::getBookReviewers'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: TRUE

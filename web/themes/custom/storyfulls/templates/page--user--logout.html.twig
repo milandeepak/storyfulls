@@ -1,0 +1,130 @@
+{#
+/**
+ * @file
+ * Template for Logout Confirmation Page.
+ */
+#}
+<!DOCTYPE html>
+<html{{ html_attributes }}>
+  <head>
+    <head-placeholder token="{{ placeholder_token }}">
+    <title>{{ head_title|safe_join(' | ') }}</title>
+    <css-placeholder token="{{ placeholder_token }}">
+    <js-placeholder token="{{ placeholder_token }}">
+  </head>
+  <body{{ attributes }}>
+    <a href="#main-content" class="visually-hidden focusable">
+      {{ 'Skip to main content'|t }}
+    </a>
+    
+    {# Header #}
+    <header class="site-header site-header--internal">
+      <div class="header-wave"></div>
+      <div class="header-top">
+        <div class="site-logo">
+          <a href="{{ path('<front>') }}">
+            <img src="{{ base_path ~ directory }}/images/storyfulls-logo.png" alt="{{ site_name }}">
+          </a>
+        </div>
+        <nav class="main-nav">
+          <ul class="main-navigation">
+            <li><a href="{{ path('<front>') }}">Home</a></li>
+            <li><a href="/books">Books</a></li>
+            <li><a href="/blogs">Blogs</a></li>
+            <li><a href="/our-readers">Our Readers</a></li>
+            <li><a href="/user/login">Login</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    {# Main Content #}
+    <main id="main-content">
+      <div class="user-login-page">
+        <div class="auth-container" style="max-width: 600px; text-align: center; background: rgba(255,255,255,0.95); padding: 3rem; border-radius: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.1);">
+          <h1 style="font-family: 'Roboto Slab', serif; color: #2C3E50; margin-bottom: 1rem; font-size: 32px;">Ready to leave?</h1>
+          <p style="font-family: 'Roboto', sans-serif; color: #666; margin-bottom: 2rem; font-size: 18px;">Are you sure you want to log out?</p>
+          
+          <div class="logout-form-wrapper">
+            {{ page.content }}
+          </div>
+        </div>
+      </div>
+    </main>
+
+    {# Footer #}
+    {% if page.footer %}
+      <footer>
+        {{ page.footer }}
+      </footer>
+    {% endif %}
+
+    <js-bottom-placeholder token="{{ placeholder_token }}">
+    
+    <style>
+      /* Styles for the logout form buttons */
+      .logout-form-wrapper form {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      .logout-form-wrapper .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        border: none;
+      }
+      
+      .logout-form-wrapper input[type="submit"] {
+        padding: 0.875rem 2.5rem;
+        border-radius: 12px;
+        font-family: 'Roboto Slab', serif;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+        background: #FF6B6B;
+        color: white;
+        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+      }
+      
+      .logout-form-wrapper input[type="submit"]:hover {
+        background: #FF5252;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(255, 107, 107, 0.4);
+      }
+      
+      .logout-form-wrapper a {
+        padding: 0.875rem 2.5rem;
+        border-radius: 12px;
+        font-family: 'Roboto Slab', serif;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        background: #fff;
+        color: #666;
+        border: 2px solid #E0E0E0;
+        display: inline-block;
+      }
+      
+      .logout-form-wrapper a:hover {
+        background: #F5F5F5;
+        color: #2C3E50;
+        border-color: #BDBDBD;
+      }
+      
+      /* Hide default page title if it appears in content */
+      .logout-form-wrapper h1 {
+        display: none;
+      }
+    </style>
+  </body>
+</html>

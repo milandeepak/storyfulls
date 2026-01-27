@@ -1,0 +1,367 @@
+{#
+/**
+ * @file
+ * Template for displaying all reviews by a specific user.
+ */
+#}
+
+<style>
+  .book-reviews-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+  
+  .reviews-header {
+    text-align: center;
+    margin-bottom: 5rem;
+  }
+  
+  .reviews-title {
+    font-family: 'Roboto Slab', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: #2C3E50;
+    margin: 0;
+    line-height: 1.2;
+  }
+  
+  .reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+  }
+  
+  .review-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-left: 140px;
+  }
+  
+  .review-book-cover {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    z-index: 2;
+    flex-shrink: 0;
+    padding: 15px;
+  }
+  
+  /* Alternating circle colors - light pastels */
+  .review-book-cover.color-1 {
+    background: #FFF4E6; /* Light peach/cream */
+  }
+  
+  .review-book-cover.color-2 {
+    background: #FFE4E8; /* Light pink */
+  }
+  
+  .review-book-cover.color-3 {
+    background: #E8F5E9; /* Light mint green */
+  }
+  
+  .review-book-cover.color-4 {
+    background: #FFF9C4; /* Light yellow */
+  }
+  
+  .review-book-cover.color-5 {
+    background: #E1F5FE; /* Light sky blue */
+  }
+  
+  .review-book-cover.color-6 {
+    background: #F3E5F5; /* Light lavender */
+  }
+  
+  .review-book-cover img {
+    max-width: 160px;
+    max-height: 220px;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .review-book-cover-placeholder {
+    width: 180px;
+    height: 240px;
+    background: #E0E0E0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 14px;
+    text-align: center;
+    padding: 2rem;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .review-content {
+    flex: 1;
+    background: linear-gradient(135deg, #E3F5FC 0%, #B3E5FC 100%);
+    border-radius: 24px;
+    padding: 2rem 3rem 2rem 160px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    position: relative;
+    z-index: 1;
+    transition: transform 0.2s, box-shadow 0.2s;
+    min-height: 180px;
+  }
+  
+  .review-content:hover {
+    transform: translateX(8px);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+  }
+  
+  .review-book-title {
+    font-family: 'Roboto Slab', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #2C3E50;
+    margin: 0 0 1rem 0;
+    line-height: 1.3;
+  }
+  
+  .review-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    color: #2C3E50;
+    line-height: 1.7;
+    margin: 0 0 1.5rem 0;
+  }
+  
+  .review-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .review-rating {
+    display: flex;
+    gap: 0.25rem;
+  }
+  
+  .review-rating .star {
+    color: #FFD700;
+    font-size: 20px;
+  }
+  
+  .review-date {
+    font-size: 14px;
+    color: #666;
+    font-style: italic;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .no-reviews {
+    background: white;
+    border-radius: 24px;
+    padding: 4rem 3rem;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+  
+  .no-reviews-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    color: #666;
+    margin: 0;
+  }
+
+  /* User Profile Card at Bottom */
+  .user-profile-card-bottom {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    margin-top: 5rem;
+  }
+
+  .user-card-content {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .user-avatar-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #E8F4FF 0%, #F0F9FF 100%);
+    padding: 0.5rem;
+  }
+
+  .user-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .user-info-text {
+    flex: 1;
+  }
+
+  .user-name-display {
+    font-family: 'Roboto Slab', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2C3E50;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .user-age-display {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    color: #666;
+    margin: 0;
+  }
+
+  .user-action-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-shrink: 0;
+  }
+
+  .follow-btn-user,
+  .view-profile-btn-user {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .follow-btn-user {
+    background: #E8F4FF;
+    color: #2C3E50;
+  }
+
+  .follow-btn-user:hover {
+    background: #D0E9FF;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .view-profile-btn-user {
+    background: #E8F4FF;
+    color: #2C3E50;
+  }
+
+  .view-profile-btn-user:hover {
+    background: #D0E9FF;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  @media (max-width: 768px) {
+    .review-card {
+      padding-left: 0;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .review-book-cover {
+      position: relative;
+      top: 0;
+      transform: none;
+      margin-bottom: -40px;
+      z-index: 2;
+    }
+    
+    .review-content {
+      padding: 100px 2rem 2rem 2rem;
+    }
+
+    .user-card-content {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .user-action-buttons {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .follow-btn-user,
+    .view-profile-btn-user {
+      width: 100%;
+    }
+  }
+</style>
+
+<main class="book-reviews-page">
+  <div class="reviews-header">
+    <h1 class="reviews-title">Kid Critic Corner: Where young readers share their thoughts</h1>
+  </div>
+  
+  {% if reviews %}
+    <div class="reviews-list">
+      {% for review in reviews %}
+        <div class="review-card">
+          <div class="review-book-cover color-{{ (loop.index0 % 6) + 1 }}">
+            {% if review.book_cover %}
+              <img src="{{ review.book_cover }}" alt="{{ review.book_title }}">
+            {% else %}
+              <div class="review-book-cover-placeholder">
+                No Cover
+              </div>
+            {% endif %}
+          </div>
+          
+          <div class="review-content">
+            <h2 class="review-book-title">{{ review.book_title }}</h2>
+            <p class="review-text">{{ review.review_text }}</p>
+            
+            <div class="review-meta">
+              {% if review.rating %}
+                <div class="review-rating">
+                  {% for i in 1..5 %}
+                    <span class="star">{{ i <= review.rating ? '★' : '☆' }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              <span class="review-date">{{ review.created|date('M d, Y') }}</span>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="no-reviews">
+      <p class="no-reviews-text">No book reviews yet. Start reading and share your thoughts!</p>
+    </div>
+  {% endif %}
+
+  {# User Profile Card at Bottom #}
+  <div class="user-profile-card-bottom">
+    <div class="user-card-content">
+      <div class="user-avatar-circle">
+        <img src="{{ user_avatar }}" alt="{{ user_name }}" class="user-avatar-img">
+      </div>
+      <div class="user-info-text">
+        <h3 class="user-name-display">{{ user_name }}</h3>
+        <p class="user-age-display">{{ user_age }}</p>
+      </div>
+      <div class="user-action-buttons">
+        <button class="follow-btn-user" onclick="alert('Follow functionality coming soon!')">Follow</button>
+        <a href="/user/{{ user_id }}" class="view-profile-btn-user">View Profile</a>
+      </div>
+    </div>
+  </div>
+</main>

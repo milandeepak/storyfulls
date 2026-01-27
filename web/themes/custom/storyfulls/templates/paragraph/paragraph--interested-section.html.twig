@@ -1,0 +1,79 @@
+{#
+/**
+ * @file
+ * Template for 'You Might Be Interested In' paragraph.
+ */
+#}
+
+<section class="interested-section">
+  <div class="container">
+    {# Section Header #}
+    <div class="section-header">
+      {% if content.field_section_title[0] %}
+        <h2 class="section-title">{{ content.field_section_title[0]['#context'].value }}</h2>
+      {% else %}
+        <h2 class="section-title">You Might Be Interested In</h2>
+      {% endif %}
+    </div>
+
+    {# Cards Grid #}
+    <div class="interested-cards-grid">
+      {# Card 1 - Young Readers #}
+      <div class="interested-card card-blue">
+        <div class="card-image">
+          {% if card1_image_url %}
+            <img src="{{ card1_image_url }}" alt="{{ card1_title }}" loading="lazy">
+          {% else %}
+            <img src="/themes/custom/storyfulls/images/youngreaders.png" alt="{{ card1_title }}" loading="lazy">
+          {% endif %}
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">{{ card1_title }}</h3>
+          <p class="card-description">{{ card1_description }}</p>
+          {% if card1_link %}
+            <a href="{{ card1_link }}" class="card-button">{{ card1_button_text }}</a>
+          {% else %}
+            <div class="card-button">{{ card1_button_text }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      {# Card 2 - Young Writers #}
+      <div class="interested-card card-green">
+        <div class="card-image">
+          {% if card2_image_url %}
+            <img src="{{ card2_image_url }}" alt="{{ card2_title }}" loading="lazy">
+          {% else %}
+            <img src="/themes/custom/storyfulls/images/youngwriters.jpg" alt="Young Writers" loading="lazy">
+          {% endif %}
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">{{ card2_title|default('Young Writers') }}</h3>
+          <p class="card-description">{{ card2_description|default('Share your creative work') }}</p>
+          {% set young_writers_link = card2_link ? card2_link : '/young-writers' %}
+          <a href="{{ young_writers_link }}" class="card-button">{{ card2_button_text|default('Explore') }}</a>
+        </div>
+      </div>
+
+      {# Card 3 - Events #}
+      <div class="interested-card card-pink">
+        <div class="card-image">
+          {% if card3_image_url %}
+            <img src="{{ card3_image_url }}" alt="{{ card3_title }}" loading="lazy">
+          {% else %}
+            <img src="/themes/custom/storyfulls/images/events.jpg" alt="{{ card3_title }}" loading="lazy">
+          {% endif %}
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">{{ card3_title }}</h3>
+          <p class="card-description">{{ card3_description }}</p>
+          {% if card3_link %}
+            <a href="{{ card3_link }}" class="card-button">{{ card3_button_text }}</a>
+          {% else %}
+            <div class="card-button">{{ card3_button_text }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

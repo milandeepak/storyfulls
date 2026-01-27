@@ -1,0 +1,222 @@
+{#
+/**
+ * @file
+ * Template for Books Listing Page.
+ */
+#}
+<!DOCTYPE html>
+<html{{ html_attributes }}>
+  <head>
+    <head-placeholder token="{{ placeholder_token }}">
+    <title>{{ head_title|safe_join(' | ') }}</title>
+    <css-placeholder token="{{ placeholder_token }}">
+    <js-placeholder token="{{ placeholder_token }}">
+    <style>
+      /* Force header transparency on Books Listing page */
+      .site-header--internal {
+        background-color: transparent !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+      /* Ensure main content doesn't have a background blocking it if set elsewhere */
+      body {
+        background-color: #fff;
+      }
+    </style>
+  </head>
+  <body{{ attributes }}>
+    <a href="#main-content" class="visually-hidden focusable">
+      {{ 'Skip to main content'|t }}
+    </a>
+    
+    {# Header #}
+    <header class="site-header site-header--internal">
+      {# Wavy pattern behind nav #}
+      <div class="header-wave"></div>
+
+      {# Top Navigation #}
+      <div class="header-top">
+        {# Logo #}
+        <div class="site-logo">
+          <a href="{{ path('<front>') }}">
+            <img src="{{ base_path ~ directory }}/images/storyfulls-logo.png" alt="{{ site_name }}">
+          </a>
+        </div>
+
+        {# Main Navigation #}
+        <nav class="main-nav">
+          <ul class="main-navigation">
+            <li><a href="{{ path('<front>') }}">Home</a></li>
+            <li><a href="/books">Books</a></li>
+            <li><a href="/blogs">Blogs</a></li>
+            <li><a href="/our-readers">Our Readers</a></li>
+            {% if logged_in and is_admin %}
+              <li><a href="/admin/dashboard">Dashboard</a></li>
+            {% endif %}
+            {% if logged_in %}
+              <li class="user-menu-item">
+                <a href="#" class="user-menu-toggle">
+                  <span class="user-greeting">Profile</span>
+                  <svg class="dropdown-icon" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                    <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </a>
+                <ul class="user-dropdown">
+                  <li><a href="/user">View Profile</a></li>
+                  <li><a href="/user/{{ user_id }}/wishlist">My Wishlist</a></li>
+                  <li><a href="/user/{{ user_id }}/edit">Update Profile</a></li>
+                  <li class="dropdown-divider"></li>
+                  <li class="logout-item"><a href="/user/logout">Logout</a></li>
+                </ul>
+              </li>
+            {% else %}
+              <li><a href="/user/login">Login</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    {# Main Content #}
+    <main id="main-content">
+      <div class="books-listing-page">
+        {# Hero Section with Banner #}
+        <section class="books-hero">
+          <div class="hero-banner">
+            <img src="{{ banner_url|default('/themes/custom/storyfulls/images/bannerforbookspage.png') }}" alt="{{ banner_alt|default('So Many Books So Little Time') }}" loading="eager">
+          </div>
+        </section>
+
+        {# Age Group Filters #}
+        <section class="age-filters-section">
+          <div class="container">
+            <div class="age-group-selectors">
+              <div class="age-group-item active" data-age="0-2">
+                <div class="age-avatar">
+                  <img src="/themes/custom/storyfulls/images/0-2.jpg" alt="0-2 years" loading="lazy">
+                </div>
+                <span class="age-label">0-2</span>
+              </div>
+
+              <div class="age-group-item" data-age="3-5">
+                <div class="age-avatar">
+                  <img src="/themes/custom/storyfulls/images/3-5.jpg" alt="3-5 years" loading="lazy">
+                </div>
+                <span class="age-label">3-5</span>
+              </div>
+
+              <div class="age-group-item" data-age="6-8">
+                <div class="age-avatar">
+                  <img src="/themes/custom/storyfulls/images/6-8.jpg" alt="6-8 years" loading="lazy">
+                </div>
+                <span class="age-label">6-8</span>
+              </div>
+
+              <div class="age-group-item" data-age="9-12">
+                <div class="age-avatar">
+                  <img src="/themes/custom/storyfulls/images/9-12.jpg" alt="9-12 years" loading="lazy">
+                </div>
+                <span class="age-label">9-12</span>
+              </div>
+
+              <div class="age-group-item" data-age="13-16">
+                <div class="age-avatar">
+                  <img src="/themes/custom/storyfulls/images/13-16.jpg" alt="13-16 years" loading="lazy">
+                </div>
+                <span class="age-label">13-16</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {# Search and Filter Section #}
+        <section class="search-filter-section">
+          <div class="container">
+            <div class="search-filter-controls">
+              <input type="text" id="book-search" class="search-input" placeholder="Ex: Nicola Edwards">
+              <select id="genre-filter" class="genre-select">
+                <option value="">Choose Genre</option>
+                {% if genres %}
+                  {% for genre in genres %}
+                    <option value="{{ genre.id }}">{{ genre.name }}</option>
+                  {% endfor %}
+                {% endif %}
+              </select>
+              <button id="apply-filters" class="apply-button">Apply</button>
+            </div>
+          </div>
+        </section>
+
+        {# Books Grid #}
+        <section class="books-grid-section">
+          <div class="container">
+            <div id="books-grid" class="books-grid">
+              {% if books %}
+                {% for book in books %}
+                  <div class="book-item" 
+                       data-age="{{ book.age_group }}" 
+                       data-genre="{{ book.genre_ids|join(',') }}"
+                       data-title="{{ book.title|lower }}"
+                       data-author="{{ book.author|lower }}">
+                    <a href="{{ book.url }}" class="book-link">
+                      <div class="book-cover-wrapper">
+                        {% if book.cover_url %}
+                          <img src="{{ book.cover_url }}" alt="{{ book.title }}" class="book-cover" loading="lazy">
+                        {% else %}
+                          <div class="book-cover-placeholder">No Cover</div>
+                        {% endif %}
+                        {% if book.rating %}
+                          <div class="book-rating">⭐ {{ book.rating }}</div>
+                        {% endif %}
+                      </div>
+                      <h3 class="book-title">{{ book.title }}</h3>
+                    </a>
+                  </div>
+                {% endfor %}
+              {% else %}
+                <p class="no-books">No books available yet.</p>
+              {% endif %}
+            </div>
+            
+            {# Pagination Controls #}
+            <div id="pagination-controls" class="pagination-controls"></div>
+            
+            <div id="no-results" class="no-results" style="display: none;">
+              <p>No books found matching your criteria.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    {# Footer #}
+    {% if page.footer %}
+      <footer>
+        {{ page.footer }}
+      </footer>
+    {% endif %}
+
+    <js-bottom-placeholder token="{{ placeholder_token }}">
+    
+    {# Inline script to ensure age filters work #}
+    <script>
+      (function() {
+        console.log('Inline script loaded');
+        
+        // Wait for DOM and jQuery
+        if (typeof jQuery !== 'undefined') {
+          jQuery(document).ready(function($) {
+            console.log('jQuery ready, age items:', $('.age-group-item').length);
+            
+            // Test click handler
+            $('.age-group-item').on('click', function() {
+              console.log('Inline click handler triggered for:', $(this).data('age'));
+            });
+          });
+        } else {
+          console.error('jQuery not loaded!');
+        }
+      })();
+    </script>
+  </body>
+</html>

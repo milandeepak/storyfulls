@@ -1,0 +1,84 @@
+{#
+/**
+ * @file
+ * Template for User Stories & Poetry page.
+ */
+#}
+
+<div class="young-writers-user-stories-page">
+  {# Banner Section #}
+  <div class="young-writers-banner">
+    <img src="/themes/custom/storyfulls/images/storypoetrypagebanner.jpg" alt="Stories & Poetry" class="banner-image">
+    <div class="banner-overlay">
+      <h1 class="banner-title">Stories & Poetry</h1>
+      <p class="banner-subtitle">Explore the creative world of {{ user_name }}</p>
+    </div>
+  </div>
+
+  {# Share Your Work Button #}
+  {% if is_owner %}
+    <div class="share-work-section-centered">
+      <a href="/node/add/story_poetry" class="share-work-btn-large">Share your work</a>
+    </div>
+  {% endif %}
+
+  {# Posts List #}
+  <div class="posts-list-container">
+    {% if posts is empty %}
+      <div class="no-posts-message">
+        <p>This user hasn't posted any stories or poetry yet.</p>
+      </div>
+    {% else %}
+      {% for post in posts %}
+        <div class="post-item">
+          <div class="post-divider"></div>
+          <div class="post-content-wrapper">
+            {% if post.image %}
+              <div class="post-image-container">
+                <img src="{{ post.image }}" alt="{{ post.title }}" class="post-image">
+                <div class="post-actions-overlay">
+                  <button class="action-btn like-btn">
+                    <img src="/themes/custom/storyfulls/images/heart-icon.png" alt="Like">
+                    <span>126</span>
+                  </button>
+                  <button class="action-btn share-btn">
+                    <img src="/themes/custom/storyfulls/images/share-icon.png" alt="Share">
+                    <span>12</span>
+                  </button>
+                </div>
+              </div>
+            {% endif %}
+            
+            <div class="post-text-content {% if not post.image %}full-width{% endif %}">
+              <h2 class="post-title">✧ {{ post.title }} ✧</h2>
+              <div class="post-body">
+                {{ post.content|raw }}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  {# User Profile Section #}
+  {% if not is_owner %}
+    <div class="user-profile-card-bottom">
+      <div class="user-card-content">
+        <div class="user-avatar-circle">
+          <img src="{{ user_avatar }}" alt="{{ user_name }}" class="user-avatar-img">
+        </div>
+        
+        <div class="user-info-text">
+          <h3 class="user-name-display">{{ user_name }}</h3>
+          <p class="user-age-display">{{ user_age }}</p>
+        </div>
+        
+        <div class="user-action-buttons">
+          <button class="follow-btn-user">Follow</button>
+          <a href="/user/{{ user_id }}" class="view-profile-btn-user">View Profile</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>

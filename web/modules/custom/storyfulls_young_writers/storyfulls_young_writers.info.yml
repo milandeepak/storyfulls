@@ -1,0 +1,8 @@
+name: 'Storyfulls Young Writers'
+description: 'Provides functionality for the Young Writers section including book reviews, stories, poetry, and junior artists.'
+type: module
+core_version_requirement: ^11
+package: 'Storyfulls'
+dependencies:
+  - drupal:user
+  - storyfulls_profile

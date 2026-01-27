@@ -1,0 +1,152 @@
+/* User Dropdown Menu Styles */
+.user-menu-item {
+  position: relative;
+}
+
+.user-menu-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+  background: transparent;
+  color: #fff;
+  text-decoration: none;
+}
+
+.user-menu-toggle:hover {
+  border-color: #fff;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-greeting {
+  font-family: 'Roboto Slab', serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 100%;
+  letter-spacing: 0%;
+}
+
+.dropdown-icon {
+  transition: transform 0.3s ease;
+}
+
+.user-menu-item.open .dropdown-icon {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  min-width: 220px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  list-style: none;
+  padding: 0.5rem 0;
+  margin-left: 0;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.user-menu-item.open .user-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.user-dropdown li {
+  padding: 0;
+  margin: 0;
+}
+
+.user-dropdown li a {
+  display: block;
+  padding: 0.75rem 1.25rem;
+  color: #2C3E50;
+  font-family: 'Roboto Slab', serif;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.user-dropdown li a:hover {
+  background: #F8F9FA;
+  color: #4DD0E1;
+}
+
+/* Divider before logout */
+.dropdown-divider {
+  height: 1px;
+  background: #E0E0E0;
+  margin: 0.5rem 0;
+  padding: 0 !important;
+}
+
+/* Logout link special styling */
+.logout-item a {
+  color: #E74C3C !important;
+}
+
+.logout-item a:hover {
+  background: #FEF5F5 !important;
+  color: #C0392B !important;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .user-greeting {
+    font-size: 20px;
+  }
+  
+  .user-dropdown {
+    right: auto;
+    left: 0;
+    min-width: 160px;
+  }
+}
+
+/* Internal pages styling - match home page style */
+.site-header--internal .user-menu-toggle {
+  color: #333;
+  border: 2px solid rgba(51, 51, 51, 0.8);
+  background: transparent;
+}
+
+.site-header--internal .user-menu-toggle:hover {
+  border-color: #333;
+  background: rgba(51, 51, 51, 0.1);
+}
+
+.site-header--internal .user-greeting {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Ensure dropdown appears above other content */
+.site-header {
+  position: relative;
+  z-index: 100;
+  overflow: visible !important; /* Override overflow:hidden from header.css */
+}
+
+.site-header .header-top {
+  overflow: visible !important; /* Allow dropdown to overflow */
+}
+
+.main-navigation {
+  position: relative;
+  z-index: 101;
+  overflow: visible !important;
+}

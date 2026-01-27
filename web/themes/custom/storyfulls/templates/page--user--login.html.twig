@@ -1,0 +1,51 @@
+{#
+/**
+ * @file
+ * Template for Login/Register Page.
+ */
+#}
+{{ attach_library('storyfulls/auth') }}
+
+<!DOCTYPE html>
+<html{{ html_attributes }}>
+  <head>
+    <head-placeholder token="{{ placeholder_token }}">
+    <title>{{ head_title|safe_join(' | ') }}</title>
+    <css-placeholder token="{{ placeholder_token }}">
+    <js-placeholder token="{{ placeholder_token }}">
+  </head>
+  <body{{ attributes.addClass('user-login-page') }}>
+    <a href="#main-content" class="visually-hidden focusable">
+      {{ 'Skip to main content'|t }}
+    </a>
+    
+    <main id="main-content">
+      <div class="login-container">
+        <div class="login-two-column">
+          {# Left side - Book image #}
+          <div class="login-image-side">
+            <img src="/themes/custom/storyfulls/images/loginpagesidebgremoved.png?v=2" alt="Stack of colorful books" />
+          </div>
+          
+          {# Right side - Login form #}
+          <div class="login-form-side">
+            <div class="login-welcome">
+              <h2>Hello again!</h2>
+              <p>Ready for your reading adventure?</p>
+            </div>
+            
+            <div class="login-form">
+              {{ page.content }}
+            </div>
+            
+            <div class="login-footer-text">
+              Don't have an account? <a href="/user/register">Create an account</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <js-bottom-placeholder token="{{ placeholder_token }}">
+  </body>
+</html>

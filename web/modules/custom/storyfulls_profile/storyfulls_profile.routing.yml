@@ -1,0 +1,180 @@
+storyfulls_profile.update:
+  path: '/storyfulls/profile/update'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\ProfileUpdateController::updateProfile'
+    _title: 'Update Profile'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: TRUE
+
+storyfulls_profile.upload_picture:
+  path: '/storyfulls/profile/upload-picture'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\ProfileUpdateController::uploadPicture'
+    _title: 'Upload Picture'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: TRUE
+
+storyfulls_profile.update_favorites:
+  path: '/storyfulls/profile/update-favorites'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\ProfileUpdateController::updateFavorites'
+    _title: 'Update Favorites'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: TRUE
+
+storyfulls_profile.update_weeks_pick:
+  path: '/storyfulls/profile/update-weeks-pick'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\ProfileUpdateController::updateWeeksPick'
+    _title: 'Update Weeks Pick'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: TRUE
+
+storyfulls_profile.update_book_list:
+  path: '/storyfulls/profile/update-book-list'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\ProfileUpdateController::updateBookList'
+    _title: 'Update Book List'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: TRUE
+
+storyfulls_profile.search_books:
+  path: '/storyfulls/book/search'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\ProfileUpdateController::searchBooks'
+    _title: 'Search Books'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: TRUE
+
+storyfulls_profile.my_book_reviews:
+  path: '/user/{user}/book-reviews'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\BookReviewController::myReviews'
+    _title: 'Book Reviews'
+  requirements:
+    _permission: 'access content'
+    user: \d+
+  options:
+    no_cache: TRUE
+
+storyfulls_profile.add_to_wishlist:
+  path: '/storyfulls/wishlist/add'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\WishlistController::addToWishlist'
+    _title: 'Add to Wishlist'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: TRUE
+
+storyfulls_profile.my_wishlist:
+  path: '/user/{user}/wishlist'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\WishlistController::myWishlist'
+    _title: 'My Wishlist'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    user: \d+
+  options:
+    no_cache: TRUE
+
+storyfulls_profile.add_to_books_read:
+  path: '/storyfulls/books-read/add'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\WishlistController::addToBooksRead'
+    _title: 'Add to Books Read'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: TRUE
+
+storyfulls_profile.my_books_read:
+  path: '/user/{user}/books-read'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\WishlistController::myBooksRead'
+    _title: 'Books I''ve Read'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    user: \d+
+  options:
+    no_cache: TRUE
+
+storyfulls_profile.write_review:
+  path: '/book/{book}/write-review'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\BookReviewController::writeReview'
+    _title: 'Write a Review'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    book: \d+
+  options:
+    no_cache: TRUE
+    parameters:
+      book:
+        type: entity:node
+
+storyfulls_profile.autocomplete_authors:
+  path: '/storyfulls/autocomplete/authors'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\AutocompleteController::authors'
+  requirements:
+    _access: 'TRUE'
+
+storyfulls_profile.autocomplete_books:
+  path: '/storyfulls/autocomplete/books'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\AutocompleteController::books'
+  requirements:
+    _access: 'TRUE'
+
+storyfulls_profile.edit_profile:
+  path: '/user/edit-profile'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\ProfileEditController::editProfile'
+    _title: 'Edit Profile'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: TRUE
+
+storyfulls_profile.edit_favorite_authors:
+  path: '/user/edit-favorite-authors'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\EditFavoritesController::editAuthors'
+    _title: 'Edit Favorite Authors'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: TRUE
+
+storyfulls_profile.edit_favorite_books:
+  path: '/user/edit-favorite-books'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\EditFavoritesController::editBooks'
+    _title: 'Edit Favorite Books'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: TRUE
+
+
+storyfulls_profile.users_page:
+  path: '/our-readers'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\UsersPageController::listUsers'
+    _title: 'Our Readers'
+  requirements:
+    _permission: 'access content'
+

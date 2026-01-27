@@ -1,0 +1,95 @@
+{#
+/**
+ * @file
+ * Edit Favorite Authors Template
+ */
+#}
+<div class="edit-favorites-page">
+  <main class="edit-favorites-main">
+    <div class="edit-favorites-container">
+      
+      {# Page Header #}
+      <div class="edit-favorites-header">
+        <div class="header-icon">
+          <img src="/themes/custom/storyfulls/images/sideimageforfavoriteauthors.png" alt="Authors Icon" class="page-icon">
+        </div>
+        <h1 class="edit-favorites-title">Edit Favorite Authors</h1>
+        <p class="edit-favorites-subtitle">Add up to 5 of your favorite authors. Drag to reorder!</p>
+      </div>
+
+      {# Edit Form #}
+      <form method="post" class="edit-favorites-form" id="editAuthorsForm">
+        
+        <input type="hidden" name="authors_data" id="authorsData">
+        
+        {# Authors List #}
+        <div class="favorites-list-section">
+          <div class="favorites-sortable" id="authorsList">
+            
+            {% if favorite_authors %}
+              {% for author in favorite_authors %}
+                <div class="favorite-item-row" data-id="{{ author.id }}">
+                  <span class="drag-handle">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M9 5H11V7H9V5ZM13 5H15V7H13V5ZM9 11H11V13H9V11ZM13 11H15V13H13V11ZM9 17H11V19H9V17ZM13 17H15V19H13V17Z" fill="currentColor"/>
+                    </svg>
+                  </span>
+                  <input type="text" class="favorite-input" value="{{ author.name }}" placeholder="Author name">
+                  <button type="button" class="remove-favorite-btn" aria-label="Remove">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  </button>
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="favorite-item-row">
+                <span class="drag-handle">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 5H11V7H9V5ZM13 5H15V7H13V5ZM9 11H11V13H9V11ZM13 11H15V13H13V11ZM9 17H11V19H9V17ZM13 17H15V19H13V17Z" fill="currentColor"/>
+                  </svg>
+                </span>
+                <input type="text" class="favorite-input" placeholder="Author name">
+                <button type="button" class="remove-favorite-btn" aria-label="Remove">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            {% endif %}
+            
+          </div>
+          
+          {# Add Button #}
+          <button type="button" class="add-favorite-btn" id="addAuthorBtn">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>Add Another Author</span>
+          </button>
+          
+          <p class="favorites-hint">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="#4DD0E1" stroke-width="2"/>
+              <path d="M8 5V8M8 11H8.01" stroke="#4DD0E1" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            You can add up to 5 favorite authors. Drag the rows to reorder them.
+          </p>
+        </div>
+
+        {# Form Actions #}
+        <div class="form-actions">
+          <a href="/user" class="btn btn-cancel">Cancel</a>
+          <button type="submit" class="btn btn-save">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M15 5L7 13L3 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Save Changes</span>
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </main>
+</div>

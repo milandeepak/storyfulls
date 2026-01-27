@@ -1,0 +1,5 @@
+name: 'Storyfulls Admin Dashboard'
+description: 'Admin dashboard for managing books, blogs, users and other content'
+type: module
+core_version_requirement: ^10 || ^11
+package: 'Storyfulls'

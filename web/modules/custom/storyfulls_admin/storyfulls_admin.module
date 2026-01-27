@@ -1,0 +1,83 @@
+<?php
+
+/**
+ * @file
+ * Storyfulls admin dashboard module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function storyfulls_admin_theme($existing, $type, $theme, $path) {
+  return [
+    'admin_dashboard' => [
+      'variables' => [],
+      'template' => 'admin-dashboard',
+    ],
+    'manage_books' => [
+      'variables' => [
+        'books' => [],
+        'current_name' => NULL,
+        'current_status' => NULL,
+      ],
+      'template' => 'manage-books',
+    ],
+    'manage_blogs' => [
+      'variables' => [
+        'blogs' => [],
+        'current_name' => NULL,
+        'current_status' => NULL,
+      ],
+      'template' => 'manage-blogs',
+    ],
+    'manage_taxonomy' => [
+      'variables' => [
+        'terms' => [],
+        'vocabulary' => '',
+        'label' => '',
+        'singular_label' => '',
+        'current_name' => NULL,
+      ],
+      'template' => 'manage-taxonomy',
+    ],
+    'manage_write_ups' => [
+      'variables' => [
+        'writeups' => [],
+        'current_name' => NULL,
+        'current_status' => NULL,
+      ],
+      'template' => 'manage-write-ups',
+    ],
+    'manage_events' => [
+      'variables' => [
+        'events' => [],
+        'current_name' => NULL,
+        'current_status' => NULL,
+      ],
+      'template' => 'manage-events',
+    ],
+    'manage_announcement' => [
+      'variables' => [],
+      'template' => 'manage-announcement',
+    ],
+    'manage_users' => [
+      'variables' => [
+        'users' => [],
+        'current_name' => NULL,
+      ],
+      'template' => 'manage-users',
+    ],
+    'manage_reviews' => [
+      'variables' => [
+        'reviews' => [],
+      ],
+      'template' => 'manage-reviews',
+    ],
+    'book_of_season' => [
+      'variables' => [
+        'books' => [],
+      ],
+      'template' => 'book-of-season',
+    ],
+  ];
+}

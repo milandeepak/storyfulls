@@ -1,0 +1,17 @@
+name: Storyfulls
+type: theme
+description: 'Custom theme for Storyfulls children book platform'
+core_version_requirement: ^10 || ^11
+base theme: false
+
+regions:
+  header: Header
+  primary_menu: 'Primary menu'
+  content: Content
+  sidebar_first: 'Sidebar first'
+  footer: Footer
+
+libraries:
+  - storyfulls/global-styling
+
+logo: images/storyfulls-logo.png

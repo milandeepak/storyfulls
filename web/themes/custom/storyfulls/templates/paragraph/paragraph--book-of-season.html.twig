@@ -1,0 +1,42 @@
+{#
+/**
+ * @file
+ * Template for Book of the Season Section paragraph.
+ */
+#}
+
+<section class="book-of-season-section">
+  <div class="container">
+    <div class="season-book-item">
+      {# Circular Book Cover (Left, overlapping) #}
+      <div class="season-book-cover-circle">
+        {% if book_cover_url %}
+          <img src="{{ book_cover_url }}" alt="{{ book_title }}" class="season-book-cover-img">
+        {% else %}
+          <div class="season-book-placeholder">Book Cover</div>
+        {% endif %}
+      </div>
+
+      {# Book Details Content Box (Right, with gradient background) #}
+      <div class="season-book-content">
+        <h2 class="season-content-title">Book of the Season</h2>
+        
+        {% if book_title %}
+          <h3 class="season-book-title">{{ book_title }}{% if book_author %} by {{ book_author }}{% endif %}</h3>
+        {% endif %}
+        
+        {% if book_description %}
+          <div class="season-book-description season-truncate">
+            {{ book_description|striptags }}
+          </div>
+        {% endif %}
+        
+        <div class="season-actions">
+          {% if book_url %}
+            <a href="{{ book_url }}" class="season-read-more">Read more</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

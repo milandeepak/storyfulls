@@ -1,0 +1,210 @@
+{#
+/**
+ * @file
+ * Template for displaying user's books read.
+ *
+ * Available variables:
+ * - user_name: The name of the user.
+ * - user_id: The user ID.
+ * - books_read: Array of books read data.
+ * - books_read_count: Total number of books read.
+ */
+#}
+{{ attach_library('storyfulls/user-profile') }}
+{{ attach_library('storyfulls/global-styling') }}
+
+<style>
+  .books-read-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  .books-read-header {
+    background: white;
+    border-radius: 24px;
+    padding: 2rem 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .books-read-title {
+    font-family: 'Roboto Slab', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #2C3E50;
+    margin: 0;
+  }
+  
+  .books-read-count {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    color: #666;
+    background: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%);
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  
+  .books-read-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2rem;
+  }
+  
+  .books-read-book-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .books-read-book-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+  }
+  
+  .books-read-book-cover {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .books-read-book-cover-placeholder {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: linear-gradient(135deg, #E0E0E0 0%, #BDBDBD 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 14px;
+    text-align: center;
+  }
+  
+  .books-read-book-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .books-read-book-title {
+    font-family: 'Roboto Slab', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #2C3E50;
+    line-height: 1.3;
+    margin: 0;
+  }
+  
+  .books-read-book-author {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+  }
+  
+  .no-books-read {
+    background: white;
+    border-radius: 24px;
+    padding: 3rem;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+  
+  .no-books-read-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    color: #666;
+    margin: 0 0 1.5rem 0;
+  }
+  
+  .browse-books-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #F48FB1 0%, #EC407A 100%);
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 20px;
+    text-decoration: none;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(244, 143, 177, 0.3);
+  }
+  
+  .browse-books-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(244, 143, 177, 0.4);
+    color: white;
+  }
+  
+  .back-link {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    background: white;
+    border-radius: 20px;
+    text-decoration: none;
+    color: #2C3E50;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+  }
+  
+  .back-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+</style>
+
+<main class="books-read-page">
+  <a href="/user/{{ user_id }}" class="back-link">← Back to Profile</a>
+  
+  <div class="books-read-header">
+    <h1 class="books-read-title">Books I've Read</h1>
+    <span class="books-read-count">{{ books_read_count }} book{{ books_read_count != 1 ? 's' : '' }}</span>
+  </div>
+  
+  {% if books_read %}
+    <div class="books-read-grid">
+      {% for book in books_read %}
+        <a href="{{ book.url }}" class="books-read-book-card">
+          {% if book.cover %}
+            <img src="{{ book.cover }}" alt="{{ book.title }}" class="books-read-book-cover">
+          {% else %}
+            <div class="books-read-book-cover-placeholder">
+              No Cover
+            </div>
+          {% endif %}
+          
+          <div class="books-read-book-info">
+            <h3 class="books-read-book-title">{{ book.title }}</h3>
+            {% if book.author %}
+              <p class="books-read-book-author">by {{ book.author }}</p>
+            {% endif %}
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="no-books-read">
+      <p class="no-books-read-text">You haven't marked any books as read yet. Start exploring and track your reading journey!</p>
+      <a href="/books" class="browse-books-btn">Browse Books</a>
+    </div>
+  {% endif %}
+</main>

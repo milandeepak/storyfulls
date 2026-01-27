@@ -1,0 +1,56 @@
+{#
+/**
+ * @file
+ * Template for the Book Reviews page showing list of users.
+ */
+#}
+
+<div class="young-writers-book-reviews-page">
+  {# Banner Section #}
+  <div class="young-writers-section-banner">
+    <h1 class="section-title">Book Reviews</h1>
+    <p class="section-subtitle">Share the reviews of your favourite children's books here</p>
+  </div>
+
+  {# Share Your Work Button #}
+  <div class="share-work-section">
+    <a href="/user/login" class="share-work-btn">Share your work</a>
+  </div>
+
+  {# Users Grid #}
+  <div class="users-grid">
+    {% if users|length > 0 %}
+      {% for user in users %}
+        <div class="user-card">
+          <a href="/young-writers/book-reviews/user/{{ user.id }}" class="user-card-link">
+            <div class="user-avatar">
+              <img src="{{ user.picture }}" alt="{{ user.name }}">
+            </div>
+            <div class="user-info">
+              <h3 class="user-name">{{ user.name }}</h3>
+              <p class="review-count">{{ user.review_count }} post{{ user.review_count != 1 ? 's' : '' }}</p>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="no-reviews">
+        <p>No reviews have been posted yet. Be the first to share your thoughts!</p>
+      </div>
+    {% endif %}
+  </div>
+
+  {# Pagination placeholder for future #}
+  <div class="pagination-controls">
+    <button class="prev-btn" disabled>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button class="next-btn" disabled>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+</div>

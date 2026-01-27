@@ -1,0 +1,104 @@
+{#
+/**
+ * @file
+ * Template for the Events page.
+ */
+#}
+<style>
+  /* Force header transparency on this page */
+  .site-header--internal {
+    background-color: transparent !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  /* Ensure main content doesn't have a background blocking it if set elsewhere */
+  body {
+    background-color: #fff;
+  }
+</style>
+
+<div class="events-page-wrapper">
+  {# Banner Section #}
+  <div class="events-banner">
+    <img src="{{ banner_url|default('/themes/custom/storyfulls/images/eventspagebanner.png') }}" alt="{{ banner_alt|default('Discover events for young readers') }}" class="events-banner-img">
+  </div>
+
+  <div class="events-container">
+    {# Filter Section #}
+    <div class="events-filter-bar">
+      <div class="dropdown-wrapper">
+        <select class="location-dropdown">
+          <option value="">Location</option>
+          <option value="online">Online</option>
+          <option value="in-person">In Person</option>
+        </select>
+      </div>
+    </div>
+
+    {# Events Grid #}
+    <div class="events-grid">
+      {% if events %}
+        {% for event in events %}
+          <div class="event-card">
+            <div class="event-card-image-wrapper">
+              {% if event.image_url %}
+                <img src="{{ event.image_url }}" alt="{{ event.title }}" class="event-card-img">
+              {% else %}
+                <img src="/themes/custom/storyfulls/images/eventcardimage.png" alt="{{ event.title }}" class="event-card-img">
+              {% endif %}
+            </div>
+            <div class="event-card-content">
+              <h3 class="event-title">{{ event.title }}</h3>
+              <div class="event-description">
+                {{ event.description|striptags|slice(0, 150) }}...
+              </div>
+              
+              <div class="event-details-row">
+                <div class="event-detail-item">
+                  <span class="detail-label">Location</span>
+                  <span class="detail-value">{{ event.location }}</span>
+                </div>
+                <div class="event-detail-item">
+                  <span class="detail-label">Age</span>
+                  <span class="detail-value">{{ event.age_group }}</span>
+                </div>
+                <a href="{{ event.url }}" class="event-view-btn">
+                  <img src="/themes/custom/storyfulls/images/eventcardviewdetailsarrow.png" alt="View Details">
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        {# Dummy Content for Prototype #}
+        {% for i in 1..6 %}
+          <div class="event-card">
+            <div class="event-card-image-wrapper">
+              <img src="/themes/custom/storyfulls/images/eventcardimage.png" alt="Event Image" class="event-card-img">
+            </div>
+            <div class="event-card-content">
+              <h3 class="event-title">IBBY International Children's Book Day 2025</h3>
+              <div class="event-description">
+                This special day was established by IBBY to promote the love of reading and to inspire people around the world to celebrate children's books.
+              </div>
+              
+              <div class="event-details-row">
+                <div class="event-detail-item">
+                  <span class="detail-label">Location</span>
+                  <span class="detail-value">Online</span>
+                </div>
+                <div class="event-detail-item">
+                  <span class="detail-label">Age</span>
+                  <span class="detail-value">Above 2 yr</span>
+                </div>
+                <a href="#" class="event-view-btn">
+                  <img src="/themes/custom/storyfulls/images/eventcardviewdetailsarrow.png" alt="View Details">
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,4 @@
+services:
+  storyfulls_banners.banner_service:
+    class: Drupal\storyfulls_banners\BannerService
+    arguments: ['@entity_type.manager']

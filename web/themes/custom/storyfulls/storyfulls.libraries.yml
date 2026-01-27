@@ -1,0 +1,148 @@
+global-styling:
+  css:
+    theme:
+      css/base.css: {}
+      css/header.css: {}
+      css/footer.css: {}
+      css/books-by-age.css: {}
+      css/book-detail.css: {}
+      css/community-picks.css: {}
+      css/interested-section.css: {}
+      css/books-by-genres.css: {}
+      css/book-of-season.css: {}
+      css/user-dropdown.css: {}
+  js:
+    js/main.js: {}
+    js/mobile-menu.js: {}
+    js/books-by-age.js: {}
+    js/books-by-genres.js: {}
+    js/book-detail.js: {}
+    js/book-detail-actions.js: {}
+    js/user-dropdown.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/once
+
+books-listing:
+  css:
+    theme:
+      css/books-listing.css: {}
+  js:
+    js/books-listing.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+
+user-profile:
+  css:
+    theme:
+      css/user-profile-new.css: {}
+  js:
+    js/user-profile-modal.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.ajax
+    - core/jquery.once
+    - core/jquery.ui.sortable
+    - core/jquery.ui.autocomplete
+
+auth:
+  css:
+    theme:
+      css/auth.css: {}
+  js:
+    js/auth.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+    - core/drupal.autocomplete
+    - core/jquery.ui.autocomplete
+
+young-writers:
+  css:
+    theme:
+      css/young-writers.css: {}
+  js:
+    js/young-writers.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+
+admin-dashboard:
+  css:
+    theme:
+      css/admin-dashboard.css: {}
+  dependencies:
+    - core/drupal
+
+write-review:
+  css:
+    theme:
+      css/write-review.css: {}
+  js:
+    js/write-review.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+
+events-page:
+  css:
+    theme:
+      css/events-page.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+
+event-detail:
+  css:
+    theme:
+      css/event-detail.css: {}
+  dependencies:
+    - core/drupal
+
+blogs-page:
+  css:
+    theme:
+      css/blogs-page.css: {}
+  dependencies:
+    - core/drupal
+
+blog-detail:
+  css:
+    theme:
+      css/blog-detail.css: {}
+  dependencies:
+    - core/drupal
+
+edit-profile:
+  css:
+    theme:
+      css/edit-profile.css: {}
+  js:
+    js/edit-profile.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+
+edit-favorites:
+  css:
+    theme:
+      css/edit-favorites.css: {}
+  js:
+    js/edit-favorites.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+    - core/sortable
+    - core/drupal.autocomplete
+    - core/jquery.ui.autocomplete
+
+

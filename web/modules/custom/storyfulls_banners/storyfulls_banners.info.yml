@@ -1,0 +1,8 @@
+name: Storyfulls Banners
+type: module
+description: 'Manages page banners for Events, Blog, and Books pages'
+core_version_requirement: ^10 || ^11
+package: Custom
+dependencies:
+  - drupal:file
+  - drupal:image

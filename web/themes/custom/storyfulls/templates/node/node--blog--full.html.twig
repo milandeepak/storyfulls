@@ -1,0 +1,54 @@
+{#
+/**
+ * @file
+ * Theme override for blog nodes in full display mode.
+ */
+#}
+
+<article{{ attributes.addClass('blog-detail-page') }}>
+  <div class="blog-detail-container">
+    <div class="blog-content-box">
+      {{ title_prefix }}
+      <h1 class="blog-detail-title">{{ label }}</h1>
+      {{ title_suffix }}
+
+      <div class="blog-image-section">
+        <div class="blog-feature-wrap">
+          <img src="{{ blog_meta.image_url }}" alt="{{ label }}">
+        </div>
+        
+        <div class="blog-actions">
+          <button class="blog-action-btn" aria-label="Like" title="Like">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            <span>126</span>
+          </button>
+          <button class="blog-action-btn" aria-label="Share" title="Share">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+              <polyline points="16 6 12 2 8 6"></polyline>
+              <line x1="12" y1="2" x2="12" y2="15"></line>
+            </svg>
+            <span>12</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="blog-content">
+        {{ content.body|render }}
+      </div>
+    </div>
+
+    {% if blog_meta.tags %}
+      <div class="blog-tags-section">
+        <h3 class="tags-heading">Tags</h3>
+        <div class="blog-tags-list">
+          {% for tag in blog_meta.tags %}
+            <span class="blog-tag">#{{ tag }}</span>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</article>

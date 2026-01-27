@@ -1,0 +1,21 @@
+storyfulls_auth.role_selection:
+  path: '/register'
+  defaults:
+    _controller: '\Drupal\storyfulls_auth\Controller\RoleSelectionController::selectRole'
+    _title: 'Create New Account'
+  requirements:
+    _user_is_logged_in: 'FALSE'
+
+storyfulls_auth.author_autocomplete:
+  path: '/storyfulls/autocomplete/authors'
+  defaults:
+    _controller: '\Drupal\storyfulls_auth\Controller\AutocompleteController::authorsAutocomplete'
+  requirements:
+    _permission: 'access content'
+
+storyfulls_auth.book_autocomplete:
+  path: '/storyfulls/autocomplete/books'
+  defaults:
+    _controller: '\Drupal\storyfulls_auth\Controller\AutocompleteController::booksAutocomplete'
+  requirements:
+    _permission: 'access content'

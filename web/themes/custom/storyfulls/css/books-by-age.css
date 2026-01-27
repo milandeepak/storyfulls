@@ -1,0 +1,267 @@
+/* Books by Age Section */
+.books-by-age-section {
+  padding: 4rem 2rem;
+  background: #fff;
+  position: relative;
+}
+
+.books-by-age-section .container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Section Header */
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.section-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+}
+
+.section-subtitle {
+  font-family: 'Roboto Slab', serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #7F8C8D;
+  margin: 0;
+}
+
+/* Age Group Selectors */
+.age-group-selectors {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4rem;
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+  padding: 0 2rem;
+  flex-wrap: wrap;
+}
+
+.age-group-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.age-group-item:hover {
+  transform: translateY(-5px);
+}
+
+.age-group-item.active .age-avatar {
+  border-color: #FF6B6B;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+/* Age Avatar (Circular) - Bigger size */
+.age-avatar {
+  width: 157px;
+  height: 157px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #E0E0E0;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.age-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Age Label */
+.age-label {
+  font-family: 'Roboto Slab', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* View All Link in Age Selectors */
+.age-group-item.view-all-link {
+  cursor: default;
+}
+
+.age-group-item.view-all-link:hover {
+  transform: none;
+}
+
+.view-all-btn {
+  font-family: 'Roboto Slab', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #FF6B6B;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.view-all-btn:hover {
+  color: #FF5252;
+}
+
+/* Books Subsection */
+.books-subsection {
+  margin-bottom: 3rem;
+  transition: all 0.3s ease;
+}
+
+.subsection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #E8E8E8;
+}
+
+.subsection-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: #2C3E50;
+  margin: 0;
+}
+
+.view-all-link {
+  font-family: 'Roboto Slab', serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #FF6B6B;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.view-all-link:hover {
+  color: #FF5252;
+  text-decoration: underline;
+}
+
+/* Books Grid */
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+}
+
+.book-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.book-card:hover {
+  transform: translateY(-5px);
+}
+
+.book-card-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-top: 0.8rem;
+  text-align: center;
+  line-height: 1.3;
+  max-height: 2.6em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.book-cover {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.book-card:hover .book-cover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.book-cover-placeholder {
+  width: 100%;
+  height: 300px;
+  background: #E0E0E0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-family: 'Roboto Slab', serif;
+}
+
+.no-books {
+  text-align: center;
+  font-family: 'Roboto Slab', serif;
+  color: #999;
+  padding: 2rem;
+}
+
+/* Age Filtered Section (initially hidden) */
+.books-subsection.age-filtered {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .books-by-age-section {
+    padding: 2rem 1rem;
+  }
+
+  .age-group-selectors {
+    padding: 0 1rem;
+  }
+
+  .age-avatar {
+    width: 110px;
+    height: 110px;
+  }
+
+  .age-label {
+    font-size: 16px;
+  }
+
+  .books-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .book-cover {
+    height: 220px;
+  }
+
+  .subsection-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

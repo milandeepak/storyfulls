@@ -1,0 +1,127 @@
+<?php
+
+/**
+ * @file
+ * Storyfulls Profile module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function storyfulls_profile_theme($existing, $type, $theme, $path) {
+  return [
+    'storyfulls_book_reviews' => [
+      'variables' => [
+        'user_name' => NULL,
+        'user_id' => NULL,
+        'reviews' => [],
+        'review_count' => 0,
+      ],
+      'template' => 'storyfulls-book-reviews',
+    ],
+    'storyfulls_wishlist' => [
+      'variables' => [
+        'user_name' => NULL,
+        'user_id' => NULL,
+        'wishlist' => [],
+        'wishlist_count' => 0,
+      ],
+      'template' => 'storyfulls-wishlist',
+    ],
+    'storyfulls_books_read' => [
+      'variables' => [
+        'user_name' => NULL,
+        'user_id' => NULL,
+        'books_read' => [],
+        'books_read_count' => 0,
+      ],
+      'template' => 'storyfulls-books-read',
+    ],
+    'storyfulls_write_review' => [
+      'variables' => [
+        'book_id' => NULL,
+        'book_title' => NULL,
+        'book_author' => NULL,
+        'book_cover' => NULL,
+      ],
+      'template' => 'storyfulls-write-review',
+    ],
+    'storyfulls_edit_profile' => [
+      'variables' => [
+        'user_data' => [],
+      ],
+      'template' => 'storyfulls-edit-profile',
+    ],
+    'storyfulls_edit_favorite_authors' => [
+      'variables' => [
+        'user_id' => NULL,
+        'favorite_authors' => [],
+      ],
+      'template' => 'storyfulls-edit-favorite-authors',
+    ],
+    'storyfulls_edit_favorite_books' => [
+      'variables' => [
+        'user_id' => NULL,
+        'favorite_books' => [],
+      ],
+      'template' => 'storyfulls-edit-favorite-books',
+    ],
+    'storyfulls_edit_favorite_genres' => [
+      'variables' => [
+        'user_id' => NULL,
+        'favorite_genres' => [],
+        'all_genres' => [],
+      ],
+      'template' => 'storyfulls-edit-favorite-genres',
+    ],
+    'storyfulls_users_page' => [
+      'variables' => [
+        'users' => [],
+      ],
+      'template' => 'storyfulls-users-page',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for node entities.
+ */
+function storyfulls_profile_node_insert(\Drupal\node\NodeInterface $node) {
+  if ($node->getType() === 'book_review') {
+    // Invalidate rating cache for the reviewed book
+    _storyfulls_profile_invalidate_book_rating($node);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for node entities.
+ */
+function storyfulls_profile_node_update(\Drupal\node\NodeInterface $node) {
+  if ($node->getType() === 'book_review') {
+    // Invalidate rating cache for the reviewed book
+    _storyfulls_profile_invalidate_book_rating($node);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for node entities.
+ */
+function storyfulls_profile_node_delete(\Drupal\node\NodeInterface $node) {
+  if ($node->getType() === 'book_review') {
+    // Invalidate rating cache for the reviewed book
+    _storyfulls_profile_invalidate_book_rating($node);
+  }
+}
+
+/**
+ * Helper function to invalidate book rating cache.
+ */
+function _storyfulls_profile_invalidate_book_rating(\Drupal\node\NodeInterface $review_node) {
+  if ($review_node->hasField('field_reviewed_book') && !$review_node->get('field_reviewed_book')->isEmpty()) {
+    $book_id = $review_node->get('field_reviewed_book')->target_id;
+    if ($book_id) {
+      $rating_service = \Drupal::service('storyfulls_profile.book_rating');
+      $rating_service->invalidateRatingCache($book_id);
+    }
+  }
+}

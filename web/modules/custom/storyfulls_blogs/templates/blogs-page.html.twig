@@ -1,0 +1,66 @@
+{#
+/**
+ * @file
+ * Template for the Blogs page.
+ */
+#}
+<style>
+  /* Force header transparency on this page */
+  .site-header--internal {
+    background-color: transparent !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  /* Ensure main content doesn't have a background blocking it if set elsewhere */
+  body {
+    background-color: #fff;
+  }
+</style>
+
+<div class="blogs-page-wrapper">
+  {# Banner Section #}
+  <div class="blogs-banner">
+    <img src="{{ banner_url|default('/themes/custom/storyfulls/images/blogpagebanner.png') }}" alt="{{ banner_alt|default('Discover blogs') }}" class="blogs-banner-img">
+  </div>
+
+  <div class="blogs-container">
+    {# Blogs Grid #}
+    <div class="blogs-grid">
+      {% if blogs %}
+        {% for blog in blogs %}
+          <div class="blog-card">
+            {# Image Layer #}
+            <div class="blog-card-image-wrapper">
+              <img src="{{ blog.image_url }}" alt="{{ blog.title }}" class="blog-card-img">
+            </div>
+            
+            {# Cloud and Content Overlay #}
+            <div class="blog-card-overlay">
+               <div class="blog-cloud-bg"></div>
+               <div class="blog-card-content">
+                  <h3 class="blog-title">{{ blog.title }}</h3>
+                  <a href="{{ blog.url }}" class="blog-learn-more">Learn more ➜</a>
+               </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        {# Dummy Content #}
+        {% for i in 1..6 %}
+          <div class="blog-card">
+            <div class="blog-card-image-wrapper">
+              <img src="/themes/custom/storyfulls/images/blogeventcard.png" alt="Blog Image" class="blog-card-img">
+            </div>
+            <div class="blog-card-overlay">
+               <div class="blog-cloud-bg"></div>
+               <div class="blog-card-content">
+                  <h3 class="blog-title">Reading Tips: How to start reading early?</h3>
+                  <a href="#" class="blog-learn-more">Learn more ➜</a>
+               </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>

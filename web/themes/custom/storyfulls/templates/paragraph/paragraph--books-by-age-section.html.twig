@@ -1,0 +1,85 @@
+{#
+/**
+ * @file
+ * Template for Books by Age Section paragraph.
+ */
+#}
+
+<section class="books-by-age-section">
+  <div class="container">
+    {# Section Header #}
+    <div class="section-header">
+      <h2 class="section-title">Books By Age</h2>
+      <p class="section-subtitle">Choose Your Category</p>
+    </div>
+
+    {# Age Group Selectors #}
+    <div class="age-group-selectors">
+      <div class="age-group-item" data-age="0-2">
+        <div class="age-avatar">
+          <img src="/themes/custom/storyfulls/images/0-2.jpg" alt="0-2 years" loading="lazy">
+        </div>
+        <span class="age-label">0-2</span>
+      </div>
+
+      <div class="age-group-item" data-age="3-5">
+        <div class="age-avatar">
+          <img src="/themes/custom/storyfulls/images/3-5.jpg" alt="3-5 years" loading="lazy">
+        </div>
+        <span class="age-label">3-5</span>
+      </div>
+
+      <div class="age-group-item" data-age="6-8">
+        <div class="age-avatar">
+          <img src="/themes/custom/storyfulls/images/6-8.jpg" alt="6-8 years" loading="lazy">
+        </div>
+        <span class="age-label">6-8</span>
+      </div>
+
+      <div class="age-group-item" data-age="9-12">
+        <div class="age-avatar">
+          <img src="/themes/custom/storyfulls/images/9-12.jpg" alt="9-12 years" loading="lazy">
+        </div>
+        <span class="age-label">9-12</span>
+      </div>
+
+      <div class="age-group-item" data-age="13-16">
+        <div class="age-avatar">
+          <img src="/themes/custom/storyfulls/images/13-16.jpg" alt="13-16 years" loading="lazy">
+        </div>
+        <span class="age-label">13-16</span>
+      </div>
+    </div>
+
+    {# Age-Filtered Books Section (shown by default with 0-2 books) #}
+    <div class="books-subsection age-filtered" id="age-filtered-books">
+      <div class="books-grid" id="filtered-books-grid">
+        {# Populated via JavaScript #}
+      </div>
+    </div>
+
+    {# Most Rated Books Section (always visible below age-filtered books) #}
+    <div class="books-subsection" id="most-rated-section">
+      <div class="subsection-header">
+        <h3 class="subsection-title">Most Rated</h3>
+        <a href="/books/most-rated" class="view-all-link">View All</a>
+      </div>
+      <div class="books-grid" id="most-rated-books">
+        {% if most_rated_books %}
+          {% for book in most_rated_books %}
+            <a href="{{ book.url }}" class="book-card">
+              {% if book.cover_url %}
+                <img src="{{ book.cover_url }}" alt="{{ book.title }}" class="book-cover" loading="lazy">
+              {% else %}
+                <div class="book-cover-placeholder">No Cover</div>
+              {% endif %}
+              <div class="book-card-title">{{ book.title }}</div>
+            </a>
+          {% endfor %}
+        {% else %}
+          <p class="no-books">No books available yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>

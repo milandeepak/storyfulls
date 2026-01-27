@@ -1,0 +1,492 @@
+{#
+/**
+ * @file
+ * User profile page template - Redesigned
+ */
+#}
+{{ attach_library('storyfulls/user-profile') }}
+{{ attach_library('storyfulls/global-styling') }}
+
+<!DOCTYPE html>
+<html{{ html_attributes }}>
+  <head>
+    <head-placeholder token="{{ placeholder_token }}">
+    <title>{{ head_title|safe_join(' | ') }}</title>
+    <css-placeholder token="{{ placeholder_token }}">
+    <js-placeholder token="{{ placeholder_token }}">
+  </head>
+  <body{{ attributes.addClass('profile-page-body') }}>
+    <a href="#main-content" class="visually-hidden focusable">
+      {{ 'Skip to main content'|t }}
+    </a>
+    
+    {# Header #}
+    <header class="site-header site-header--internal">
+      <div class="header-wave"></div>
+      <div class="header-top">
+        <div class="site-logo">
+          <a href="{{ path('<front>') }}">
+            <img src="{{ base_path ~ directory }}/images/storyfulls-logo.png" alt="{{ site_name }}">
+          </a>
+        </div>
+        <nav class="main-nav">
+          <ul class="main-navigation">
+            <li><a href="{{ path('<front>') }}">Home</a></li>
+            <li><a href="/books">Books</a></li>
+            <li><a href="/blogs">Blogs</a></li>
+            <li><a href="/our-readers">Our Readers</a></li>
+            {% if logged_in and is_admin %}
+              <li><a href="/admin/dashboard">Dashboard</a></li>
+            {% endif %}
+            {% if logged_in %}
+              <li class="user-menu-item">
+                <a href="#" class="user-menu-toggle">
+                  <span class="user-greeting">Profile</span>
+                  <svg class="dropdown-icon" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                    <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </a>
+                <ul class="user-dropdown">
+                  <li><a href="/user">View Profile</a></li>
+                  <li><a href="/user/{{ user_id }}/wishlist">My Wishlist</a></li>
+                  <li><a href="/user/{{ user_id }}/edit">Update Profile</a></li>
+                  <li class="dropdown-divider"></li>
+                  <li class="logout-item"><a href="/user/logout">Logout</a></li>
+                </ul>
+              </li>
+            {% else %}
+              <li><a href="/user/login">Login</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content" class="user-profile-page">
+      <div class="profile-layout">
+        
+        {# Top Section: Profile Header + Activity Cards #}
+        <div class="profile-top-section">
+          
+          {# Profile Header Card #}
+          <div class="profile-header-card">
+            <div class="profile-header-top">
+              <div class="profile-header-left">
+                <h1 class="profile-greeting">Hi, {{ user_first_name }} {{ user_last_name }}</h1>
+                {% if bio %}
+                  <p class="profile-bio">{{ bio }}</p>
+                {% else %}
+                  <p class="profile-bio">I do believe something very magical can happen when you read a good book</p>
+                {% endif %}
+                
+                {# Profile Details Grid #}
+                <div class="profile-details-grid">
+                  <div class="detail-item">
+                    <span class="detail-icon"><img src="{{ base_path ~ directory }}/images/Profile-forprofilepage.png" alt="Profile" class="detail-icon-img"></span>
+                    <span class="detail-text">{{ managed_by_parents ? 'Managed by parents' : 'Independent' }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-icon"><img src="{{ base_path ~ directory }}/images/age.png" alt="Age" class="detail-icon-img"></span>
+                    <span class="detail-text">{{ user_age ? user_age ~ ' Years' : 'Age not set' }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-icon"><img src="{{ base_path ~ directory }}/images/locationsymbol.png" alt="Location" class="detail-icon-img"></span>
+                    <span class="detail-text">{{ location }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-icon"><img src="{{ base_path ~ directory }}/images/currentlyreading.png" alt="Currently reading" class="detail-icon-img"></span>
+                    <span class="detail-text">Currently reading - {{ currently_reading|default('Book name') }}</span>
+                  </div>
+                </div>
+              </div>
+              
+                {# Profile Picture - centered with badge #}
+                <div class="profile-picture-inline">
+                  {% if user_picture_url %}
+                    <img src="{{ user_picture_url }}" alt="{{ user_first_name }}'s profile picture" class="profile-avatar-inline">
+                  {% else %}
+                    <div class="profile-avatar-placeholder-inline">
+                      <span class="avatar-initials">{{ user_first_name|first }}{{ user_last_name|first }}</span>
+                    </div>
+                  {% endif %}
+                  
+                  <img src="{{ user_badge_url }}" class="profile-badge-img" alt="User Badge">
+                  
+                  {% if can_edit %}
+                    <a href="/user/edit-profile" class="edit-profile-btn-inline">
+                      <img src="{{ base_path ~ directory }}/images/editbutton.png" alt="Edit" class="edit-icon-tiny">
+                    </a>
+                  {% endif %}
+                </div>
+            </div>
+          </div>
+          
+          {# Activity Cards Stack (Right Side) #}
+          <div class="activity-cards-stack">
+            
+            {# My Book Review Card #}
+            <a href="/user/{{ user_id }}/book-reviews" class="activity-card book-review-card" style="text-decoration: none; color: inherit;">
+              <img src="{{ base_path ~ directory }}/images/Bookformybookreview.png" alt="Book" class="card-icon">
+              <div class="card-content">
+                <h3 class="card-title">My Book Review</h3>
+                <p class="card-count">{{ review_count|default(0) }}</p>
+              </div>
+            </a>
+            
+            {# My Inner Thoughts Card #}
+            <a href="/young-writers/stories-poetry/user/{{ user_id }}" class="activity-card inner-thoughts-card" style="text-decoration: none; color: inherit;">
+              <img src="{{ base_path ~ directory }}/images/imageformyinnerthoughts.png" alt="Thoughts" class="card-icon">
+              <div class="card-content">
+                <h3 class="card-title">My Inner Thoughts</h3>
+                <p class="card-count">{{ story_count|default(0) }}</p>
+              </div>
+            </a>
+            
+            {# My Canvas Card #}
+            <div class="activity-card canvas-card">
+              <img src="{{ base_path ~ directory }}/images/imageformycanvas.png" alt="Canvas" class="card-icon">
+              <div class="card-content">
+                <h3 class="card-title">My Canvas</h3>
+                <p class="card-count">{{ art_count|default(0) }}</p>
+              </div>
+            </div>
+            
+            {# This Week's Pick Card #}
+            <div class="activity-card weeks-pick-card">
+              <img src="{{ base_path ~ directory }}/images/bookforthisweekpick.png" alt="Book" class="card-icon">
+              <div class="card-content">
+                <h3 class="card-title">This Week's Pick</h3>
+                <p class="card-subtitle">{{ weeks_pick_book|default('Book Name') }}</p>
+              </div>
+              {% if can_edit %}
+                <button class="card-edit-btn-activity" data-modal="edit-weeks-pick">
+                  <img src="{{ base_path ~ directory }}/images/editbutton.png" alt="Edit" class="edit-icon-tiny">
+                </button>
+              {% endif %}
+            </div>
+            
+          </div>
+        </div>
+
+        {# Bottom Section: Favorites + Lists #}
+        <div class="profile-bottom-section">
+          
+          {# Favorites Grid #}
+          <div class="favorites-grid">
+            
+            {# Favourite Authors #}
+            <div class="favorite-card">
+              <div class="favorite-card-header">
+                <h3 class="favorite-card-title">Favourite Authors</h3>
+                {% if can_edit %}
+                  <a href="/user/edit-favorite-authors" class="card-edit-btn">
+                    <img src="{{ base_path ~ directory }}/images/editbutton.png" alt="Edit" class="edit-icon-small">
+                  </a>
+                {% endif %}
+              </div>
+              <div class="favorite-card-body">
+                <img src="{{ base_path ~ directory }}/images/sideimageforfavoriteauthors.png" alt="Authors" class="favorite-side-image">
+                <div class="favorite-list">
+                  {% if favorite_authors %}
+                    {% for author in favorite_authors %}
+                      <div class="favorite-item">{{ author }}</div>
+                    {% endfor %}
+                  {% else %}
+                    <p class="no-favorites">No favorite authors yet</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            
+            {# Favourite Books #}
+            <div class="favorite-card">
+              <div class="favorite-card-header">
+                <h3 class="favorite-card-title">Favourite Books</h3>
+                {% if can_edit %}
+                  <a href="/user/edit-favorite-books" class="card-edit-btn">
+                    <img src="{{ base_path ~ directory }}/images/editbutton.png" alt="Edit" class="edit-icon-small">
+                  </a>
+                {% endif %}
+              </div>
+              <div class="favorite-card-body">
+                <img src="{{ base_path ~ directory }}/images/booksimageforfavoritebooks.png" alt="Books" class="favorite-side-image">
+                <div class="favorite-list">
+                  {% if favorite_books %}
+                    {% for book in favorite_books %}
+                      <div class="favorite-item">{{ book }}</div>
+                    {% endfor %}
+                  {% else %}
+                    <p class="no-favorites">No favorite books yet</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            
+            {# Favourite Genres #}
+            <div class="favorite-card">
+              <div class="favorite-card-header">
+                <h3 class="favorite-card-title">Favourite Genres</h3>
+                {% if can_edit %}
+                  <a href="/user/edit-favorite-genres" class="card-edit-btn">
+                    <img src="{{ base_path ~ directory }}/images/editbutton.png" alt="Edit" class="edit-icon-small">
+                  </a>
+                {% endif %}
+              </div>
+              <div class="favorite-card-body">
+                <img src="{{ base_path ~ directory }}/images/sideimageforfavoritegenre.png" alt="Genres" class="favorite-side-image">
+                <div class="favorite-list genres-list">
+                  {% if favorite_genres %}
+                    {% for genre in favorite_genres %}
+                      <div class="genre-tag">{{ genre }}</div>
+                    {% endfor %}
+                  {% else %}
+                    <p class="no-favorites">No favorite genres yet</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          
+          {# My Lists Section #}
+          <div class="lists-grid" id="wishlist">
+            
+            {# My Wishlist #}
+            <a href="/user/{{ user_id }}/wishlist" class="list-card wishlist-card" style="text-decoration: none; color: inherit; display: block;">
+              <div class="list-card-header">
+                <h3 class="list-card-title">My Wishlist</h3>
+                {% if can_edit %}
+                  <button class="card-edit-btn" data-modal="edit-wishlist">
+                    <img src="{{ base_path ~ directory }}/images/editbutton.png" alt="Edit" class="edit-icon-small">
+                  </button>
+                {% endif %}
+              </div>
+              <div class="list-card-body">
+                <img src="{{ base_path ~ directory }}/images/sideimageforwishlist.png" alt="Wishlist" class="list-full-image">
+              </div>
+            </a>
+            
+            {# Books I've Read #}
+            <a href="/user/{{ user_id }}/books-read" class="list-card books-read-card" style="text-decoration: none; color: inherit; display: block;">
+              <div class="list-card-body full-height">
+                <img src="{{ base_path ~ directory }}/images/fullimageforbooksiveread.jpg" alt="Books Read" class="list-full-image">
+              </div>
+            </a>
+            
+          </div>
+          
+        </div>
+        
+      </div>
+    </main>
+
+    {# Edit Modals - Only show if user can edit #}
+    {% if can_edit %}
+      {# Profile Edit Modal #}
+      <div class="modal-overlay" id="edit-profile-modal" style="display:none;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Edit Profile</h2>
+            <button class="modal-close" data-close="edit-profile-modal">&times;</button>
+          </div>
+          <form class="modal-form" id="edit-profile-form" data-user-id="{{ user_id }}">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" name="first_name" value="{{ user_first_name }}" required>
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" name="last_name" value="{{ user_last_name }}" required>
+            </div>
+            <div class="form-group">
+              <label>Age</label>
+              <input type="number" name="age" value="{{ user_age }}" min="1" max="120">
+            </div>
+            <div class="form-group">
+              <label>Currently Reading</label>
+              <input type="text" name="currently_reading" value="{{ currently_reading }}">
+            </div>
+            <div class="form-group">
+              <label>Profile Picture</label>
+              <input type="file" name="profile_picture" accept="image/*">
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn-cancel" data-close="edit-profile-modal">Cancel</button>
+              <button type="submit" class="btn-save">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      {# Edit Favorite Authors Modal #}
+      <div class="modal-overlay" id="edit-authors-modal" style="display:none;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Edit Favorite Authors</h2>
+            <button class="modal-close" data-close="edit-authors-modal">&times;</button>
+          </div>
+          <form class="modal-form" id="edit-authors-form">
+            <div class="form-help-text">Add up to 5 favorite authors. Drag to reorder.</div>
+            <div class="authors-sortable">
+              {% for i in 1..5 %}
+                <div class="form-group sortable-item">
+                  <span class="drag-handle">⋮⋮</span>
+                  <label>Author {{ i }}</label>
+                  <input type="text" name="author_{{ i }}" value="{{ favorite_authors[i-1]|default('') }}" placeholder="Start typing author name...">
+                </div>
+              {% endfor %}
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn-cancel" data-close="edit-authors-modal">Cancel</button>
+              <button type="submit" class="btn-save">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      {# Edit Favorite Books Modal #}
+      <div class="modal-overlay" id="edit-books-modal" style="display:none;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Edit Favorite Books</h2>
+            <button class="modal-close" data-close="edit-books-modal">&times;</button>
+          </div>
+          <form class="modal-form" id="edit-books-form">
+            <div class="form-help-text">Add up to 5 favorite books. Drag to reorder.</div>
+            <div class="books-sortable">
+              {% for i in 1..5 %}
+                <div class="form-group sortable-item">
+                  <span class="drag-handle">⋮⋮</span>
+                  <label>Book {{ i }}</label>
+                  <input type="text" name="book_{{ i }}" value="{{ favorite_books[i-1]|default('') }}" placeholder="Start typing book title...">
+                </div>
+              {% endfor %}
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn-cancel" data-close="edit-books-modal">Cancel</button>
+              <button type="submit" class="btn-save">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      {# Edit Favorite Genres Modal #}
+      <div class="modal-overlay" id="edit-genres-modal" style="display:none;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Edit Favorite Genres</h2>
+            <button class="modal-close" data-close="edit-genres-modal">&times;</button>
+          </div>
+          <form class="modal-form" id="edit-genres-form">
+            <div class="form-help-text">Select your favorite genres</div>
+            <div class="genres-checkbox-grid">
+              {% set all_genres = ['(Auto)biography/Memoir', 'Adventure', 'Anthology', 'Classics', 'Comedy', 'Comics', 'Early Readers', 'Fantasy Fiction', 'Fiction', 'Graphic Novel', 'History', 'Literature', 'Mystery', 'Mythology', 'Non-Fiction', 'Picture Books', 'Science-Fiction', 'Sports'] %}
+              {% for genre in all_genres %}
+                <div class="checkbox-item">
+                  <input type="checkbox" name="genres[]" value="{{ genre }}" id="genre-{{ loop.index }}" {% if genre in favorite_genres %}checked{% endif %}>
+                  <label for="genre-{{ loop.index }}">{{ genre }}</label>
+                </div>
+              {% endfor %}
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn-cancel" data-close="edit-genres-modal">Cancel</button>
+              <button type="submit" class="btn-save">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      {# Edit Week's Pick Modal #}
+      <div class="modal-overlay" id="edit-weeks-pick-modal" style="display:none;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Edit This Week's Pick</h2>
+            <button class="modal-close" data-close="edit-weeks-pick-modal">&times;</button>
+          </div>
+          <form class="modal-form" id="edit-weeks-pick-form">
+            <div class="form-group">
+              <label>Book Title</label>
+              <input type="text" name="weeks_pick_book" value="{{ weeks_pick_book }}" placeholder="Enter book title">
+            </div>
+            <div class="form-group">
+              <label>Author</label>
+              <input type="text" name="weeks_pick_author" value="{{ weeks_pick_author }}" placeholder="Enter author name">
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn-cancel" data-close="edit-weeks-pick-modal">Cancel</button>
+              <button type="submit" class="btn-save">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      {# Edit Wishlist Modal #}
+      <div class="modal-overlay" id="edit-wishlist-modal" style="display:none;">
+        <div class="modal-content modal-content-large">
+          <div class="modal-header">
+            <h2 class="modal-title">Edit My Wishlist</h2>
+            <button class="modal-close" data-close="edit-wishlist-modal">&times;</button>
+          </div>
+          <form class="modal-form" id="edit-wishlist-form">
+            <div class="form-help-text">Search and add books to your wishlist</div>
+            <div class="form-group">
+              <label>Search Books</label>
+              <input type="text" class="book-search-input" data-list-type="wishlist" placeholder="Type book title...">
+              <div class="book-search-results"></div>
+            </div>
+            <div class="book-list-container">
+              {% if wishlist %}
+                {% for book in wishlist %}
+                  <div class="book-list-item wishlist-item" data-book-id="{{ book.id }}">
+                    <img src="{{ book.cover_url }}" alt="{{ book.title }}" class="book-list-cover">
+                    <span class="book-list-title">{{ book.title }}</span>
+                    <button type="button" class="remove-book-from-list">&times;</button>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn-cancel" data-close="edit-wishlist-modal">Cancel</button>
+              <button type="submit" class="btn-save">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      {# Edit Books Read Modal #}
+      <div class="modal-overlay" id="edit-books-read-modal" style="display:none;">
+        <div class="modal-content modal-content-large">
+          <div class="modal-header">
+            <h2 class="modal-title">Edit Books I've Read</h2>
+            <button class="modal-close" data-close="edit-books-read-modal">&times;</button>
+          </div>
+          <form class="modal-form" id="edit-books-read-form">
+            <div class="form-help-text">Search and add books you've read</div>
+            <div class="form-group">
+              <label>Search Books</label>
+              <input type="text" class="book-search-input" data-list-type="books_read" placeholder="Type book title...">
+              <div class="book-search-results"></div>
+            </div>
+            <div class="book-list-container">
+              {% if books_read %}
+                {% for book in books_read %}
+                  <div class="book-list-item books-read-item" data-book-id="{{ book.id }}">
+                    <img src="{{ book.cover_url }}" alt="{{ book.title }}" class="book-list-cover">
+                    <span class="book-list-title">{{ book.title }}</span>
+                    <button type="button" class="remove-book-from-list">&times;</button>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn-cancel" data-close="edit-books-read-modal">Cancel</button>
+              <button type="submit" class="btn-save">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    {% endif %}
+
+    <js-bottom-placeholder token="{{ placeholder_token }}">
+  </body>
+</html>

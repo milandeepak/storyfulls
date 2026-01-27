@@ -1,0 +1,1259 @@
+/* User Profile Page - Redesigned */
+
+.profile-page-body {
+  background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #90CAF9 100%);
+  min-height: 100vh;
+}
+
+.user-profile-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Main Layout Container */
+.profile-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
+
+/* TOP SECTION: Profile Card + Activity Cards */
+.profile-top-section {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* BOTTOM SECTION: Favorites + Lists */
+.profile-bottom-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
+
+/* LEFT COLUMN - REMOVED */
+/* RIGHT COLUMN - REMOVED */
+
+/* Profile Header Card */
+.profile-header-card {
+  background: white;
+  border-radius: 24px;
+  padding: 2.5rem 3rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 3rem;
+}
+
+/* Profile Header Top - Contains greeting and inline picture */
+.profile-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Changed to flex-start to allow pop-out */
+  width: 100%;
+  gap: 3rem;
+}
+
+.profile-header-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-top: 1rem; /* Add padding since we aligned flex-start */
+}
+
+.profile-greeting {
+  font-family: 'Roboto Slab', serif;
+  font-size: 40px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.profile-bio {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 500px;
+}
+
+/* Profile Picture - Square Pop-out with Badge */
+.profile-picture-inline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  margin-top: -60px; /* Pop out of the card */
+  margin-right: -10px;
+}
+
+.profile-avatar-inline,
+.profile-avatar-placeholder-inline {
+  width: 160px;
+  height: 160px;
+  border-radius: 20px; /* Rounded Square */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  object-fit: cover;
+  background: #E0E0E0; /* Simple grey background like image */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: none; /* Removed border */
+}
+
+.profile-avatar-placeholder-inline .avatar-initials {
+  font-family: 'Roboto Slab', serif;
+  font-size: 56px;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+}
+
+/* Badge Image */
+.profile-badge-img {
+  width: 90px;
+  height: auto;
+  position: absolute;
+  bottom: -35px; /* Overlap bottom */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+}
+
+/* Edit Button Position */
+.edit-profile-btn-inline {
+  position: absolute;
+  top: 10px;
+  right: -15px;
+  width: 36px;
+  height: 36px;
+  background: white;
+  border: 1px solid #E0E0E0;
+  border-radius: 10px; /* Rounded square button */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.edit-profile-btn-inline:hover {
+  background: #F5F5F5;
+  transform: scale(1.1);
+  border-color: #BDBDBD;
+}
+
+.edit-icon-tiny {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.profile-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem 2rem;
+  margin-top: 1.5rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.detail-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.detail-icon-img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.detail-text {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  color: #2C3E50;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Favorites Grid - 3 Cards - FILL WIDTH */
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.favorite-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1.25rem; /* Further reduced padding from 1.5rem */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  position: relative;
+  height: 250px; /* Fixed height */
+  width: 100%;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.favorite-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.favorite-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem; /* Reduced from 1rem */
+}
+
+.favorite-card-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 18px; /* Slightly smaller title */
+  font-weight: 700;
+  color: #2C3E50;
+  margin: 0;
+}
+
+.card-edit-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-edit-btn:hover {
+  transform: scale(1.15);
+  opacity: 0.7;
+}
+
+.edit-icon-small {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+.favorite-card-body {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  flex: 1;
+  overflow: hidden;
+  align-items: flex-start;
+}
+
+.favorite-side-image {
+  width: 120px;
+  height: auto;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.favorite-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem; /* Further reduced gap */
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+/* Custom Scrollbar for lists */
+.favorite-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.favorite-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.favorite-list::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 4px;
+}
+
+.favorite-item {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px; /* Reduced from 16px */
+  color: #2C3E50;
+  padding: 0.35rem 0; /* Further reduced from 0.5rem */
+  text-align: left;
+  font-weight: 500;
+  line-height: 1.2; /* Tighter line height */
+}
+
+.genres-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem; /* Further reduced gap */
+}
+
+.genre-tag {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px; /* Reduced from 16px */
+  font-weight: 500;
+  color: #2C3E50;
+  padding: 0.35rem 0; /* Further reduced from 0.5rem */
+  text-align: left;
+  line-height: 1.2; /* Tighter line height */
+}
+
+.no-favorites {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  color: #999;
+  font-style: italic;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+/* Lists Grid - Centered Flex Layout */
+.lists-grid {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.list-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  position: relative;
+  height: 250px; /* Reduced fixed height */
+  display: flex;
+  flex-direction: column;
+  /* Match width of 3-column grid items: (100% - 2 * gap) / 3 */
+  /* Gap is 1.5rem, so 2 gaps = 3rem */
+  width: calc((100% - 3rem) / 3);
+}
+
+.list-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.list-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem; /* Reduced padding */
+  background: white;
+  z-index: 2;
+}
+
+.list-card-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 18px; /* Slightly smaller title */
+  font-weight: 700;
+  color: #2C3E50;
+  margin: 0;
+}
+
+.list-card-body {
+  padding: 0;
+  position: relative;
+  flex: 1;
+  display: flex;
+}
+
+.list-card-body.full-height {
+  height: 100%;
+}
+
+.list-full-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Specific Card Styles */
+.books-read-card {
+  border: none;
+}
+
+.books-read-card .list-card-body {
+  height: 100%;
+}
+
+/* Floating Edit Button for image-only cards */
+.floating-edit-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  padding: 0.5rem;
+}
+
+/* RIGHT COLUMN - REMOVED */
+
+/* Activity Cards Stack - Vertical Compact */
+.activity-cards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* Space between cards */
+  width: 100%;
+}
+
+.activity-card {
+  width: 100%;
+  height: 60px; /* Fixed small height */
+  border-radius: 12px; /* Smaller border radius */
+  border: 1px solid; /* Thinner border */
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  position: relative;
+  transition: all 0.2s;
+  cursor: default;
+  overflow: hidden; /* Clip sparkles */
+}
+
+/* Sparkle Background Pattern */
+.activity-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* 6 Stars in total */
+  background-image: 
+    url('../images/shinystar.png'), 
+    url('../images/smallstar.png'), 
+    url('../images/bigstar.png'),
+    url('../images/bigstar.png'),
+    url('../images/smallstar.png'),
+    url('../images/shinystar.png');
+  background-repeat: no-repeat;
+  background-size: 
+    24px 24px, /* Shiny */
+    16px 16px, /* Small */
+    32px 32px, /* Big */
+    28px 28px, /* Big 2 */
+    14px 14px, /* Small 2 */
+    20px 20px; /* Shiny 2 */
+  background-position: 
+    15% 20%, /* Shiny */
+    85% 70%, /* Small */
+    92% 15%, /* Big */
+    5% 85%,  /* Big 2 */
+    50% 10%, /* Small 2 */
+    40% 90%; /* Shiny 2 */
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.activity-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Colors with Borders - Pastel */
+.book-review-card {
+  background: linear-gradient(90deg, #D4EFF9 0%, #E3F2FD 100%);
+  border-color: #A5D8E8;
+}
+
+.inner-thoughts-card {
+  background: linear-gradient(90deg, #E0F2F1 0%, #DCE7C8 100%);
+  border-color: #C5E1A5;
+}
+
+.canvas-card {
+  background: linear-gradient(90deg, #FCE4EC 0%, #F8BBD0 100%);
+  border-color: #F48FB1;
+}
+
+.weeks-pick-card {
+  background: linear-gradient(90deg, #FFFDE7 0%, #FFF59D 100%);
+  border-color: #FFE082;
+}
+
+.card-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  flex-shrink: 0;
+  display: block;
+  z-index: 1;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.card-content {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  z-index: 1;
+}
+
+.card-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.card-count {
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2C3E50;
+  margin: 0;
+  line-height: 1;
+  background: none !important; /* Force remove any background */
+  position: relative;
+  z-index: 2;
+}
+
+/* Kill any unwanted pseudo-elements (star emojis) */
+.card-count::before,
+.card-count::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+}
+
+.card-subtitle {
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2C3E50;
+  margin: 0;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+.card-edit-btn-activity {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+.activity-card {
+  width: 100%;
+  min-height: 65px;
+  border-radius: 16px;
+  border: 2px solid;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  position: relative;
+  transition: all 0.2s;
+  cursor: default;
+}
+
+.activity-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Colors with Borders */
+.book-review-card {
+  background: linear-gradient(135deg, #E3F5FC 0%, #B3E5FC 100%);
+  border-color: #81D4E6;
+}
+
+.inner-thoughts-card {
+  background: linear-gradient(135deg, #E8F5E9 0%, #C5E1A5 100%);
+  border-color: #9CCC65;
+}
+
+.canvas-card {
+  background: linear-gradient(135deg, #FCE4EC 0%, #F8BBD0 100%);
+  border-color: #F48FB1;
+}
+
+.weeks-pick-card {
+  background: linear-gradient(135deg, #FFFDE7 0%, #FFF9C4 100%);
+  border-color: #FFD54F;
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.card-content {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+}
+
+.card-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.card-count {
+  font-family: 'Roboto', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin: 0;
+  line-height: 1;
+}
+
+.card-subtitle {
+  font-family: 'Roboto', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2C3E50;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.activity-card {
+  width: 100%;
+  min-height: 80px;
+  border-radius: 20px;
+  border: 3px solid;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  position: relative;
+  transition: all 0.2s;
+  cursor: default;
+}
+
+.activity-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Card Colors with Borders */
+.book-review-card {
+  background: linear-gradient(135deg, #E3F5FC 0%, #B3E5FC 100%);
+  border-color: #81D4E6;
+}
+
+.inner-thoughts-card {
+  background: linear-gradient(135deg, #E8F5E9 0%, #C5E1A5 100%);
+  border-color: #9CCC65;
+}
+
+.canvas-card {
+  background: linear-gradient(135deg, #FCE4EC 0%, #F8BBD0 100%);
+  border-color: #F48FB1;
+}
+
+.weeks-pick-card {
+  background: linear-gradient(135deg, #FFFDE7 0%, #FFF9C4 100%);
+  border-color: #FFD54F;
+}
+
+.card-icon {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  flex-shrink: 0;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+}
+
+.card-content {
+  flex: 1;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.card-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.card-count {
+  font-family: 'Roboto', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin: 0;
+  line-height: 1;
+}
+
+.card-subtitle {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2C3E50;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.card-edit-btn-activity {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.card-edit-btn-activity:hover {
+  transform: scale(1.15);
+  opacity: 0.7;
+}
+  height: 16px;
+}
+
+/* MODAL STYLES */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 2rem;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 24px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  border-bottom: 2px solid #E0E0E0;
+}
+
+.modal-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin: 0;
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  font-size: 32px;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.modal-close:hover {
+  color: #E74C3C;
+}
+
+.modal-form {
+  padding: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2C3E50;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="file"],
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #E0E0E0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #4DD0E1;
+  box-shadow: 0 0 0 3px rgba(77, 208, 225, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding: 1.5rem 2rem;
+  border-top: 2px solid #E0E0E0;
+}
+
+.btn-cancel,
+.btn-save {
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+}
+
+.btn-cancel {
+  background: #E0E0E0;
+  color: #2C3E50;
+}
+
+.btn-cancel:hover {
+  background: #BDBDBD;
+}
+
+.btn-save {
+  background: #4DD0E1;
+  color: white;
+}
+
+.btn-save:hover {
+  background: #26C6DA;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(77, 208, 225, 0.3);
+}
+
+/* Autocomplete Field Styles */
+.autocomplete-field-wrapper {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.autocomplete-field {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.autocomplete-field input {
+  flex: 1;
+}
+
+.remove-autocomplete-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #FFEBEE;
+  color: #E74C3C;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.remove-autocomplete-btn:hover {
+  background: #E74C3C;
+  color: white;
+}
+
+/* Genre Checkboxes in Modal */
+.genres-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: #F8F9FA;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.checkbox-item:hover {
+  background: #E3F2FD;
+}
+
+.checkbox-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin: 0;
+}
+
+.checkbox-item label {
+  margin: 0 !important;
+  cursor: pointer;
+  font-size: 14px !important;
+}
+
+/* Sortable Items */
+.authors-sortable,
+.books-sortable {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sortable-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: #F8F9FA;
+  border-radius: 8px;
+  cursor: move;
+  transition: all 0.2s;
+}
+
+.sortable-item:hover {
+  background: #E3F2FD;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.drag-handle {
+  font-size: 20px;
+  color: #999;
+  cursor: grab;
+  user-select: none;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.sortable-placeholder {
+  background: #E3F2FD;
+  border: 2px dashed #4DD0E1;
+  border-radius: 8px;
+  height: 60px;
+  margin-bottom: 0.75rem;
+}
+
+/* Form Help Text */
+.form-help-text {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+/* Book Search Results */
+.book-search-results {
+  position: relative;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 0.5rem;
+  border: 2px solid #E0E0E0;
+  border-radius: 8px;
+  background: white;
+  display: none;
+}
+
+.book-search-results:not(:empty) {
+  display: block;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid #F0F0F0;
+  transition: background 0.2s;
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+.search-result-item:hover {
+  background: #F8F9FA;
+}
+
+.search-result-cover {
+  width: 40px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.search-result-title {
+  flex: 1;
+  font-size: 14px;
+  color: #2C3E50;
+  font-weight: 500;
+}
+
+.add-book-to-list {
+  padding: 0.5rem 1rem;
+  background: #4DD0E1;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.add-book-to-list:hover {
+  background: #26C6DA;
+  transform: translateY(-1px);
+}
+
+/* Book List Container */
+.book-list-container {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: #F8F9FA;
+  border-radius: 8px;
+}
+
+.book-list-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  transition: all 0.2s;
+}
+
+.book-list-item:last-child {
+  margin-bottom: 0;
+}
+
+.book-list-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.book-list-cover {
+  width: 40px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.book-list-title {
+  flex: 1;
+  font-size: 14px;
+  color: #2C3E50;
+  font-weight: 500;
+}
+
+.remove-book-from-list {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: #FFEBEE;
+  color: #E74C3C;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.remove-book-from-list:hover {
+  background: #E74C3C;
+  color: white;
+}
+
+/* Large Modal */
+.modal-content-large {
+  max-width: 800px;
+}
+
+/* Profile Messages */
+.profile-message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10001;
+  padding: 15px 25px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translate(-50%, -20px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+.profile-message--success {
+  background: #4CAF50;
+}
+
+.profile-message--error {
+  background: #f44336;
+}
+
+.profile-message--warning {
+  background: #ff9800;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .profile-top-section {
+    grid-template-columns: 1fr;
+  }
+  
+  .favorites-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .lists-grid {
+    flex-direction: column;
+  }
+  
+  .list-card {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .user-profile-page {
+    padding: 1rem;
+  }
+  
+  .profile-header-card {
+    padding: 1.5rem;
+  }
+  
+  .profile-greeting {
+    font-size: 28px;
+  }
+  
+  .profile-details-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .activity-cards-stack {
+    gap: 0.75rem;
+  }
+  
+  .modal-content {
+    max-width: 100%;
+    margin: 1rem;
+  }
+}

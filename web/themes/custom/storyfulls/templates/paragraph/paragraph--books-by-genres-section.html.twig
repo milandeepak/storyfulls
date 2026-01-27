@@ -1,0 +1,76 @@
+{#
+/**
+ * @file
+ * Template for Books by Genres Section paragraph.
+ */
+#}
+
+<section class="books-by-genres-section">
+  <div class="container">
+    {# Section Header #}
+    <div class="section-header">
+      <h2 class="section-title">Books by Genres</h2>
+    </div>
+
+    {# Genre Tabs #}
+    <div class="genre-tabs-wrapper">
+      <div class="genre-tabs">
+        {% if visible_genres %}
+          {# Show first 8 genres as visible tabs #}
+          {% for genre in visible_genres %}
+            <button class="genre-tab{% if loop.first %} active{% endif %}" data-genre="{{ genre.slug }}">{{ genre.name }}</button>
+          {% endfor %}
+          
+          {# More Options dropdown if there are more than 8 genres #}
+          {% if more_genres %}
+            <div class="genre-more-options-wrapper">
+              <button class="genre-tab more-options" id="more-options-btn">
+                More Options
+                <svg class="dropdown-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M4 6l4 4 4-4H4z"/>
+                </svg>
+              </button>
+              <div class="genre-dropdown-menu" id="genre-dropdown-menu">
+                {% for genre in more_genres %}
+                  <button class="genre-dropdown-item genre-tab" data-genre="{{ genre.slug }}">{{ genre.name }}</button>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        {% else %}
+          {# Fallback tabs if no genres available #}
+          <button class="genre-tab active" data-genre="sports">Sports</button>
+          <button class="genre-tab" data-genre="picture-books">Picture Books</button>
+          <button class="genre-tab" data-genre="non-fiction">Non-Fiction</button>
+          <button class="genre-tab" data-genre="mystery">Mystery</button>
+          <button class="genre-tab" data-genre="comics">Comics</button>
+          <button class="genre-tab" data-genre="comedy">Comedy</button>
+        {% endif %}
+      </div>
+    </div>
+
+    {# Books Grid Container #}
+    <div class="genre-books-container">
+      <div class="genre-books-grid" id="genre-books-grid">
+        {# Books will be populated via JavaScript based on selected genre #}
+      </div>
+      
+      {# Scroll Arrow #}
+      <button class="scroll-arrow" id="scroll-right-arrow" aria-label="Scroll right">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    {# Loading State #}
+    <div class="genre-loading" id="genre-loading" style="display: none;">
+      <p>Loading books...</p>
+    </div>
+
+    {# No Books State #}
+    <div class="genre-no-books" id="genre-no-books" style="display: none;">
+      <p>No books available in this genre yet.</p>
+    </div>
+  </div>
+</section>

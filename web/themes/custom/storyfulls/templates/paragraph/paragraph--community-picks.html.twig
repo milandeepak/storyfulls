@@ -1,0 +1,44 @@
+{#
+/**
+ * @file
+ * Template for Community Picks paragraph.
+ */
+#}
+
+<section class="community-picks-section">
+  <div class="container">
+    {# Section Header #}
+    <div class="section-header">
+      {% if content.field_section_title[0] %}
+        <h2 class="section-title">{{ content.field_section_title[0]['#context'].value }}</h2>
+      {% else %}
+        <h2 class="section-title">Discover books handpicked by a community of parents & bookworms.</h2>
+      {% endif %}
+    </div>
+
+    {# Books Grid #}
+    <div class="community-picks-grid">
+      {% if community_books %}
+        {% for book in community_books %}
+          <a href="{{ book.url }}" class="community-book-card">
+            <div class="book-cover-wrapper">
+              {% if book.cover_url %}
+                <img src="{{ book.cover_url }}" alt="{{ book.title }}" class="book-cover" loading="lazy">
+              {% else %}
+                <div class="book-cover-placeholder">No Cover</div>
+              {% endif %}
+            </div>
+            <div class="book-card-content">
+              <h3 class="book-card-title">{{ book.title }}</h3>
+              {% if book.author %}
+                <p class="book-card-author">{{ book.author }}</p>
+              {% endif %}
+            </div>
+          </a>
+        {% endfor %}
+      {% else %}
+        <p class="no-books">No community picks available yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>

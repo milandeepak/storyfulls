@@ -1,0 +1,31 @@
+entity.page_banner.collection:
+  path: '/admin/content/banners'
+  defaults:
+    _entity_list: 'page_banner'
+    _title: 'Manage Page Banners'
+  requirements:
+    _permission: 'administer page banners'
+
+entity.page_banner.add_form:
+  path: '/admin/content/banners/add'
+  defaults:
+    _entity_form: 'page_banner.add'
+    _title: 'Add Page Banner'
+  requirements:
+    _permission: 'administer page banners'
+
+entity.page_banner.edit_form:
+  path: '/admin/content/banners/{page_banner}/edit'
+  defaults:
+    _entity_form: 'page_banner.edit'
+    _title: 'Edit Page Banner'
+  requirements:
+    _permission: 'administer page banners'
+
+entity.page_banner.delete_form:
+  path: '/admin/content/banners/{page_banner}/delete'
+  defaults:
+    _entity_form: 'page_banner.delete'
+    _title: 'Delete Page Banner'
+  requirements:
+    _permission: 'administer page banners'

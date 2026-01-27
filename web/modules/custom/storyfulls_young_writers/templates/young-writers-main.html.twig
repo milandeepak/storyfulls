@@ -1,0 +1,86 @@
+{#
+/**
+ * @file
+ * Template for the main Young Writers page.
+ */
+#}
+
+<div class="young-writers-page">
+  {# Banner Section #}
+  <div class="young-writers-banner">
+    <img src="/themes/custom/storyfulls/images/youngwriterbanner.png" alt="Young Writers Corner" class="banner-image">
+    <div class="banner-overlay">
+      <h1 class="banner-title">Young Writers Corner</h1>
+      <p class="banner-subtitle">Unlock the Power of Expressing!</p>
+    </div>
+  </div>
+
+  {# Three Cards Section #}
+  <div class="young-writers-cards">
+    <div class="card-container">
+      {# Book Reviews Card #}
+      <div class="yw-card" id="book-reviews-card">
+        <div class="card-link" data-reveal-target="book-reviews-reveal">
+          <div class="card-icon">
+            <img src="/themes/custom/storyfulls/images/bookreviewcardyoungwritepage.png" alt="Book Reviews">
+          </div>
+          <h2 class="card-title">Book Reviews</h2>
+          <p class="card-description">Share the reviews of your favourite children's books here</p>
+        </div>
+      </div>
+
+      {# Stories & Poetry Card #}
+      <div class="yw-card">
+        <a href="/young-writers/stories-poetry" class="card-link">
+          <div class="card-icon">
+            <img src="/themes/custom/storyfulls/images/storyandpoetrycardyoungwritepage.png" alt="Stories & Poetry">
+          </div>
+          <h2 class="card-title">Stories & Poetry</h2>
+          <p class="card-description">Calling all young wordsmiths! Share your magic with words here</p>
+        </a>
+      </div>
+
+      {# Junior Artists Card #}
+      <div class="yw-card">
+        <a href="/young-writers/junior-artists" class="card-link">
+          <div class="card-icon">
+            <img src="/themes/custom/storyfulls/images/juniorartistcardyoungwriterpage.png" alt="Junior Artists">
+          </div>
+          <h2 class="card-title">Junior Artists</h2>
+          <p class="card-description">To all future illustrators, showcase your artwork inspired by your favourite books</p>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {# Book Reviews Reveal Section #}
+  <div id="book-reviews-reveal" class="reviewers-reveal-section" style="display: none;">
+    {# Action Bar #}
+    <div class="reviewers-action-bar">
+      <button class="share-your-work-btn">Share your work</button>
+      <div class="reviewers-search">
+        <input type="text" id="reviewer-search" placeholder="EX- Nicola Edwards" class="reviewer-search-input">
+      </div>
+    </div>
+
+    {# User Grid #}
+    <div class="reviewers-grid" id="reviewers-grid">
+      {# Grid will be populated dynamically via JavaScript #}
+      <div class="loading-spinner">Loading reviewers...</div>
+    </div>
+
+    {# Navigation Arrows #}
+    <div class="reviewers-navigation">
+      <button class="nav-arrow nav-prev" id="reviewers-prev" disabled>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="nav-arrow nav-next" id="reviewers-next">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>

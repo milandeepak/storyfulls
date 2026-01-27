@@ -1,0 +1,66 @@
+{#
+/**
+ * @file
+ * Page template for Edit Favorite Genres page
+ */
+#}
+{{ attach_library('storyfulls/edit-favorites') }}
+{{ attach_library('storyfulls/global-styling') }}
+
+<!DOCTYPE html>
+<html{{ html_attributes }}>
+  <head>
+    <head-placeholder token="{{ placeholder_token }}">
+    <title>{{ head_title|safe_join(' | ') }}</title>
+    <css-placeholder token="{{ placeholder_token }}">
+    <js-placeholder token="{{ placeholder_token }}">
+  </head>
+  <body{{ attributes.addClass('edit-profile-page') }}>
+    <a href="#main-content" class="visually-hidden focusable">
+      {{ 'Skip to main content'|t }}
+    </a>
+    
+    {# Header #}
+    <header class="site-header site-header--internal">
+      <div class="header-wave"></div>
+      <div class="header-top">
+        <div class="site-logo">
+          <a href="{{ path('<front>') }}">
+            <img src="{{ base_path ~ directory }}/images/storyfulls-logo.png" alt="{{ site_name }}">
+          </a>
+        </div>
+        <nav class="main-nav">
+          <ul class="main-navigation">
+            <li><a href="{{ path('<front>') }}">Home</a></li>
+            <li><a href="/books">Books</a></li>
+            <li><a href="/blogs">Blogs</a></li>
+            <li><a href="/our-readers">Our Readers</a></li>
+            {% if logged_in %}
+              <li class="user-menu-item">
+                <a href="#" class="user-menu-toggle">
+                  <span class="user-greeting">Profile</span>
+                  <svg class="dropdown-icon" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                    <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </a>
+                <ul class="user-dropdown">
+                  <li><a href="/user">View Profile</a></li>
+                  <li><a href="/user/edit-profile">Edit Profile</a></li>
+                  <li><a href="/user/logout">Logout</a></li>
+                </ul>
+              </li>
+            {% else %}
+              <li><a href="/user/login">Login</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      {{ page.content }}
+    </main>
+
+    <js-bottom-placeholder token="{{ placeholder_token }}">
+  </body>
+</html>

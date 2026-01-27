@@ -1,0 +1,163 @@
+/* Blog Detail Page */
+
+.blog-detail-page {
+  background: #ffffff;
+  min-height: 100vh;
+  padding: 3rem 0 5rem;
+  color: #1F2937;
+  font-family: 'Roboto', sans-serif;
+}
+
+.blog-detail-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.blog-detail-title {
+  font-family: 'Roboto', sans-serif;
+  font-size: 28px;
+  font-weight: 400;
+  text-align: center;
+  margin: 0 0 2rem;
+  color: #7B9EC4;
+  line-height: 1.4;
+}
+
+.blog-image-section {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.blog-feature-wrap {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #F3F4F6;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.blog-feature-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.blog-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.blog-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  color: #6B7280;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.blog-action-btn:hover {
+  background: #F9FAFB;
+  border-color: #D1D5DB;
+}
+
+.blog-action-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.blog-content-box {
+  background: #FFF9E6;
+  border-radius: 16px;
+  padding: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.blog-content {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #374151;
+}
+
+.blog-content p {
+  margin: 0 0 1.5rem;
+}
+
+.blog-content p:last-child {
+  margin-bottom: 0;
+}
+
+.blog-content h2,
+.blog-content h3 {
+  font-family: 'Roboto Slab', serif;
+  color: #1F2937;
+  margin: 2rem 0 1rem;
+  font-weight: 700;
+}
+
+.blog-content ul {
+  margin: 0 0 1.5rem 1.5rem;
+  padding: 0;
+}
+
+.blog-content li {
+  margin-bottom: 0.5rem;
+}
+
+.blog-tags-section {
+  margin-top: 3rem;
+}
+
+.tags-heading {
+  font-family: 'Roboto Slab', serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 1rem;
+  color: #1F2937;
+}
+
+.blog-tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.blog-tag {
+  background: #F5F5F5;
+  border: 1px solid #E0E0E0;
+  color: #555;
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .blog-detail-title {
+    font-size: 22px;
+  }
+
+  .blog-feature-wrap {
+    height: 280px;
+  }
+
+  .blog-content-box {
+    padding: 1.5rem;
+  }
+
+  .blog-content {
+    font-size: 15px;
+  }
+}

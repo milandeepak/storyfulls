@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * @file
+ * Module file for Storyfulls Banners.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function storyfulls_banners_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.storyfulls_banners':
+      return '<p>' . t('Manage page banners for Events, Blog, and Books pages from the admin interface.') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function storyfulls_banners_theme($existing, $type, $theme, $path) {
+  return [
+    'page_banner' => [
+      'variables' => [
+        'banner_url' => NULL,
+        'alt_text' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for events-page.
+ */
+function storyfulls_banners_preprocess_events_page(&$variables) {
+  $banner_service = \Drupal::service('storyfulls_banners.banner_service');
+  $banner = $banner_service->getBanner('events');
+  
+  if (!empty($banner)) {
+    $variables['banner_url'] = $banner['url'];
+    $variables['banner_alt'] = $banner['alt'];
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for blogs-page.
+ */
+function storyfulls_banners_preprocess_blogs_page(&$variables) {
+  $banner_service = \Drupal::service('storyfulls_banners.banner_service');
+  $banner = $banner_service->getBanner('blog');
+  
+  if (!empty($banner)) {
+    $variables['banner_url'] = $banner['url'];
+    $variables['banner_alt'] = $banner['alt'];
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for page--node--33.
+ */
+function storyfulls_banners_preprocess_page__node__33(&$variables) {
+  $banner_service = \Drupal::service('storyfulls_banners.banner_service');
+  $banner = $banner_service->getBanner('books');
+  
+  if (!empty($banner)) {
+    $variables['banner_url'] = $banner['url'];
+    $variables['banner_alt'] = $banner['alt'];
+  }
+}

@@ -1,0 +1,4 @@
+administer page banners:
+  title: 'Administer page banners'
+  description: 'Add, edit, and delete page banners'
+  restrict access: true

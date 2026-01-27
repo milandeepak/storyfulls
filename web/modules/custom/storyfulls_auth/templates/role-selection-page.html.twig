@@ -1,0 +1,81 @@
+{#
+/**
+ * @file
+ * Role Selection Page Template
+ */
+#}
+<div class="role-selection-page">
+  <main class="role-selection-main">
+    <div class="role-selection-container">
+      
+      {# Page Header #}
+      <div class="role-selection-header">
+        <h1 class="role-selection-title">Create New Account</h1>
+        <p class="role-selection-subtitle">Choose how you want to join our reading community</p>
+      </div>
+
+      {# Role Selection Cards #}
+      <div class="role-cards-wrapper">
+        
+        {# Young Readers Card #}
+        <a href="/user/register?role=young_reader" class="role-card role-card-reader">
+          <div class="role-card-content">
+            <div class="role-card-icon">
+              <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                <circle cx="40" cy="40" r="38" stroke="currentColor" stroke-width="4" fill="none"/>
+                <path d="M25 45 L35 55 L55 35" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              </svg>
+            </div>
+            
+            <h2 class="role-card-title">For Young Readers</h2>
+            
+            <p class="role-card-description">
+              Share your favourite books, explore new books and connect with fellow readers
+            </p>
+            
+            <div class="role-card-button">
+              <span>Join as Young Reader</span>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M7 4L13 10L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </a>
+
+        {# Librarians Card #}
+        <a href="/user/register?role=librarian" class="role-card role-card-librarian">
+          <div class="role-card-content">
+            <div class="role-card-icon">
+              <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                <rect x="15" y="15" width="50" height="50" rx="4" stroke="currentColor" stroke-width="4" fill="none"/>
+                <line x1="30" y1="30" x2="50" y2="30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                <line x1="30" y1="40" x2="50" y2="40" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                <line x1="30" y1="50" x2="45" y2="50" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
+            
+            <h2 class="role-card-title">For Librarians</h2>
+            
+            <p class="role-card-description">
+              Empower young minds to elevate their reading experience
+            </p>
+            
+            <div class="role-card-button">
+              <span>Join as Librarian</span>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M7 4L13 10L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </a>
+
+      </div>
+
+      {# Login Link #}
+      <div class="role-selection-footer">
+        <p>Already have an account? <a href="/user/login" class="login-link">Log in here</a></p>
+      </div>
+
+    </div>
+  </main>
+</div>
