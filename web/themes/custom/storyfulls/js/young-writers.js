@@ -106,6 +106,8 @@
     $('.share-your-work-btn').on('click', function() {
       if (window.location.pathname.includes('stories-poetry')) {
         window.location.href = '/node/add/story_poetry';
+      } else if (window.location.pathname.includes('junior-artists')) {
+        window.location.href = '/node/add/junior_artist';
       } else {
         window.location.href = '/node/add/book_review';
       }
