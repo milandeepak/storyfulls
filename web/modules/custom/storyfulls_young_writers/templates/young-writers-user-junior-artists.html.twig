@@ -1,0 +1,84 @@
+{#
+/**
+ * @file
+ * Template for a user's Junior Artist page (list of artworks).
+ */
+#}
+
+<div class="young-writers-user-detail-page">
+  {# Banner Section #}
+  <div class="young-writers-banner">
+    <img src="/themes/custom/storyfulls/images/juniorartistspagebanner.jpg" alt="Junior Artists" class="banner-image">
+    <div class="banner-overlay">
+      <h1 class="banner-title">Junior Artists</h1>
+      <p class="banner-subtitle">Calling all young artists! Share your masterpieces here</p>
+    </div>
+  </div>
+
+  {# User Profile Header - Centered #}
+  <div class="user-profile-header-centered">
+    <div class="user-avatar-large">
+      <img src="{{ user_avatar }}" alt="{{ user_name }}">
+    </div>
+    <div class="user-info-large">
+      <h2 class="user-name">{{ user_name }}</h2>
+      <p class="user-age">{{ user_age }}</p>
+      
+      {% if is_owner %}
+        <a href="/node/add/junior_artist" class="share-work-btn-small">Share your work</a>
+      {% else %}
+        <button class="follow-btn">Follow</button>
+      {% endif %}
+    </div>
+  </div>
+
+  {# Divider #}
+  <div class="section-divider">
+    <span class="divider-icon">🎨</span>
+  </div>
+
+  {# Posts List (Image Left, Text Right) #}
+  <div class="user-posts-list">
+    {% if posts is empty %}
+      <div class="no-posts-message">
+        <p>This artist hasn't shared any artwork yet.</p>
+      </div>
+    {% else %}
+      {% for post in posts %}
+        <div class="user-post-item">
+          {# Image Section (Left) #}
+          <div class="post-image-container">
+            {% if post.image %}
+              <img src="{{ post.image }}" alt="{{ post.title }}" class="post-image">
+              {# Like/Share Overlay #}
+              <div class="image-overlay-actions">
+                <button class="action-btn like-btn" data-id="{{ post.id }}">
+                  <i class="fas fa-heart"></i>
+                  <span>0</span>
+                </button>
+                <button class="action-btn share-btn" data-id="{{ post.id }}">
+                  <i class="fas fa-share-alt"></i>
+                </button>
+              </div>
+            {% else %}
+              <div class="post-image-placeholder">
+                <i class="fas fa-palette"></i>
+              </div>
+            {% endif %}
+          </div>
+          
+          {# Content Section (Right) #}
+          <div class="post-content-container">
+            <h3 class="post-title">{{ post.title }}</h3>
+            <div class="post-body">
+              {{ post.content|raw }}
+            </div>
+            <div class="post-meta">
+              <span class="post-date">Posted on {{ post.created|date('F j, Y') }}</span>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>

@@ -361,8 +361,160 @@ class YoungWritersController extends ControllerBase {
    * Display Junior Artists page.
    */
   public function juniorArtists() {
+    // Get all users who have posted artwork
+    $database = \Drupal::database();
+    
+    // Query to get users with junior_artist content
+    $query = $database->select('node_field_data', 'n')
+      ->fields('n', ['uid'])
+      ->condition('n.type', 'junior_artist')
+      ->condition('n.status', 1)
+      ->groupBy('n.uid');
+    
+    $user_ids = $query->execute()->fetchCol();
+    
+    // Load user data
+    $user_storage = \Drupal::entityTypeManager()->getStorage('user');
+    $users = $user_storage->loadMultiple($user_ids);
+    
+    $users_data = [];
+    $avatars = ['elephantavatar.png', 'tigeravatar.png', 'rhinoavatar.png'];
+    
+    foreach ($users as $user) {
+      if ($user->id() == 0) continue; // Skip anonymous
+      
+      // Get post count
+      $post_query = \Drupal::entityTypeManager()->getStorage('node')->getQuery()
+        ->condition('type', 'junior_artist')
+        ->condition('uid', $user->id())
+        ->condition('status', 1)
+        ->accessCheck(TRUE);
+      
+      $post_count = $post_query->count()->execute();
+      
+      // Get avatar
+      $user_picture = '';
+      if ($user->hasField('field_avatar') && !$user->get('field_avatar')->isEmpty()) {
+        $avatar_filename = $user->get('field_avatar')->value;
+        $user_picture = '/themes/custom/storyfulls/images/' . $avatar_filename;
+      } else {
+        $avatar_index = ($user->id() - 1) % count($avatars);
+        $user_picture = '/themes/custom/storyfulls/images/' . $avatars[$avatar_index];
+      }
+      
+      // Get Age
+      $user_age = 'Age not available';
+      if ($user->hasField('field_date_of_birth') && !$user->get('field_date_of_birth')->isEmpty()) {
+        $dob = $user->get('field_date_of_birth')->value;
+        if ($dob) {
+          $birthDate = new \DateTime($dob);
+          $today = new \DateTime();
+          $age = $today->diff($birthDate)->y;
+          $user_age = $age . ' years';
+        }
+      }
+      
+      $users_data[] = [
+        'id' => $user->id(),
+        'name' => $user->getDisplayName(),
+        'picture' => $user_picture,
+        'post_count' => $post_count,
+        'age' => $user_age,
+      ];
+    }
+    
+    // Sort by post count
+    usort($users_data, function($a, $b) {
+      return $b['post_count'] - $a['post_count'];
+    });
+
     return [
       '#theme' => 'young_writers_junior_artists',
+      '#artists' => $users_data,
+      '#attached' => [
+        'library' => [
+          'storyfulls/young-writers',
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * Display specific user's artwork.
+   */
+  public function userJuniorArtists(UserInterface $user) {
+    // Load artwork by this user
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    $query = $node_storage->getQuery()
+      ->condition('type', 'junior_artist')
+      ->condition('uid', $user->id())
+      ->condition('status', 1)
+      ->sort('created', 'DESC')
+      ->accessCheck(TRUE);
+      
+    $nids = $query->execute();
+    $nodes = $node_storage->loadMultiple($nids);
+    
+    $posts = [];
+    foreach ($nodes as $node) {
+      $image_url = '';
+      if ($node->hasField('field_featured_image') && !$node->get('field_featured_image')->isEmpty()) {
+        $file = $node->get('field_featured_image')->entity;
+        if ($file) {
+          $image_url = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+        }
+      }
+      
+      $body = '';
+      if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+        $body = $node->get('body')->value; 
+      }
+
+      $posts[] = [
+        'id' => $node->id(),
+        'title' => $node->getTitle(),
+        'image' => $image_url,
+        'content' => $body,
+        'created' => $node->getCreatedTime(),
+      ];
+    }
+
+    // User Data for bottom section
+    $avatars = ['elephantavatar.png', 'tigeravatar.png', 'rhinoavatar.png'];
+    $avatar_index = ($user->id() - 1) % count($avatars);
+    $user_picture = '';
+    
+    if ($user->hasField('field_avatar') && !$user->get('field_avatar')->isEmpty()) {
+       $avatar_filename = $user->get('field_avatar')->value;
+       $user_picture = '/themes/custom/storyfulls/images/' . $avatar_filename;
+    } else {
+       $user_picture = '/themes/custom/storyfulls/images/' . $avatars[$avatar_index];
+    }
+    
+    // Calculate Age
+    $user_age = '';
+    if ($user->hasField('field_date_of_birth') && !$user->get('field_date_of_birth')->isEmpty()) {
+      $dob = $user->get('field_date_of_birth')->value;
+      if ($dob) {
+        $birthDate = new \DateTime($dob);
+        $today = new \DateTime();
+        $age = $today->diff($birthDate)->y;
+        $user_age = $age . ' years';
+      }
+    }
+
+    // Check if current user is the owner
+    $current_user = \Drupal::currentUser();
+    $is_owner = ($current_user->id() == $user->id());
+
+    return [
+      '#theme' => 'young_writers_user_junior_artists',
+      '#user_name' => $user->getDisplayName(),
+      '#user_id' => $user->id(),
+      '#user_avatar' => $user_picture,
+      '#user_age' => $user_age,
+      '#posts' => $posts,
+      '#is_owner' => $is_owner,
       '#attached' => [
         'library' => [
           'storyfulls/young-writers',

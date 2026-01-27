@@ -51,8 +51,21 @@ function storyfulls_young_writers_theme($existing, $type, $theme, $path) {
       'template' => 'young-writers-user-stories',
     ],
     'young_writers_junior_artists' => [
-      'variables' => [],
+      'variables' => [
+        'artists' => [],
+      ],
       'template' => 'young-writers-junior-artists',
+    ],
+    'young_writers_user_junior_artists' => [
+      'variables' => [
+        'user_name' => '',
+        'user_id' => 0,
+        'user_avatar' => '',
+        'user_age' => '',
+        'posts' => [],
+        'is_owner' => FALSE,
+      ],
+      'template' => 'young-writers-user-junior-artists',
     ],
   ];
 }

@@ -104,7 +104,11 @@
 
     // Share your work button
     $('.share-your-work-btn').on('click', function() {
-      window.location.href = '/node/add/book_review';
+      if (window.location.pathname.includes('stories-poetry')) {
+        window.location.href = '/node/add/story_poetry';
+      } else {
+        window.location.href = '/node/add/book_review';
+      }
     });
 
     // Like Button Handler (Stories & Poetry)

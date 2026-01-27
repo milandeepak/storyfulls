@@ -60,6 +60,17 @@ storyfulls_young_writers.junior_artists:
   options:
     no_cache: TRUE
 
+storyfulls_young_writers.user_junior_artists:
+  path: '/young-writers/junior-artists/user/{user}'
+  defaults:
+    _controller: '\Drupal\storyfulls_young_writers\Controller\YoungWritersController::userJuniorArtists'
+    _title: 'User Artwork'
+  requirements:
+    _permission: 'access content'
+    user: \d+
+  options:
+    no_cache: TRUE
+
 storyfulls_young_writers.get_reviewers:
   path: '/young-writers/api/get-reviewers'
   defaults:

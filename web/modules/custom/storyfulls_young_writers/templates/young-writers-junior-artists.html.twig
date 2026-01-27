@@ -7,21 +7,46 @@
 
 <div class="young-writers-junior-artists-page">
   {# Banner Section #}
-  <div class="young-writers-section-banner">
-    <h1 class="section-title">Junior Artists</h1>
-    <p class="section-subtitle">To all future illustrators, showcase your artwork inspired by your favourite books</p>
+  <div class="young-writers-banner">
+    <img src="/themes/custom/storyfulls/images/juniorartistspagebanner.jpg" alt="Junior Artists" class="banner-image">
+    <div class="banner-overlay">
+      <h1 class="banner-title">Junior Artists</h1>
+      <p class="banner-subtitle">Calling all young artists! Share your masterpieces here</p>
+    </div>
   </div>
 
   {# Share Your Work Button #}
-  <div class="share-work-section">
-    <a href="/user/login" class="share-work-btn">Share your work</a>
+  <div class="share-work-section-centered">
+    <a href="/node/add/junior_artist" class="share-work-btn-large">Share your work</a>
   </div>
 
-  {# Coming Soon Message #}
-  <div class="coming-soon">
-    <div class="coming-soon-content">
-      <h2>Coming Soon!</h2>
-      <p>This section is currently being developed. Soon you'll be able to showcase your amazing artwork here!</p>
-    </div>
+  {# Artists List #}
+  <div class="writers-grid-section">
+    {% if artists is empty %}
+      <div class="no-content-message">
+        <p>No artwork shared yet. Be the first to share your creativity!</p>
+      </div>
+    {% else %}
+      <div class="reviewers-grid">
+        {% for artist in artists %}
+          <div class="reviewer-card">
+            <div class="reviewer-card-inner">
+              <a href="/young-writers/junior-artists/user/{{ artist.id }}" class="reviewer-avatar-link">
+                <div class="reviewer-avatar" style="background-image: url('{{ artist.picture }}');"></div>
+              </a>
+              
+              <div class="reviewer-info">
+                <h3 class="reviewer-name">{{ artist.name }}</h3>
+                <p class="reviewer-age">{{ artist.age }}</p>
+                <div class="reviewer-stats">
+                  <span class="stat-count">{{ artist.post_count }}</span>
+                  <span class="stat-label">Artworks</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
   </div>
 </div>
