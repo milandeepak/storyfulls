@@ -1,0 +1,30 @@
+# Render Blueprint: Drupal 11 (Storyfulls)
+# Deploy from repo root; creates web service + PostgreSQL.
+# See RENDER_DEPLOY.md for step-by-step instructions.
+
+databases:
+  - name: storyfulls-db
+    plan: free
+    # Use same region as web service for lower latency
+
+services:
+  - type: web
+    name: storyfulls
+    runtime: docker
+    plan: free
+    region: oregon
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: storyfulls-db
+          property: connectionString
+      - key: DRUPAL_HASH_SALT
+        generateValue: true
+      # Optional: set after first deploy to fix mixed content (use your Render URL)
+      # - key: DRUPAL_BASE_URL
+      #   value: https://storyfulls.onrender.com
+    disk:
+      name: drupal-files
+      mountPath: /var/www/html/web/sites/default/files
+      sizeGB: 1
+    healthCheckPath: /
