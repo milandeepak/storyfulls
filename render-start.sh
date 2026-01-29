@@ -27,5 +27,10 @@ if [ -n "$DATABASE_URL" ]; then
   fi
 fi
 
-# Start nginx + PHP-FPM (from base image)
-exec /start.sh
+# Render sets PORT; nginx must listen on it
+LISTEN_PORT="${PORT:-8080}"
+sed "s/listen 8080/listen ${LISTEN_PORT}/" /etc/nginx/sites-available/default > /tmp/default.conf && mv /tmp/default.conf /etc/nginx/sites-available/default
+
+# Start PHP-FPM in background, nginx in foreground
+php-fpm --nodaemonize &
+exec nginx -g "daemon off;"

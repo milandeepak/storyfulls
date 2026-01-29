@@ -29,3 +29,6 @@
 
 # Ignore other temporary files
 /tmp
+
+# Database dumps (export scripts)
+/data

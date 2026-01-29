@@ -1,24 +1,32 @@
-# Drupal 11 on Render - nginx + PHP-FPM
-# Document root is web/ (Drupal's index.php lives in web/)
-FROM richarvey/nginx-php-fpm:3.1.6
+# Drupal 11 on Render - PHP 8.3 + nginx (lock file requires PHP >= 8.3)
+# Document root is web/
+FROM php:8.3-fpm-bookworm
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    nginx \
+    unzip \
+    git \
+    libpq-dev \
+    libpng-dev \
+    libzip-dev \
+    libonig-dev \
+    libxml2-dev \
+    && docker-php-ext-install -j$(nproc) pdo_pgsql pgsql gd zip opcache mbstring \
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 WORKDIR /var/www/html
 
-# Copy entire project (respects .dockerignore)
+# Nginx: listen on 8080, docroot web/
+COPY render-nginx-default.conf /etc/nginx/sites-available/default
+RUN echo "daemon off;" >> /etc/nginx/nginx.conf
+
 COPY . .
 
-# Drupal document root is web/, not project root
 ENV WEBROOT=/var/www/html/web
-ENV SKIP_COMPOSER=1
-ENV PHP_ERRORS_STDERR=1
-ENV RUN_SCRIPTS=1
-ENV REAL_IP_HEADER=1
 ENV COMPOSER_ALLOW_SUPERUSER=1
-
-# Production
 ENV APP_ENV=production
 
-# Start script runs composer install + drush deploy + cache rebuild
 COPY render-start.sh /render-start.sh
 RUN chmod +x /render-start.sh
 
