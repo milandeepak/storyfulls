@@ -10,9 +10,7 @@ if [ -n "$DATABASE_URL" ] && [ ! -f web/sites/default/settings.php ]; then
   printf '\n<?php\n// Render.com environment\nif (getenv("DATABASE_URL")) { include __DIR__ . "/settings.render.php"; }\n' >> web/sites/default/settings.php
 fi
 
-# Install Composer dependencies (no dev for production)
-echo "Running composer install..."
-composer install --no-dev --no-interaction --optimize-autoloader --working-dir=/var/www/html
+# Dependencies are installed in Dockerfile so the container can listen on PORT quickly
 
 # Ensure files directory exists and is writable
 mkdir -p web/sites/default/files

@@ -17,14 +17,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /var/www/html
 
-# Nginx: listen on 8080, docroot web/
+# Nginx: listen on 8080, docroot web/ (we start with "nginx -g daemon off;" so no edit to nginx.conf)
 COPY render-nginx-default.conf /etc/nginx/sites-available/default
-RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
 COPY . .
 
-ENV WEBROOT=/var/www/html/web
+# Install dependencies at build time so container starts quickly (Render port check)
 ENV COMPOSER_ALLOW_SUPERUSER=1
+RUN composer install --no-dev --no-interaction --optimize-autoloader
+
+ENV WEBROOT=/var/www/html/web
 ENV APP_ENV=production
 
 COPY render-start.sh /render-start.sh
