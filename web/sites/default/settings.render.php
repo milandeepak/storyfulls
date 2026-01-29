@@ -4,39 +4,79 @@
  * @file
  * Render.com environment settings.
  *
- * Loaded when DATABASE_URL is set (e.g. on Render). Parses DATABASE_URL
- * and configures database, trusted hosts, and base URL for HTTPS.
+ * Loaded on Render. Configures database, trusted hosts, and base URL for HTTPS.
+ *
+ * Supported DB config:
+ * - MySQL (recommended for this project on Render): DB_HOST, DB_PORT, DB_NAME,
+ *   DB_USER, DB_PASS (set via Render env vars)
+ * - DATABASE_URL: mysql://... or postgresql://... (fallback)
  */
 
-$database_url = getenv('DATABASE_URL');
-if (empty($database_url)) {
-  return;
-}
+// --- Database ---------------------------------------------------------------
+// Prefer explicit MySQL env vars (works well with Render private MySQL service).
+$db_host = getenv('DB_HOST');
+$db_name = getenv('DB_NAME');
+$db_user = getenv('DB_USER');
+$db_pass = getenv('DB_PASS');
+$db_port = getenv('DB_PORT') ?: '3306';
 
-// Parse PostgreSQL URL: postgres://user:pass@host:port/dbname
-$url = parse_url($database_url);
-if (!isset($url['scheme'], $url['host'], $url['path'])) {
-  return;
+if (!empty($db_host) && !empty($db_name) && !empty($db_user)) {
+  $databases['default']['default'] = [
+    'driver' => 'mysql',
+    'database' => $db_name,
+    'username' => $db_user,
+    'password' => $db_pass ?: '',
+    'host' => $db_host,
+    'port' => $db_port,
+    'prefix' => '',
+    'collation' => 'utf8mb4_general_ci',
+  ];
 }
-
-$databases['default']['default'] = [
-  'driver'   => 'pgsql',
-  'database' => ltrim($url['path'] ?? '', '/'),
-  'username' => $url['user'] ?? '',
-  'password' => $url['pass'] ?? '',
-  'host'     => $url['host'] ?? 'localhost',
-  'port'     => $url['port'] ?? '5432',
-  'prefix'   => '',
-];
+else {
+  // Fallback: DATABASE_URL (postgresql://... or mysql://...)
+  $database_url = getenv('DATABASE_URL');
+  if (!empty($database_url)) {
+    $url = parse_url($database_url);
+    if (isset($url['scheme'], $url['host'], $url['path'])) {
+      $scheme = strtolower($url['scheme']);
+      if ($scheme === 'postgres' || $scheme === 'postgresql') {
+        $databases['default']['default'] = [
+          'driver'   => 'pgsql',
+          'database' => ltrim($url['path'] ?? '', '/'),
+          'username' => $url['user'] ?? '',
+          'password' => $url['pass'] ?? '',
+          'host'     => $url['host'] ?? 'localhost',
+          'port'     => $url['port'] ?? '5432',
+          'prefix'   => '',
+        ];
+      }
+      elseif ($scheme === 'mysql' || $scheme === 'mariadb') {
+        $databases['default']['default'] = [
+          'driver' => 'mysql',
+          'database' => ltrim($url['path'] ?? '', '/'),
+          'username' => $url['user'] ?? '',
+          'password' => $url['pass'] ?? '',
+          'host' => $url['host'] ?? 'localhost',
+          'port' => $url['port'] ?? '3306',
+          'prefix' => '',
+          'collation' => 'utf8mb4_general_ci',
+        ];
+      }
+    }
+  }
+}
 
 // Trusted host: allow Render URL and optional custom domain
-$trusted = ['.onrender.com'];
+// Note: These are regex patterns (no delimiters).
+$settings['trusted_host_patterns'] = [
+  '^(.+\\.)?onrender\\.com$',
+];
 if ($custom = getenv('TRUSTED_HOST_PATTERNS')) {
-  $trusted = array_merge($trusted, array_map('trim', explode(',', $custom)));
+  // Comma-separated list of regex patterns.
+  foreach (array_filter(array_map('trim', explode(',', $custom))) as $pattern) {
+    $settings['trusted_host_patterns'][] = $pattern;
+  }
 }
-$settings['trusted_host_patterns'] = array_map(function ($h) {
-  return '^' . preg_quote($h, '/') . '$';
-}, $trusted);
 
 // Hash salt from env (generate with: openssl rand -hex 32)
 if ($salt = getenv('DRUPAL_HASH_SALT')) {

@@ -5,10 +5,10 @@ This project can be hosted on [Render](https://render.com) so you can share a li
 ## What you get
 
 - **Web service**: Drupal 11 behind nginx + PHP-FPM, built from the repo with Docker.
-- **PostgreSQL database**: Managed by Render (free tier available).
-- **Persistent disk**: For `sites/default/files` (uploads and config sync).
+- **MySQL 8 database**: A Render **private service** (internal-only) backed by a persistent disk.
+- **Persistent disk**: For `sites/default/files` (uploads and generated files).
 
-**Important:** The app uses **PostgreSQL** on Render. If your local site uses MySQL (e.g. with DDEV), you’ll need to either run a fresh Drupal install on Render or migrate your data to PostgreSQL before/after deploy.
+**Important:** This setup uses **MySQL** on Render so you can import your existing DDEV/MySQL database without converting to PostgreSQL.
 
 ---
 
@@ -19,26 +19,36 @@ This project can be hosted on [Render](https://render.com) so you can share a li
 2. **Go to [Render Dashboard](https://dashboard.render.com)** → **New** → **Blueprint**.
 
 3. **Connect the repo** that contains this project and select it. Render will read `render.yaml` and create:
-   - A PostgreSQL database (`storyfulls-db`)
+   - A private MySQL service (`storyfulls-mysql`)
    - A web service (`storyfulls`) using the Dockerfile
 
-4. **Create the Blueprint.** When prompted for any secret values (e.g. `DRUPAL_HASH_SALT`), you can let Render generate them.
+4. **Create the Blueprint.** You will be prompted for `MYSQL_PASSWORD` (this becomes the DB password used by Drupal). Save it somewhere.
 
-5. **Wait for the first deploy.** The build runs `composer install` and generates `settings.php` from `default.settings.php` + Render-specific settings when `DATABASE_URL` is set.
+5. **Wait for the first deploy.** The container generates `settings.php` and starts nginx/PHP-FPM. Drupal will connect to MySQL using `DB_HOST/DB_NAME/DB_USER/DB_PASS`.
 
-6. **Install Drupal or restore data**
-   - **Fresh install:** Open `https://<your-service-name>.onrender.com/core/install.php` and complete the installer (database is already configured).
-   - **Existing DB:** Export your current DB, convert/import into the Render Postgres instance, then run `drush cr` (e.g. via a one-off job or SSH if available).
+6. **Import your existing database (no fresh install)**
+   - Export from DDEV (example): `ddev export-db --gzip=false --file=/tmp/storyfulls.sql`
+   - Import into Render MySQL:
+     - Easiest: deploy **Adminer** on Render and use its **Import** UI to upload the SQL dump.
+       See [Deploy Adminer on Render](https://render.com/docs/deploy-adminer).
+     - Alternative: use the Render shell/SSH on a service in the same workspace and run `mysql` to import.
 
 7. **Optional:** In the web service **Environment** tab, add:
    - `DRUPAL_BASE_URL` = `https://<your-service-name>.onrender.com`  
    so that links and file URLs use HTTPS correctly.
 
+8. **Copy uploaded files (`sites/default/files`)**
+   - Your DB import does not include uploaded files.
+   - Attachments/uploads must be copied into the web service disk at:
+     - `/var/www/html/web/sites/default/files`
+   - Quick approach: zip your local folder and make it temporarily downloadable, then `curl` it from the Render shell and unzip into the path above.
+
 ---
 
 ## Option B: Manual setup (without Blueprint)
 
-1. In Render, create a **PostgreSQL** database (e.g. `storyfulls-db`), same region as the web service.
+1. In Render, create a **private MySQL service** (MySQL 8) with a disk mounted at `/var/lib/mysql`.
+   See [Deploy MySQL](https://render.com/docs/deploy-mysql).
 
 2. Create a **Web Service**:
    - Connect the repo.
@@ -47,14 +57,16 @@ This project can be hosted on [Render](https://render.com) so you can share a li
    - **Start:** Uses `CMD` from Dockerfile (no extra start command).
 
 3. In the web service **Environment**:
-   - `DATABASE_URL` = **Internal Database URL** from the Postgres service (from the database’s “Connect” / “Internal” URL).
-   - `DRUPAL_HASH_SALT` = generate one, e.g. `openssl rand -hex 32`.
+   - `DB_HOST` = the MySQL private service host (e.g. `storyfulls-mysql`)
+   - `DB_PORT` = `3306`
+   - `DB_NAME`, `DB_USER`, `DB_PASS` = match MySQL env vars
+   - `DRUPAL_HASH_SALT` = generate one, e.g. `openssl rand -hex 32`
 
 4. Under **Advanced** → **Disks**, add a disk:
    - **Mount Path:** `/var/www/html/web/sites/default/files`
-   - **Size:** e.g. 1 GB.
+   - **Size:** e.g. 5 GB (adjust as needed).
 
-5. Deploy. Then install Drupal at `/core/install.php` or import your database as in Option A.
+5. Deploy. Then import your MySQL dump (Adminer recommended) and copy `sites/default/files`.
 
 ---
 
@@ -63,9 +75,9 @@ This project can be hosted on [Render](https://render.com) so you can share a li
 | File | Purpose |
 |------|--------|
 | `Dockerfile` | nginx + PHP-FPM, document root = `web/` |
-| `render-start.sh` | Generates `settings.php`, runs `composer install`, ensures files dir, then starts the server |
-| `web/sites/default/settings.render.php` | Reads `DATABASE_URL` and sets database, trusted host, hash salt, etc. |
-| `render.yaml` | Blueprint: web service + Postgres + disk + env vars |
+| `render-start.sh` | Generates `settings.php`, ensures files dir, starts PHP-FPM + nginx |
+| `web/sites/default/settings.render.php` | Reads `DB_HOST/DB_NAME/DB_USER/DB_PASS` (MySQL) or `DATABASE_URL` (fallback) |
+| `render.yaml` | Blueprint: web service + MySQL private service + disks + env vars |
 | `.dockerignore` | Keeps image smaller by excluding dev/generated content |
 
 ---
@@ -80,8 +92,8 @@ This project can be hosted on [Render](https://render.com) so you can share a li
 
 ## Troubleshooting
 
-- **White screen / 500:** Check **Logs** in the Render dashboard. Ensure `DATABASE_URL` is set and is the **internal** connection string.
+- **White screen / 500:** Check **Logs** in the Render dashboard. Ensure `DB_HOST/DB_NAME/DB_USER/DB_PASS` are set and match the MySQL service.
 - **“Trusted host” error:** Add your Render URL to trusted hosts; `settings.render.php` already allows `*.onrender.com`. If you use a custom domain, set `TRUSTED_HOST_PATTERNS` (comma-separated) or add it in `settings.render.php`.
-- **Composer / Drush errors in logs:** The start script runs `composer install` and optionally `drush deploy`. If the DB isn’t ready yet, Drush may fail once; the site can still work after you run the installer or import the DB.
+- **DB import:** If you can’t SSH into services, deploy Adminer and import the SQL dump via the browser.
 
 Once the service is live, share the Render URL (e.g. `https://storyfulls.onrender.com`) with your client.

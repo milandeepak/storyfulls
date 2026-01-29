@@ -6,12 +6,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     nginx \
     unzip \
     git \
+    default-mysql-client \
     libpq-dev \
     libpng-dev \
     libzip-dev \
     libonig-dev \
     libxml2-dev \
-    && docker-php-ext-install -j$(nproc) pdo_pgsql pgsql gd zip opcache mbstring \
+    && docker-php-ext-install -j$(nproc) pdo_pgsql pgsql pdo_mysql mysqli gd zip opcache mbstring \
     && rm -rf /var/lib/apt/lists/* \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 

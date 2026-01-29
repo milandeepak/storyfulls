@@ -32,3 +32,7 @@
 
 # Database dumps (export scripts)
 /data
+
+# ngrok (local tunnel)
+/ngrok-url.txt
+/ngrok.log
