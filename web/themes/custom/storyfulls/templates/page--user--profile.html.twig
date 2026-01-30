@@ -134,7 +134,7 @@
             </a>
             
             {# My Inner Thoughts Card #}
-            <a href="/young-writers/stories-poetry/user/{{ user_id }}" class="activity-card inner-thoughts-card" style="text-decoration: none; color: inherit;">
+            <a href="/user/{{ user_id }}/inner-thoughts" class="activity-card inner-thoughts-card" style="text-decoration: none; color: inherit;">
               <img src="{{ base_path ~ directory }}/images/imageformyinnerthoughts.png" alt="Thoughts" class="card-icon">
               <div class="card-content">
                 <h3 class="card-title">My Inner Thoughts</h3>
@@ -159,9 +159,9 @@
                 <p class="card-subtitle">{{ weeks_pick_book|default('Book Name') }}</p>
               </div>
               {% if can_edit %}
-                <button class="card-edit-btn-activity" data-modal="edit-weeks-pick">
+                <a href="/user/edit-weeks-pick" class="card-edit-btn-activity">
                   <img src="{{ base_path ~ directory }}/images/editbutton.png" alt="Edit" class="edit-icon-tiny">
-                </button>
+                </a>
               {% endif %}
             </div>
             
@@ -192,7 +192,7 @@
                       <div class="favorite-item">{{ author }}</div>
                     {% endfor %}
                   {% else %}
-                    <p class="no-favorites">No favorite authors yet</p>
+                    <p class="no-favorites">No favourite authors yet</p>
                   {% endif %}
                 </div>
               </div>
@@ -216,7 +216,7 @@
                       <div class="favorite-item">{{ book }}</div>
                     {% endfor %}
                   {% else %}
-                    <p class="no-favorites">No favorite books yet</p>
+                    <p class="no-favorites">No favourite books yet</p>
                   {% endif %}
                 </div>
               </div>
@@ -240,7 +240,7 @@
                       <div class="genre-tag">{{ genre }}</div>
                     {% endfor %}
                   {% else %}
-                    <p class="no-favorites">No favorite genres yet</p>
+                    <p class="no-favorites">No favourite genres yet</p>
                   {% endif %}
                 </div>
               </div>
@@ -326,7 +326,7 @@
             <button class="modal-close" data-close="edit-authors-modal">&times;</button>
           </div>
           <form class="modal-form" id="edit-authors-form">
-            <div class="form-help-text">Add up to 5 favorite authors. Drag to reorder.</div>
+            <div class="form-help-text">Add up to 5 favourite authors. Drag to reorder.</div>
             <div class="authors-sortable">
               {% for i in 1..5 %}
                 <div class="form-group sortable-item">
@@ -352,7 +352,7 @@
             <button class="modal-close" data-close="edit-books-modal">&times;</button>
           </div>
           <form class="modal-form" id="edit-books-form">
-            <div class="form-help-text">Add up to 5 favorite books. Drag to reorder.</div>
+            <div class="form-help-text">Add up to 5 favourite books. Drag to reorder.</div>
             <div class="books-sortable">
               {% for i in 1..5 %}
                 <div class="form-group sortable-item">
@@ -378,7 +378,7 @@
             <button class="modal-close" data-close="edit-genres-modal">&times;</button>
           </div>
           <form class="modal-form" id="edit-genres-form">
-            <div class="form-help-text">Select your favorite genres</div>
+            <div class="form-help-text">Select your favourite genres</div>
             <div class="genres-checkbox-grid">
               {% set all_genres = ['(Auto)biography/Memoir', 'Adventure', 'Anthology', 'Classics', 'Comedy', 'Comics', 'Early Readers', 'Fantasy Fiction', 'Fiction', 'Graphic Novel', 'History', 'Literature', 'Mystery', 'Mythology', 'Non-Fiction', 'Picture Books', 'Science-Fiction', 'Sports'] %}
               {% for genre in all_genres %}
@@ -390,30 +390,6 @@
             </div>
             <div class="modal-actions">
               <button type="button" class="btn-cancel" data-close="edit-genres-modal">Cancel</button>
-              <button type="submit" class="btn-save">Save Changes</button>
-            </div>
-          </form>
-        </div>
-      </div>
-      
-      {# Edit Week's Pick Modal #}
-      <div class="modal-overlay" id="edit-weeks-pick-modal" style="display:none;">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h2 class="modal-title">Edit This Week's Pick</h2>
-            <button class="modal-close" data-close="edit-weeks-pick-modal">&times;</button>
-          </div>
-          <form class="modal-form" id="edit-weeks-pick-form">
-            <div class="form-group">
-              <label>Book Title</label>
-              <input type="text" name="weeks_pick_book" value="{{ weeks_pick_book }}" placeholder="Enter book title">
-            </div>
-            <div class="form-group">
-              <label>Author</label>
-              <input type="text" name="weeks_pick_author" value="{{ weeks_pick_author }}" placeholder="Enter author name">
-            </div>
-            <div class="modal-actions">
-              <button type="button" class="btn-cancel" data-close="edit-weeks-pick-modal">Cancel</button>
               <button type="submit" class="btn-save">Save Changes</button>
             </div>
           </form>

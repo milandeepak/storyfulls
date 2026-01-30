@@ -6,6 +6,14 @@ storyfulls_admin.dashboard:
   requirements:
     _role: 'administrator'
 
+storyfulls_admin.manage_homepage:
+  path: '/admin/dashboard/manage-homepage'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::manageHomepage'
+    _title: 'Manage Homepage'
+  requirements:
+    _role: 'administrator'
+
 storyfulls_admin.manage_books:
   path: '/admin/dashboard/manage-books'
   defaults:
@@ -91,6 +99,30 @@ storyfulls_admin.book_of_season:
   defaults:
     _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::bookOfSeason'
     _title: 'Book of the Season'
+  requirements:
+    _role: 'administrator'
+
+storyfulls_admin.fun_facts:
+  path: '/admin/dashboard/fun-facts'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::funFacts'
+    _title: 'Fun Facts'
+  requirements:
+    _role: 'administrator'
+
+storyfulls_admin.featured_users_month:
+  path: '/admin/dashboard/featured-users-month'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::featuredUsersMonth'
+    _title: 'Featured Users of the Month'
+  requirements:
+    _role: 'administrator'
+
+storyfulls_admin.manage_facts:
+  path: '/admin/dashboard/manage-facts'
+  defaults:
+    _controller: '\Drupal\storyfulls_admin\Controller\AdminDashboardController::manageFacts'
+    _title: 'Manage Did You Know? Facts'
   requirements:
     _role: 'administrator'
 

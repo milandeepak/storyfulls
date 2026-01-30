@@ -1,0 +1,307 @@
+<div class="manage-page">
+  <h1 class="page-title">Manage Homepage Sections</h1>
+  
+  <div class="homepage-manager">
+    <div class="manager-header">
+      <p class="instructions">
+        <strong>Instructions:</strong> Drag and drop sections to reorder them. Click "Edit" to modify a section's content, or "Delete" to remove it from the homepage.
+      </p>
+      <a href="/node/16/edit" class="btn btn-secondary">Add New Section</a>
+    </div>
+
+    {% if sections %}
+      <form method="post" id="homepage-sections-form" class="sections-form">
+        <input type="hidden" name="action" value="reorder">
+        <input type="hidden" name="section_order" id="section-order" value="">
+        
+        <div class="sections-list" id="sortable-sections">
+          {% for section in sections %}
+            <div class="section-item" data-section-id="{{ section.id }}">
+              <div class="section-handle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <line x1="3" y1="8" x2="21" y2="8" stroke-width="2"/>
+                  <line x1="3" y1="16" x2="21" y2="16" stroke-width="2"/>
+                </svg>
+              </div>
+              
+              <div class="section-info">
+                <div class="section-number">{{ section.position }}</div>
+                <div class="section-details">
+                  <h3 class="section-title">{{ section.type_label }}</h3>
+                  <span class="section-type">Type: {{ section.type }}</span>
+                </div>
+              </div>
+              
+              <div class="section-actions">
+                <a href="{{ section.edit_url }}" class="btn btn-edit">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                  </svg>
+                  Edit
+                </a>
+                
+                {% if section.can_delete %}
+                  <a href="/admin/dashboard/manage-homepage?delete={{ section.id }}" 
+                     class="btn btn-delete" 
+                     onclick="return confirm('Are you sure you want to delete this section? This action cannot be undone.');">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                      <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                    </svg>
+                    Delete
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Save Order</button>
+          <a href="/admin/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+      </form>
+    {% else %}
+      <div class="empty-state">
+        <p>No sections found on the homepage.</p>
+        <a href="/node/16/edit" class="btn btn-primary">Add First Section</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+.homepage-manager {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.manager-header {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.manager-header .instructions {
+  margin: 0;
+  flex: 1;
+  color: #555;
+  line-height: 1.6;
+}
+
+.sections-list {
+  margin-bottom: 2rem;
+}
+
+.section-item {
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.2s;
+  cursor: move;
+}
+
+.section-item:hover {
+  border-color: #4A90E2;
+  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
+}
+
+.section-item.ui-sortable-helper {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: scale(1.02);
+}
+
+.section-handle {
+  color: #999;
+  cursor: grab;
+  flex-shrink: 0;
+}
+
+.section-handle:active {
+  cursor: grabbing;
+}
+
+.section-number {
+  width: 40px;
+  height: 40px;
+  background: #4A90E2;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.section-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.section-details {
+  flex: 1;
+}
+
+.section-title {
+  margin: 0 0 0.25rem 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #2C3E50;
+}
+
+.section-type {
+  font-size: 13px;
+  color: #666;
+  font-family: monospace;
+}
+
+.section-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background: #4A90E2;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #357ABD;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #5a6268;
+}
+
+.btn-edit {
+  background: #28a745;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  font-size: 13px;
+}
+
+.btn-edit:hover {
+  background: #218838;
+}
+
+.btn-delete {
+  background: #dc3545;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  font-size: 13px;
+}
+
+.btn-delete:hover {
+  background: #c82333;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  padding-top: 1rem;
+  border-top: 2px solid #e0e0e0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.empty-state p {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .manager-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .section-item {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .section-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+</style>
+
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+<script>
+(function($) {
+  $(document).ready(function() {
+    // Make sections sortable
+    $('#sortable-sections').sortable({
+      handle: '.section-handle',
+      placeholder: 'section-placeholder',
+      cursor: 'move',
+      opacity: 0.8,
+      update: function(event, ui) {
+        updateSectionNumbers();
+        updateSectionOrder();
+      }
+    });
+
+    // Update section numbers after reorder
+    function updateSectionNumbers() {
+      $('#sortable-sections .section-item').each(function(index) {
+        $(this).find('.section-number').text(index + 1);
+      });
+    }
+
+    // Update hidden input with new order
+    function updateSectionOrder() {
+      var order = [];
+      $('#sortable-sections .section-item').each(function() {
+        order.push($(this).data('section-id'));
+      });
+      $('#section-order').val(order.join(','));
+    }
+
+    // Initialize order on page load
+    updateSectionOrder();
+  });
+})(jQuery);
+</script>

@@ -74,6 +74,14 @@ function storyfulls_profile_theme($existing, $type, $theme, $path) {
       ],
       'template' => 'storyfulls-edit-favorite-genres',
     ],
+    'storyfulls_edit_weeks_pick' => [
+      'variables' => [
+        'user_id' => NULL,
+        'weeks_pick_book' => '',
+        'weeks_pick_author' => '',
+      ],
+      'template' => 'storyfulls-edit-weeks-pick',
+    ],
     'storyfulls_users_page' => [
       'variables' => [
         'users' => [],

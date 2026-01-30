@@ -118,12 +118,75 @@ class ProfileEditController extends ControllerBase {
     
     try {
       $user->save();
+      // Invalidate user cache so the profile page shows updated data after redirect.
+      \Drupal::service('cache_tags.invalidator')->invalidateTags(['user:' . $user->id()]);
       $this->messenger()->addStatus($this->t('Your profile has been updated successfully.'));
     } catch (\Exception $e) {
       $this->messenger()->addError($this->t('An error occurred while updating your profile.'));
       \Drupal::logger('storyfulls_profile')->error('Profile update error: @error', ['@error' => $e->getMessage()]);
     }
     
+    return new RedirectResponse(Url::fromRoute('entity.user.canonical', ['user' => $user->id()])->toString());
+  }
+
+  /**
+   * Display edit This Week's Pick page.
+   */
+  public function editWeeksPick(Request $request) {
+    $current_user = $this->currentUser();
+    $user = User::load($current_user->id());
+
+    if (!$user) {
+      $this->messenger()->addError($this->t('User not found.'));
+      return new RedirectResponse(Url::fromRoute('<front>')->toString());
+    }
+
+    // Handle form submission.
+    if ($request->isMethod('POST')) {
+      return $this->handleWeeksPickSubmit($request, $user);
+    }
+
+    $weeks_pick_book = $user->hasField('field_weeks_pick_book') && !$user->get('field_weeks_pick_book')->isEmpty()
+      ? $user->get('field_weeks_pick_book')->value : '';
+    $weeks_pick_author = $user->hasField('field_weeks_pick_author') && !$user->get('field_weeks_pick_author')->isEmpty()
+      ? $user->get('field_weeks_pick_author')->value : '';
+
+    return [
+      '#theme' => 'storyfulls_edit_weeks_pick',
+      '#user_id' => $user->id(),
+      '#weeks_pick_book' => $weeks_pick_book,
+      '#weeks_pick_author' => $weeks_pick_author,
+      '#attached' => [
+        'library' => [
+          'storyfulls/edit-favorites',
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * Handle This Week's Pick form submission.
+   */
+  private function handleWeeksPickSubmit(Request $request, User $user) {
+    $book = $request->request->get('weeks_pick_book');
+    $author = $request->request->get('weeks_pick_author');
+
+    if ($book !== NULL && $user->hasField('field_weeks_pick_book')) {
+      $user->set('field_weeks_pick_book', $book);
+    }
+    if ($author !== NULL && $user->hasField('field_weeks_pick_author')) {
+      $user->set('field_weeks_pick_author', $author);
+    }
+
+    try {
+      $user->save();
+      \Drupal::service('cache_tags.invalidator')->invalidateTags(['user:' . $user->id()]);
+      $this->messenger()->addStatus($this->t("This Week's Pick has been updated successfully."));
+    } catch (\Exception $e) {
+      $this->messenger()->addError($this->t("An error occurred while updating This Week's Pick."));
+      \Drupal::logger('storyfulls_profile')->error('Weeks pick update error: @error', ['@error' => $e->getMessage()]);
+    }
+
     return new RedirectResponse(Url::fromRoute('entity.user.canonical', ['user' => $user->id()])->toString());
   }
 

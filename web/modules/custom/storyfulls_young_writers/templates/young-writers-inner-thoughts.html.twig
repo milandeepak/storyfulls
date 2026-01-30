@@ -1,0 +1,172 @@
+{#
+/**
+ * @file
+ * Template for My Inner Thoughts page (subset of stories-poetry/user).
+ */
+#}
+
+<div class="young-writers-page user-stories-page inner-thoughts-page">
+  {# Header Section #}
+  <div class="user-stories-header">
+    <div class="header-content">
+      <h1 class="page-title">Stories, Poems</h1>
+      <p class="page-subtitle">A collection by {{ user_name }}</p>
+    </div>
+  </div>
+
+  {# Content Grid #}
+  <div class="stories-grid-container">
+    {% if posts %}
+      <div class="stories-grid">
+        {% for post in posts %}
+          <div class="story-card">
+            <div class="story-card-inner" style="background-image: url('/themes/custom/storyfulls/images/storiesandpoetryusercard.png'); background-size: cover; background-position: center bottom;">
+              
+              {# Semicircle overlay at bottom with title and author #}
+              <div class="story-card-content-overlay">
+                <div class="story-card-semicircle">
+                   <h3 class="story-title">{{ post.title }}</h3>
+                   <div class="story-author">By<br>{{ user_name }}</div>
+                </div>
+              </div>
+              
+              {# Clickable Area #}
+              <a href="/node/{{ post.id }}" class="story-card-link">
+                <span class="visually-hidden">Read {{ post.title }}</span>
+              </a>
+
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="no-content-message">
+        <p>{{ user_name }} hasn't posted any stories or poetry yet.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  {# Share Button (Only visible on this page, not the public user page) #}
+  <div class="share-work-container">
+    {# If user is authenticated link directly to node add, otherwise send to login with destination #}
+    {% if is_authenticated %}
+      {% if can_create_story %}
+        <a href="/node/add/story_poetry" data-type="story_poetry" class="share-your-work-btn">Share your work</a>
+      {% else %}
+        <button class="share-your-work-btn disabled" disabled title="You are not authorized to add a story">Share your work</button>
+      {% endif %}
+    {% else %}
+      <a href="/user/login?destination=/node/add/story_poetry" data-type="story_poetry" class="share-your-work-btn">Share your work</a>
+    {% endif %}
+  </div>
+
+</div>
+
+<style>
+/* Scoped styles for this specific page layout */
+.inner-thoughts-page .stories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 30px;
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.inner-thoughts-page .story-card {
+  aspect-ratio: 1 / 1; /* Square cards as per design */
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+  background-color: #fffaf0; /* Fallback color */
+}
+
+.inner-thoughts-page .story-card:hover {
+  transform: translateY(-5px);
+}
+
+.inner-thoughts-page .story-card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  /* Background image is set inline in the loop */
+}
+
+.inner-thoughts-page .story-card-content-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50%; /* Cover bottom half */
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.inner-thoughts-page .story-card-semicircle {
+  background-color: rgba(255, 255, 255, 0.9);
+  width: 180px;
+  height: 90px; /* Half of width for semicircle */
+  border-top-left-radius: 90px;
+  border-top-right-radius: 90px;
+  border: 2px dashed #3a5dae; /* Dashed blue border as per design */
+  border-bottom: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 0; /* Sit at very bottom */
+}
+
+.inner-thoughts-page .story-title {
+  font-family: 'Georgia', serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: #000;
+  margin: 0 0 5px 0;
+  line-height: 1.2;
+  max-width: 90%;
+}
+
+.inner-thoughts-page .story-author {
+  font-family: 'Arial', sans-serif;
+  font-size: 11px;
+  color: #333;
+}
+
+.inner-thoughts-page .story-card-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.inner-thoughts-page .share-work-container {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.inner-thoughts-page .share-your-work-btn {
+  background-color: #ffd700;
+  color: #000;
+  border: none;
+  padding: 12px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.inner-thoughts-page .share-your-work-btn:hover {
+  background-color: #ffcc00;
+  transform: scale(1.05);
+}
+</style>

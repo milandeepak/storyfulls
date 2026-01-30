@@ -304,12 +304,53 @@ class YoungWritersController extends ControllerBase {
         $body = $node->get('body')->value; // Use raw value or processed
       }
 
+      // Get like count
+      $flag_service = \Drupal::service('flag');
+      $flag = $flag_service->getFlagById('like_content');
+      $like_count = 0;
+      $is_liked = false;
+
+      if ($flag) {
+        $like_count = \Drupal::entityTypeManager()->getStorage('flagging')->getQuery()
+          ->condition('flag_id', $flag->id())
+          ->condition('entity_type', $node->getEntityTypeId())
+          ->condition('entity_id', $node->id())
+          ->count()
+          ->accessCheck(TRUE)
+          ->execute();
+          
+        $current_user = \Drupal::currentUser();
+        if (!$current_user->isAnonymous()) {
+           // FlagService::isFlagged() was removed in Flag 4.x/8.x-4.x
+           // We need to use Flagging storage or another method if using newer Flag module
+           // However, let's try the FlagService::getFlagging() method or entity query
+           $flagging_service = \Drupal::service('flag'); 
+           // Correct way in Flag 4.x is often just relying on getFlagging to check existence
+           // or constructing a query manually if the convenience method is missing.
+           
+           // Using direct entity query is safest across versions if API is unstable
+           $is_flagged = \Drupal::entityTypeManager()->getStorage('flagging')->getQuery()
+             ->condition('flag_id', $flag->id())
+             ->condition('entity_type', $node->getEntityTypeId())
+             ->condition('entity_id', $node->id())
+             ->condition('uid', $current_user->id())
+             ->count()
+             ->accessCheck(TRUE)
+             ->execute();
+             
+           $is_liked = ($is_flagged > 0);
+        }
+      }
+
       $posts[] = [
         'id' => $node->id(),
         'title' => $node->getTitle(),
         'image' => $image_url,
         'content' => $body,
         'created' => $node->getCreatedTime(),
+        'like_count' => $like_count,
+        'is_liked' => $is_liked,
+        'share_url' => $node->toUrl()->setAbsolute()->toString(),
       ];
     }
 
@@ -524,6 +565,72 @@ class YoungWritersController extends ControllerBase {
   }
 
   /**
+   * Display My Inner Thoughts page for logged in user or specific user.
+   */
+  public function innerThoughts(UserInterface $user) {
+    // Reuse the logic from userStoriesPoetry but render a different template
+    // Load stories/poetry by this user
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    $query = $node_storage->getQuery()
+      ->condition('type', 'story_poetry')
+      ->condition('uid', $user->id())
+      ->condition('status', 1)
+      ->sort('created', 'DESC')
+      ->accessCheck(TRUE);
+      
+    $nids = $query->execute();
+    $nodes = $node_storage->loadMultiple($nids);
+    
+    $posts = [];
+    foreach ($nodes as $node) {
+      $image_url = '';
+      if ($node->hasField('field_featured_image') && !$node->get('field_featured_image')->isEmpty()) {
+        $file = $node->get('field_featured_image')->entity;
+        if ($file) {
+          $image_url = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+        }
+      }
+      
+      $body = '';
+      if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+        $body = $node->get('body')->value; 
+      }
+
+      $posts[] = [
+        'id' => $node->id(),
+        'title' => $node->getTitle(),
+        'image' => $image_url,
+        'content' => $body,
+        'created' => $node->getCreatedTime(),
+      ];
+    }
+    
+    // Check if current user is the owner
+    $current_user = \Drupal::currentUser();
+    $is_owner = ($current_user->id() == $user->id());
+    // Determine if current user can create story_poetry nodes.
+    // Create a temporary node of that bundle and check create access.
+    $can_create_story = \Drupal\node\Entity\Node::create(['type' => 'story_poetry'])->access('create', $current_user);
+
+    return [
+      '#theme' => 'young_writers_inner_thoughts',
+      '#user_name' => $user->getDisplayName(),
+      '#posts' => $posts,
+      '#is_owner' => $is_owner,
+      // Expose whether current user is authenticated so templates can
+      // show the appropriate "Share your work" link (login vs create).
+      '#is_authenticated' => $current_user->isAuthenticated(),
+      // Expose whether the current user has permission to create story_poetry.
+      '#can_create_story' => $can_create_story,
+      '#attached' => [
+        'library' => [
+          'storyfulls/young-writers',
+        ],
+      ],
+    ];
+  }
+
+  /**
    * AJAX endpoint to get book reviewers data.
    */
   public function getBookReviewers() {
@@ -620,6 +727,234 @@ class YoungWritersController extends ControllerBase {
     });
     
     return new JsonResponse($users_data);
+  }
+
+  /**
+   * AJAX endpoint to get story writers data.
+   */
+  public function getStoryWriters() {
+    // Get all users who have posted stories or poetry
+    $database = \Drupal::database();
+    
+    // Query to get users with story_poetry content
+    $query = $database->select('node_field_data', 'n')
+      ->fields('n', ['uid'])
+      ->condition('n.type', 'story_poetry')
+      ->condition('n.status', 1)
+      ->groupBy('n.uid');
+    
+    $user_ids = $query->execute()->fetchCol();
+    
+    // Load user data
+    $user_storage = \Drupal::entityTypeManager()->getStorage('user');
+    $users = $user_storage->loadMultiple($user_ids);
+    
+    $users_data = [];
+    $avatars = ['elephantavatar.png', 'tigeravatar.png', 'rhinoavatar.png'];
+    
+    foreach ($users as $user) {
+      if ($user->id() == 0) continue; // Skip anonymous
+      
+      // Get post count
+      $post_query = \Drupal::entityTypeManager()->getStorage('node')->getQuery()
+        ->condition('type', 'story_poetry')
+        ->condition('uid', $user->id())
+        ->condition('status', 1)
+        ->accessCheck(TRUE);
+      
+      $post_count = $post_query->count()->execute();
+      
+      // Get avatar
+      $user_picture = '';
+      if ($user->hasField('field_avatar') && !$user->get('field_avatar')->isEmpty()) {
+        $avatar_filename = $user->get('field_avatar')->value;
+        $user_picture = '/themes/custom/storyfulls/images/' . $avatar_filename;
+      } else {
+        $avatar_index = ($user->id() - 1) % count($avatars);
+        $user_picture = '/themes/custom/storyfulls/images/' . $avatars[$avatar_index];
+      }
+      
+      // Get Age
+      $user_age = 'Age not available';
+      if ($user->hasField('field_date_of_birth') && !$user->get('field_date_of_birth')->isEmpty()) {
+        $dob = $user->get('field_date_of_birth')->value;
+        if ($dob) {
+          $birthDate = new \DateTime($dob);
+          $today = new \DateTime();
+          $age = $today->diff($birthDate)->y;
+          $user_age = $age . ' years';
+        }
+      }
+
+      // Get user first name or display name
+      $name = $user->getDisplayName();
+      if ($user->hasField('field_first_name') && !$user->get('field_first_name')->isEmpty()) {
+        $first_name = $user->get('field_first_name')->value;
+        if ($user->hasField('field_last_name') && !$user->get('field_last_name')->isEmpty()) {
+          $last_name = $user->get('field_last_name')->value;
+          $name = $first_name . ' ' . $last_name;
+        } else {
+          $name = $first_name;
+        }
+      }
+      
+      $users_data[] = [
+        'id' => $user->id(),
+        'name' => $name,
+        'picture' => $user_picture,
+        'post_count' => $post_count,
+        'age' => $user_age,
+      ];
+    }
+    
+    // Sort by post count
+    usort($users_data, function($a, $b) {
+      return $b['post_count'] - $a['post_count'];
+    });
+
+    return new JsonResponse($users_data);
+  }
+
+  /**
+   * AJAX endpoint to get junior artists data.
+   */
+  public function getJuniorArtists() {
+    // Get all users who have posted artwork
+    $database = \Drupal::database();
+    
+    // Query to get users with junior_artist content
+    $query = $database->select('node_field_data', 'n')
+      ->fields('n', ['uid'])
+      ->condition('n.type', 'junior_artist')
+      ->condition('n.status', 1)
+      ->groupBy('n.uid');
+    
+    $user_ids = $query->execute()->fetchCol();
+    
+    // Load user data
+    $user_storage = \Drupal::entityTypeManager()->getStorage('user');
+    $users = $user_storage->loadMultiple($user_ids);
+    
+    $users_data = [];
+    $avatars = ['elephantavatar.png', 'tigeravatar.png', 'rhinoavatar.png'];
+    
+    foreach ($users as $user) {
+      if ($user->id() == 0) continue; // Skip anonymous
+      
+      // Get post count
+      $post_query = \Drupal::entityTypeManager()->getStorage('node')->getQuery()
+        ->condition('type', 'junior_artist')
+        ->condition('uid', $user->id())
+        ->condition('status', 1)
+        ->accessCheck(TRUE);
+      
+      $post_count = $post_query->count()->execute();
+      
+      // Get avatar
+      $user_picture = '';
+      if ($user->hasField('field_avatar') && !$user->get('field_avatar')->isEmpty()) {
+        $avatar_filename = $user->get('field_avatar')->value;
+        $user_picture = '/themes/custom/storyfulls/images/' . $avatar_filename;
+      } else {
+        $avatar_index = ($user->id() - 1) % count($avatars);
+        $user_picture = '/themes/custom/storyfulls/images/' . $avatars[$avatar_index];
+      }
+      
+      // Get Age
+      $user_age = 'Age not available';
+      if ($user->hasField('field_date_of_birth') && !$user->get('field_date_of_birth')->isEmpty()) {
+        $dob = $user->get('field_date_of_birth')->value;
+        if ($dob) {
+          $birthDate = new \DateTime($dob);
+          $today = new \DateTime();
+          $age = $today->diff($birthDate)->y;
+          $user_age = $age . ' years';
+        }
+      }
+
+      // Get user first name or display name
+      $name = $user->getDisplayName();
+      if ($user->hasField('field_first_name') && !$user->get('field_first_name')->isEmpty()) {
+        $first_name = $user->get('field_first_name')->value;
+        if ($user->hasField('field_last_name') && !$user->get('field_last_name')->isEmpty()) {
+          $last_name = $user->get('field_last_name')->value;
+          $name = $first_name . ' ' . $last_name;
+        } else {
+          $name = $first_name;
+        }
+      }
+      
+      $users_data[] = [
+        'id' => $user->id(),
+        'name' => $name,
+        'picture' => $user_picture,
+        'post_count' => $post_count,
+        'age' => $user_age,
+      ];
+    }
+    
+    // Sort by post count
+    usort($users_data, function($a, $b) {
+      return $b['post_count'] - $a['post_count'];
+    });
+
+    return new JsonResponse($users_data);
+  }
+
+  /**
+   * AJAX endpoint to toggle like status.
+   */
+  public function toggleLike($node_id) {
+    $current_user = \Drupal::currentUser();
+    if ($current_user->isAnonymous()) {
+      return new JsonResponse(['status' => 'error', 'message' => 'Login required'], 403);
+    }
+    
+    // Load the flag service
+    $flag_service = \Drupal::service('flag');
+    $flag = $flag_service->getFlagById('like_content');
+    $node = \Drupal::entityTypeManager()->getStorage('node')->load($node_id);
+    
+    if (!$node) {
+      return new JsonResponse(['status' => 'error', 'message' => 'Node not found'], 404);
+    }
+    
+    $action = '';
+    
+    // Check if already flagged using entity query for stability
+    $flagging_ids = \Drupal::entityTypeManager()->getStorage('flagging')->getQuery()
+      ->condition('flag_id', $flag->id())
+      ->condition('entity_type', $node->getEntityTypeId())
+      ->condition('entity_id', $node->id())
+      ->condition('uid', $current_user->id())
+      ->accessCheck(TRUE)
+      ->execute();
+      
+    if (!empty($flagging_ids)) {
+      // Unflag
+      $flagging = \Drupal::entityTypeManager()->getStorage('flagging')->load(reset($flagging_ids));
+      $flagging->delete();
+      $action = 'unliked';
+    } else {
+      // Flag
+      $flag_service->flag($flag, $node, $current_user);
+      $action = 'liked';
+    }
+    
+    // Get new count
+    $count = \Drupal::entityTypeManager()->getStorage('flagging')->getQuery()
+      ->condition('flag_id', $flag->id())
+      ->condition('entity_type', $node->getEntityTypeId())
+      ->condition('entity_id', $node->id())
+      ->count()
+      ->accessCheck(TRUE)
+      ->execute();
+    
+    return new JsonResponse([
+      'status' => 'success', 
+      'action' => $action, 
+      'count' => $count
+    ]);
   }
 
 }

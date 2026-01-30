@@ -20,6 +20,9 @@
       
       console.log('=== BOOKS BY AGE SCRIPT ATTACHED ===');
       
+      // Track currently selected age group
+      var currentAgeGroup = 'general';
+      
       // Get books data from drupalSettings
       console.log('drupalSettings:', drupalSettings);
       var booksByAge = drupalSettings.booksByAge || {};
@@ -35,9 +38,22 @@
       
       console.log('Books data loaded successfully!');
       
+      // Function to update the View All link
+      function updateViewAllLink(ageGroup) {
+        var $viewAllLink = $('#age-view-all-link');
+        if (ageGroup === 'general') {
+          $viewAllLink.attr('href', '/books');
+        } else {
+          $viewAllLink.attr('href', '/books?age=' + ageGroup);
+        }
+      }
+      
       // Function to display books for a specific age
       function showBooksForAge(selectedAge) {
         console.log('>>> showBooksForAge called with:', selectedAge);
+        
+        currentAgeGroup = selectedAge;
+        updateViewAllLink(selectedAge);
         
         var booksForAge = booksByAge[selectedAge] || [];
         
@@ -115,15 +131,9 @@
         showBooksForAge(selectedAge);
       });
       
-      // **DEFAULT: Show 0-2 books on page load**
-      console.log('>>> Setting default to 0-2 age group');
-      console.log('>>> Will call showBooksForAge in 500ms');
-      
-      setTimeout(function() {
-        console.log('>>> Timeout fired, setting active and showing books');
-        $('.books-by-age-section .age-group-item[data-age="0-2"]').addClass('active');
-        showBooksForAge('0-2');
-      }, 500);
+      // **DEFAULT: Show general books on page load**
+      console.log('>>> Loading general books initially');
+      showBooksForAge('general');
     }
   };
 

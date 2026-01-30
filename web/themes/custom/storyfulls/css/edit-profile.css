@@ -3,7 +3,7 @@
 .edit-profile-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #FFF9E6 0%, #FFF4D6 50%, #FFE8CC 100%);
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
 }
 
 /* Main Container */
@@ -268,7 +268,7 @@
 }
 
 .form-label {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   font-size: 15px;
   font-weight: 600;
   color: #2C3E50;
@@ -283,7 +283,7 @@
   border: 2px solid #E0E0E0;
   border-radius: 10px;
   font-size: 16px;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   color: #2C3E50;
   background: #fff;
   transition: all 0.3s ease;

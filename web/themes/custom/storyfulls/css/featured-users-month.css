@@ -1,0 +1,140 @@
+/* Featured Users of the Month Section */
+.featured-users-section {
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #D4F1F4 0%, #A8E6CF 100%);
+  position: relative;
+}
+
+.featured-users-section .container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Grid Layout - Two Cards Side by Side */
+.featured-users-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4rem;
+  align-items: start;
+}
+
+/* Individual User Card */
+.featured-user-card {
+  text-align: center;
+}
+
+/* Card Title */
+.featured-user-title {
+  font-family: 'Brush Script MT', cursive, 'Roboto Slab', serif;
+  font-size: 48px;
+  font-weight: 400;
+  color: #5CB8A8;
+  margin: 0 0 2rem 0;
+  line-height: 1.2;
+  text-align: left;
+}
+
+/* User Content Container */
+.featured-user-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* User Avatar */
+.user-avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #E8E8E8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Placeholder Avatar */
+.user-avatar-placeholder .avatar-circle {
+  width: 100%;
+  height: 100%;
+  background: #D0D0D0;
+  border-radius: 50%;
+}
+
+/* User Name */
+.user-name {
+  font-family: 'Roboto Slab', serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: #2C3E50;
+  text-align: center;
+}
+
+/* Empty User Name */
+.user-name-empty {
+  color: #FF6B6B;
+  font-weight: 400;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .featured-users-section {
+    padding: 3rem 1.5rem;
+  }
+
+  .featured-users-grid {
+    gap: 3rem;
+  }
+
+  .featured-user-title {
+    font-size: 38px;
+  }
+
+  .user-avatar {
+    width: 130px;
+    height: 130px;
+  }
+
+  .user-name {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .featured-users-section {
+    padding: 2.5rem 1rem;
+  }
+
+  .featured-users-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .featured-user-card {
+    text-align: center;
+  }
+
+  .featured-user-title {
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .user-avatar {
+    width: 120px;
+    height: 120px;
+  }
+
+  .user-name {
+    font-size: 18px;
+  }
+}

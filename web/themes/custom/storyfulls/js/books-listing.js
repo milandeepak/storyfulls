@@ -15,21 +15,35 @@
 
       console.log('Initializing books listing behavior');
 
-      // Initialize variables - default to first age group (0-2)
-      let currentAge = '0-2';
+      // Initialize variables - default to all age groups
+      let currentAge = 'all';
       let currentSearch = '';
       let currentGenre = '';
       let currentPage = 1;
       const booksPerPage = 24; // Show 24 books per page (4x6 grid)
 
-      // Check URL parameters for pre-filled search
+      // Check URL parameters for age group and search
       const urlParams = new URLSearchParams(window.location.search);
+      const ageFromUrl = urlParams.get('age');
       const searchFromUrl = urlParams.get('keys');
+      
+      if (ageFromUrl) {
+        // Age group passed from homepage
+        currentAge = ageFromUrl;
+        console.log('Pre-selected age from URL:', ageFromUrl);
+        
+        // Set the active age group in the UI
+        $('.age-group-item').removeClass('active');
+        $('.age-group-item[data-age="' + ageFromUrl + '"]').addClass('active');
+      } else {
+        // No age specified, show all - no age group is selected
+        $('.age-group-item').removeClass('active');
+        console.log('No age specified, showing all books');
+      }
+      
       if (searchFromUrl) {
         currentSearch = searchFromUrl.toLowerCase().trim();
         $('#book-search').val(searchFromUrl);
-        // When coming from a direct link with search, show all age groups
-        currentAge = 'all';
         console.log('Pre-filled search from URL:', searchFromUrl);
       }
 

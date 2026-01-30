@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * @file
+ * Install and update hooks for storyfulls_young_writers.
+ */
+
+/**
+ * Grant story_poetry create/edit/delete permissions to authenticated users.
+ */
+function storyfulls_young_writers_update_9001() {
+  // Roles to grant basic create/edit/delete own permissions.
+  $roles_to_grant = [
+    'authenticated',
+    'content_creator',
+    'young_writer',
+  ];
+
+  $basic_permissions = [
+    'create story_poetry content',
+    'edit own story_poetry content',
+    'delete own story_poetry content',
+  ];
+
+  foreach ($roles_to_grant as $role_id) {
+    $role = \Drupal\user\Entity\Role::load($role_id);
+    if ($role) {
+      foreach ($basic_permissions as $perm) {
+        if (!$role->hasPermission($perm)) {
+          $role->grantPermission($perm);
+        }
+      }
+      $role->save();
+    }
+  }
+
+  // Ensure administrators have full control over story_poetry.
+  $admin_role = \Drupal\user\Entity\Role::load('administrator');
+  if ($admin_role) {
+    $admin_permissions = [
+      'create story_poetry content',
+      'edit any story_poetry content',
+      'delete any story_poetry content',
+      'edit own story_poetry content',
+      'delete own story_poetry content',
+    ];
+    foreach ($admin_permissions as $perm) {
+      if (!$admin_role->hasPermission($perm)) {
+        $admin_role->grantPermission($perm);
+      }
+    }
+    $admin_role->save();
+  }
+
+  return t('Updated roles with story_poetry permissions.');
+}
+

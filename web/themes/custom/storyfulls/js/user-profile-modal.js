@@ -158,46 +158,6 @@
         saveFavorites('genres', genres, 'edit-genres-modal');
       });
       
-      // Edit Week's Pick Form
-      $('#edit-weeks-pick-form', context).once('weeks-pick-form-submit').on('submit', function(e) {
-        e.preventDefault();
-        
-        const $form = $(this);
-        const $submitBtn = $form.find('button[type="submit"]');
-        const originalText = $submitBtn.text();
-        
-        const data = {
-          book: $form.find('input[name="weeks_pick_book"]').val(),
-          author: $form.find('input[name="weeks_pick_author"]').val()
-        };
-        
-        $submitBtn.prop('disabled', true).text('Saving...');
-        
-        $.ajax({
-          url: '/storyfulls/profile/update-weeks-pick',
-          type: 'POST',
-          data: JSON.stringify(data),
-          contentType: 'application/json',
-          success: function(response) {
-            if (response.success) {
-              // Update UI
-              $('.weeks-pick-card .card-subtitle').text(data.book || 'Book Name');
-              
-              closeModal('edit-weeks-pick-modal');
-              showMessage('Week\'s pick updated successfully!', 'success');
-            } else {
-              showMessage(response.message || 'Error updating week\'s pick', 'error');
-            }
-          },
-          error: function() {
-            showMessage('Error updating week\'s pick. Please try again.', 'error');
-          },
-          complete: function() {
-            $submitBtn.prop('disabled', false).text(originalText);
-          }
-        });
-      });
-      
       // Edit Wishlist Form
       $('#edit-wishlist-form', context).once('wishlist-form-submit').on('submit', function(e) {
         e.preventDefault();
@@ -333,13 +293,13 @@
               updateFavoritesUI(type, values);
               
               closeModal(modalId);
-              showMessage('Favorites updated successfully!', 'success');
+              showMessage('Favourites updated successfully!', 'success');
             } else {
-              showMessage(response.message || 'Error updating favorites', 'error');
+              showMessage(response.message || 'Error updating favourites', 'error');
             }
           },
           error: function() {
-            showMessage('Error updating favorites. Please try again.', 'error');
+            showMessage('Error updating favourites. Please try again.', 'error');
           },
           complete: function() {
             $submitBtn.prop('disabled', false).text(originalText);
@@ -366,7 +326,7 @@
         $container.empty();
         
         if (values.length === 0) {
-          $container.append('<p class="no-favorites">No favorite ' + type + ' yet</p>');
+          $container.append('<p class="no-favorites">No favourite ' + type + ' yet</p>');
         } else {
           values.forEach(function(value) {
             if (type === 'genres') {

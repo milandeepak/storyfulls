@@ -79,5 +79,36 @@ function storyfulls_admin_theme($existing, $type, $theme, $path) {
       ],
       'template' => 'book-of-season',
     ],
+    'fun_facts' => [
+      'variables' => [
+        'title' => '',
+        'content' => '',
+        'image' => NULL,
+      ],
+      'template' => 'fun-facts',
+    ],
+    'featured_users_month' => [
+      'variables' => [
+        'users' => [],
+        'current_author_uid' => NULL,
+        'current_reviewer_uid' => NULL,
+      ],
+      'template' => 'featured-users-month',
+    ],
+    'manage_homepage' => [
+      'variables' => [
+        'sections' => [],
+      ],
+      'template' => 'manage-homepage',
+    ],
+    'manage_facts' => [
+      'variables' => [
+        'question' => '',
+        'options' => [],
+        'correct_answer' => 0,
+        'image' => NULL,
+      ],
+      'template' => 'manage-facts',
+    ],
   ];
 }

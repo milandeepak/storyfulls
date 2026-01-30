@@ -1,0 +1,59 @@
+{#
+/**
+ * @file
+ * Template for 'Fact Section' paragraph.
+ */
+#}
+
+<section class="fact-section" data-paragraph-id="{{ paragraph.id.value }}" data-correct-answer="{{ paragraph.field_correct_answer_index.value }}">
+  <div class="fact-section-background">
+     {# Individual cloud elements #}
+     <div class="cloud cloud-1"></div>
+     <div class="cloud cloud-2"></div>
+     <div class="cloud cloud-3"></div>
+     <div class="cloud cloud-4"></div>
+     <div class="cloud cloud-5"></div>
+     <div class="cloud cloud-6"></div>
+     <div class="cloud cloud-7"></div>
+     <div class="cloud cloud-8"></div>
+  </div>
+  <div class="container">
+    <div class="fact-content-wrapper">
+      {# Left Side Image #}
+      <div class="fact-image-side">
+        {% if content.field_fact_image[0] %}
+             {{ content.field_fact_image }}
+        {% else %}
+            <img src="/themes/custom/storyfulls/images/factsectionsideimage.png" alt="Fact Side Image">
+        {% endif %}
+      </div>
+
+      {# Right Side Content #}
+      <div class="fact-text-side">
+        <div class="fact-question-box">
+           {% if paragraph.field_fact_question.value %}
+              <h2 class="fact-question">{{ paragraph.field_fact_question.value }}</h2>
+           {% endif %}
+        </div>
+        
+        <div class="fact-options-grid">
+          {% if paragraph.field_fact_options %}
+             {% for key, item in paragraph.field_fact_options %}
+                <button class="fact-option" data-option-index="{{ key }}" type="button">
+                  {{ item.value }}
+                </button>
+             {% endfor %}
+          {% endif %}
+        </div>
+
+        <div class="fact-submit-wrapper">
+          <button class="fact-submit-btn" type="button">Submit</button>
+        </div>
+
+        <div class="fact-result" style="display: none;">
+          <p class="fact-result-message"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

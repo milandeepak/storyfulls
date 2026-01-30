@@ -1,0 +1,47 @@
+{#
+/**
+ * @file
+ * Edit This Week's Pick template
+ */
+#}
+<div class="edit-favorites-page edit-weeks-pick-page">
+  <main class="edit-favorites-main">
+    <div class="edit-favorites-container">
+
+      {# Page Header #}
+      <div class="edit-favorites-header">
+        <div class="header-icon">
+          <img src="/themes/custom/storyfulls/images/bookforthisweekpick.png" alt="This Week's Pick" class="page-icon">
+        </div>
+        <h1 class="edit-favorites-title">Edit This Week's Pick</h1>
+        <p class="edit-favorites-subtitle">Share the book you're picking this week with your profile visitors.</p>
+      </div>
+
+      {# Edit Form #}
+      <form method="post" class="edit-favorites-form edit-weeks-pick-form" id="editWeeksPickForm">
+        <div class="favorites-list-section">
+          <div class="form-group">
+            <label for="weeksPickBook" class="form-label">Book Title</label>
+            <input type="text" id="weeksPickBook" name="weeks_pick_book" value="{{ weeks_pick_book }}" class="form-input favorite-input" placeholder="Enter book title">
+          </div>
+          <div class="form-group">
+            <label for="weeksPickAuthor" class="form-label">Author</label>
+            <input type="text" id="weeksPickAuthor" name="weeks_pick_author" value="{{ weeks_pick_author }}" class="form-input favorite-input" placeholder="Enter author name">
+          </div>
+        </div>
+
+        {# Form Actions #}
+        <div class="form-actions">
+          <a href="/user" class="btn btn-cancel">Cancel</a>
+          <button type="submit" class="btn btn-save">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M15 5L7 13L3 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Save Changes</span>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </main>
+</div>

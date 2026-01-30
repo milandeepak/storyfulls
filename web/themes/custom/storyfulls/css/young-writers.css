@@ -41,7 +41,7 @@
 }
 
 .banner-subtitle {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   font-size: 1.25rem;
   color: #2C3E50;
   margin: 0;
@@ -104,12 +104,88 @@
 }
 
 .card-description {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   font-size: 1rem;
   color: #666;
   text-align: center;
   margin: 0;
   line-height: 1.5;
+}
+
+/* Junior Artists Styles */
+.junior-artist-card {
+  width: 100%;
+  aspect-ratio: 3/4; /* Adjust based on actual card image dimensions */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.junior-artist-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.artist-card-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+}
+
+.artist-card-overlay {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.canvas-text {
+  font-family: 'Roboto Slab', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2C3E50;
+  text-align: center;
+  padding-top: 20px;
+  text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+  /* Adjust positioning to match the card "header" area */
+}
+
+.artist-info-semicircle {
+  width: 100%;
+  height: 35%; /* Adjust height for semi-circle appearance */
+  background: rgba(255, 255, 255, 0.9);
+  border-top-left-radius: 50% 20px;
+  border-top-right-radius: 50% 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 1rem;
+  /* Make it look like it's part of the card design */
+  backdrop-filter: blur(5px);
+}
+
+.artist-name {
+  font-family: 'Roboto Slab', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2C3E50;
+  margin-bottom: 0.25rem;
+}
+
+.artist-age {
+  font-family: 'Roboto Slab', serif;
+  font-size: 0.9rem;
+  color: #666;
 }
 
 /* Reviewers Reveal Section */
@@ -167,7 +243,7 @@
 .reviewer-search-input {
   width: 100%;
   padding: 0.875rem 1.25rem;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   font-size: 16px;
   border: 2px solid #E0E0E0;
   border-radius: 8px;
@@ -291,7 +367,7 @@
 }
 
 .reviewer-age {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   font-size: 14px;
   color: #666;
   margin: 0;
@@ -337,7 +413,7 @@
 .no-reviewers {
   text-align: center;
   padding: 3rem 1rem;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   font-size: 18px;
   color: #666;
   grid-column: 1 / -1;
@@ -536,7 +612,7 @@
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   font-size: 1rem;
 }
 
@@ -563,7 +639,7 @@
 }
 
 .post-body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   font-size: 1.1rem;
   line-height: 1.8;
   color: #444;
@@ -670,7 +746,7 @@
   justify-content: center;
   background: #f0f0f0;
   color: #999;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   border-radius: 8px;
 }
 
@@ -725,7 +801,7 @@
 }
 
 .review-text-content {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   font-size: 1rem;
   line-height: 1.6;
   color: #555;
@@ -776,7 +852,7 @@
 }
 
 .user-age-display {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   font-size: 1rem;
   color: #666;
   margin: 0;
@@ -790,7 +866,7 @@
 
 .follow-btn-user,
 .view-profile-btn-user {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   font-size: 1rem;
   font-weight: 600;
   padding: 0.75rem 1.5rem;
@@ -829,7 +905,7 @@
 .no-reviews-message {
   text-align: center;
   padding: 3rem;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   font-size: 1.125rem;
   color: #666;
 }
@@ -900,5 +976,158 @@
   
   .user-name-display {
     font-size: 1.25rem;
+  }
+}
+
+/* Story Node Full Display */
+.story-poetry-full-node {
+  max-width: 1200px;
+  margin: 4rem auto;
+  padding: 0 2rem;
+}
+
+.story-poetry-container {
+  display: flex;
+  gap: 4rem;
+  align-items: flex-start;
+}
+
+.story-left-column {
+  flex: 0 0 45%;
+  max-width: 500px;
+}
+
+.story-right-column {
+  flex: 1;
+  padding-top: 0;
+}
+
+.story-image-wrapper {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  line-height: 0;
+}
+
+.story-image-wrapper img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* Gradient Overlay at bottom of image */
+.story-actions-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px; /* Fixed height for gradient */
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+  padding: 0 1.5rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: center; /* Center vertically in the overlay height */
+  justify-content: flex-start;
+}
+
+/* Action Buttons in Overlay */
+.action-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: white;
+  font-family: 'Roboto Slab', serif;
+  font-weight: 500;
+  font-size: 16px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  transition: transform 0.2s ease;
+}
+
+.action-btn:hover {
+  transform: scale(1.05);
+}
+
+.action-btn img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+}
+
+.like-count {
+  color: white;
+  font-weight: 600;
+}
+
+/* Right Column Content */
+.story-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 2.5rem;
+  color: #2C3E50;
+  margin: 0 0 2rem;
+  text-align: center;
+  position: relative;
+  display: block;
+}
+
+/* Stars decoration */
+.story-title:before {
+  content: "✧ ";
+  color: #2C3E50;
+  margin-right: 10px;
+}
+
+.story-title:after {
+  content: " ✧";
+  color: #2C3E50;
+  margin-left: 10px;
+}
+
+.story-content {
+  font-family: 'Roboto Slab', serif;
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #2C3E50;
+  white-space: pre-wrap; /* Preserves poetic formatting */
+}
+
+/* Paragraph spacing in content */
+.story-content p {
+  margin-bottom: 1.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 968px) {
+  .story-poetry-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .story-left-column {
+    flex: 0 0 auto;
+    max-width: 100%;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  .story-image-wrapper {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  
+  .story-right-column {
+    width: 100%;
+  }
+  
+  .story-title {
+    font-size: 2rem;
+    text-align: center;
   }
 }

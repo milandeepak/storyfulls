@@ -169,6 +169,15 @@ storyfulls_profile.edit_favorite_books:
   options:
     no_cache: TRUE
 
+storyfulls_profile.edit_weeks_pick:
+  path: '/user/edit-weeks-pick'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\ProfileEditController::editWeeksPick'
+    _title: "Edit This Week's Pick"
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: TRUE
 
 storyfulls_profile.users_page:
   path: '/our-readers'

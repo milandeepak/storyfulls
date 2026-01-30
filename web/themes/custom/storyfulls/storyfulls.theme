@@ -68,6 +68,38 @@ function storyfulls_preprocess_paragraph__books_by_age_section(&$variables) {
   
   $age_groups = ['0-2', '3-5', '6-8', '9-12', '13-16'];
   
+  // Get general books (from all age groups combined) for initial display
+  $general_books_query = \Drupal::entityQuery('node')
+    ->accessCheck(TRUE)
+    ->condition('type', 'book')
+    ->condition('status', 1)
+    ->sort('created', 'DESC')
+    ->range(0, $number_of_books);
+  
+  $general_nids = $general_books_query->execute();
+  $all_books_by_age['general'] = [];
+  
+  if (!empty($general_nids)) {
+    $general_nodes = Node::loadMultiple($general_nids);
+    foreach ($general_nodes as $node) {
+      $book_data = [
+        'nid' => $node->id(),
+        'title' => $node->getTitle(),
+        'url' => $node->toUrl()->toString(),
+        'cover_url' => NULL,
+      ];
+      
+      if ($node->hasField('field_featured_image') && !$node->get('field_featured_image')->isEmpty()) {
+        $file = $node->get('field_featured_image')->entity;
+        if ($file) {
+          $book_data['cover_url'] = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+        }
+      }
+      
+      $all_books_by_age['general'][] = $book_data;
+    }
+  }
+  
   foreach ($age_groups as $age_range) {
     // Get the term ID for this age group
     $terms = \Drupal::entityTypeManager()
@@ -526,6 +558,81 @@ function storyfulls_preprocess_paragraph__book_of_season(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_paragraph__fun_facts().
+ */
+function storyfulls_preprocess_paragraph__fun_facts(&$variables) {
+  $paragraph = $variables['paragraph'];
+  
+  // Initialize variables
+  $variables['fun_facts_title'] = NULL;
+  $variables['fun_facts_text'] = NULL;
+  $variables['fun_facts_image_url'] = NULL;
+  
+  // Get title
+  if ($paragraph->hasField('field_title') && !$paragraph->get('field_title')->isEmpty()) {
+    $variables['fun_facts_title'] = $paragraph->get('field_title')->value;
+  }
+  
+  // Get content/text
+  if ($paragraph->hasField('field_content') && !$paragraph->get('field_content')->isEmpty()) {
+    $variables['fun_facts_text'] = $paragraph->get('field_content')->value;
+  }
+  
+  // Get featured image
+  if ($paragraph->hasField('field_featured_image') && !$paragraph->get('field_featured_image')->isEmpty()) {
+    $file = $paragraph->get('field_featured_image')->entity;
+    if ($file) {
+      $variables['fun_facts_image_url'] = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_paragraph__featured_users_month().
+ */
+function storyfulls_preprocess_paragraph__featured_users_month(&$variables) {
+  $paragraph = $variables['paragraph'];
+  
+  // Initialize variables
+  $variables['author_name'] = NULL;
+  $variables['author_avatar'] = NULL;
+  $variables['reviewer_name'] = NULL;
+  $variables['reviewer_avatar'] = NULL;
+  
+  // Get Children Author
+  if ($paragraph->hasField('field_featured_author') && !$paragraph->get('field_featured_author')->isEmpty()) {
+    $author = $paragraph->get('field_featured_author')->entity;
+    if ($author) {
+      $variables['author_name'] = $author->getDisplayName();
+      
+      // Get author avatar
+      if ($author->hasField('user_picture') && !$author->get('user_picture')->isEmpty()) {
+        $file = $author->get('user_picture')->entity;
+        if ($file) {
+          $variables['author_avatar'] = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+        }
+      }
+    }
+  }
+  
+  // Get Reviewer of the Month
+  if ($paragraph->hasField('field_featured_reviewer') && !$paragraph->get('field_featured_reviewer')->isEmpty()) {
+    $reviewer = $paragraph->get('field_featured_reviewer')->entity;
+    if ($reviewer) {
+      $variables['reviewer_name'] = $reviewer->getDisplayName();
+      
+      // Get reviewer avatar
+      if ($reviewer->hasField('user_picture') && !$reviewer->get('user_picture')->isEmpty()) {
+        $file = $reviewer->get('user_picture')->entity;
+        if ($file) {
+          $variables['reviewer_avatar'] = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+        }
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_preprocess_paragraph__interested_section().
  */
 function storyfulls_preprocess_paragraph__interested_section(&$variables) {
@@ -656,15 +763,25 @@ function storyfulls_preprocess_node__book(&$variables) {
     }
   }
   
-  // Prepare purchase link URL
-  if ($node->hasField('field_purchase_link') && !$node->get('field_purchase_link')->isEmpty()) {
-    $link_value = $node->get('field_purchase_link')->first()->getValue();
-    $variables['purchase_url'] = $link_value['uri'] ?? NULL;
-    $variables['purchase_title'] = $link_value['title'] ?? 'Buy on Amazon';
-  } else {
-    $variables['purchase_url'] = NULL;
-    $variables['purchase_title'] = 'Buy on Amazon';
+  // Prepare purchase link URL - check both field_amazon_link and field_purchase_link
+  $purchase_url = NULL;
+  $purchase_title = 'Buy on Amazon';
+  
+  // First check for Amazon link field
+  if ($node->hasField('field_amazon_link') && !$node->get('field_amazon_link')->isEmpty()) {
+    $link_value = $node->get('field_amazon_link')->first()->getValue();
+    $purchase_url = $link_value['uri'] ?? NULL;
+    $purchase_title = $link_value['title'] ?? 'Buy on Amazon';
   }
+  // Fallback to purchase link field if Amazon link not set
+  elseif ($node->hasField('field_purchase_link') && !$node->get('field_purchase_link')->isEmpty()) {
+    $link_value = $node->get('field_purchase_link')->first()->getValue();
+    $purchase_url = $link_value['uri'] ?? NULL;
+    $purchase_title = $link_value['title'] ?? 'Buy on Amazon';
+  }
+  
+  $variables['purchase_url'] = $purchase_url;
+  $variables['purchase_title'] = $purchase_title;
   
   // Prepare description with HTML support
   if ($node->hasField('field_description') && !$node->get('field_description')->isEmpty()) {
@@ -712,10 +829,27 @@ function storyfulls_preprocess_node__book(&$variables) {
       $rating = $review->get('field_rating')->value;
     }
     
+    // Get user avatar
+    $avatar_url = NULL;
+    $user_entity = \Drupal\user\Entity\User::load($author->id());
+    if ($user_entity) {
+      if ($user_entity->hasField('field_avatar') && !$user_entity->get('field_avatar')->isEmpty()) {
+        // Custom avatar field stores filename
+        $avatar_filename = $user_entity->get('field_avatar')->value;
+        $avatar_url = '/themes/custom/storyfulls/images/' . $avatar_filename;
+      } else {
+        // Fallback to cyclical assignment based on user ID if no avatar is set
+        $avatars = ['elephantavatar.png', 'tigeravatar.png', 'rhinoavatar.png'];
+        $avatar_index = ($user_entity->id() - 1) % count($avatars);
+        $avatar_url = '/themes/custom/storyfulls/images/' . $avatars[$avatar_index];
+      }
+    }
+    
     $review_data[] = [
       'id' => $review->id(),
       'author_name' => $author->getDisplayName(),
       'author_id' => $author->id(),
+      'author_avatar' => $avatar_url,
       'review_text' => $review_text,
       'rating' => $rating,
       'created' => $review->getCreatedTime(),
@@ -1092,6 +1226,48 @@ function storyfulls_preprocess_page(&$variables) {
       $variables['debug_is_admin'] = $is_admin ? 'YES' : 'NO';
     }
   }
+}
+
+/**
+ * Implements hook_preprocess_node__story_poetry().
+ */
+function storyfulls_preprocess_node__story_poetry(&$variables) {
+  $node = $variables['node'];
+  
+  // Get like count and status
+  $flag_service = \Drupal::service('flag');
+  $flag = $flag_service->getFlagById('like_content');
+  $like_count = 0;
+  $is_liked = FALSE;
+
+  if ($flag) {
+    // Count total likes
+    $like_count = \Drupal::entityTypeManager()->getStorage('flagging')->getQuery()
+      ->condition('flag_id', $flag->id())
+      ->condition('entity_type', $node->getEntityTypeId())
+      ->condition('entity_id', $node->id())
+      ->count()
+      ->accessCheck(TRUE)
+      ->execute();
+      
+    // Check if current user liked it
+    $current_user = \Drupal::currentUser();
+    if (!$current_user->isAnonymous()) {
+       $is_flagged = \Drupal::entityTypeManager()->getStorage('flagging')->getQuery()
+         ->condition('flag_id', $flag->id())
+         ->condition('entity_type', $node->getEntityTypeId())
+         ->condition('entity_id', $node->id())
+         ->condition('uid', $current_user->id())
+         ->count()
+         ->accessCheck(TRUE)
+         ->execute();
+         
+       $is_liked = ($is_flagged > 0);
+    }
+  }
+
+  $variables['like_count'] = $like_count;
+  $variables['is_liked'] = $is_liked;
 }
 
 /**

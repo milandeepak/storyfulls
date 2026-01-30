@@ -71,11 +71,50 @@ storyfulls_young_writers.user_junior_artists:
   options:
     no_cache: TRUE
 
+storyfulls_young_writers.inner_thoughts:
+  path: '/user/{user}/inner-thoughts'
+  defaults:
+    _controller: '\Drupal\storyfulls_young_writers\Controller\YoungWritersController::innerThoughts'
+    _title: 'My Inner Thoughts'
+  requirements:
+    _permission: 'access content'
+    user: \d+
+  options:
+    no_cache: TRUE
+
 storyfulls_young_writers.get_reviewers:
   path: '/young-writers/api/get-reviewers'
   defaults:
     _controller: '\Drupal\storyfulls_young_writers\Controller\YoungWritersController::getBookReviewers'
   requirements:
     _permission: 'access content'
+  options:
+    no_cache: TRUE
+
+storyfulls_young_writers.get_writers:
+  path: '/young-writers/api/get-writers'
+  defaults:
+    _controller: '\Drupal\storyfulls_young_writers\Controller\YoungWritersController::getStoryWriters'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: TRUE
+
+storyfulls_young_writers.get_junior_artists:
+  path: '/young-writers/api/get-junior-artists'
+  defaults:
+    _controller: '\Drupal\storyfulls_young_writers\Controller\YoungWritersController::getJuniorArtists'
+  requirements:
+    _permission: 'access content'
+  options:
+    no_cache: TRUE
+
+storyfulls_young_writers.toggle_like:
+  path: '/young-writers/api/like/{node_id}'
+  defaults:
+    _controller: '\Drupal\storyfulls_young_writers\Controller\YoungWritersController::toggleLike'
+  requirements:
+    _permission: 'flag like_content'
+    node_id: \d+
   options:
     no_cache: TRUE

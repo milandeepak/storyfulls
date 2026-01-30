@@ -131,6 +131,23 @@
         }, 500); // Slight delay so it appears after page load
       }
       
+      // Review text truncation and "Read more" handler
+      $('.review-text', context).once('review-truncate').each(function() {
+        const $reviewText = $(this);
+        const $readMoreLink = $reviewText.closest('.review-text-wrapper').find('.review-read-more');
+        
+        // Check if text is truncated (comparing scroll height to client height)
+        if (this.scrollHeight > this.clientHeight) {
+          $readMoreLink.show();
+        }
+      });
+      
+      // Handle "Write a Review" button click when user has already reviewed
+      $('.already-reviewed-btn', context).once('already-reviewed').on('click', function(e) {
+        e.preventDefault();
+        showToast('✓ You\'ve already reviewed this book. Thank you for your feedback!', 'info');
+      });
+      
     }
   };
   

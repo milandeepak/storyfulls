@@ -10,17 +10,6 @@
   {# Page Title #}
   <div class="book-detail-header">
     <h1{{ title_attributes.addClass('book-detail-title') }}>{{ label }}</h1>
-    {% if rating_count > 0 %}
-      <div class="book-rating-summary">
-        <span class="rating-stars">{{ rating_stars }}</span>
-        <span class="rating-text">{{ rating_display }}</span>
-        <span class="rating-count">({{ rating_count }} {{ rating_count == 1 ? 'review' : 'reviews' }})</span>
-      </div>
-    {% else %}
-      <div class="book-rating-summary no-ratings">
-        <span class="rating-text">No ratings yet - be the first to review!</span>
-      </div>
-    {% endif %}
   </div>
 
   {# Main Content Area #}
@@ -33,6 +22,14 @@
       {% else %}
         <div class="book-cover-placeholder">
           <p>Book cover not uploaded yet</p>
+        </div>
+      {% endif %}
+      
+      {# Rating Badge on Book Cover #}
+      {% if rating_count > 0 %}
+        <div class="book-rating-badge">
+          <span class="rating-star-icon">★</span>
+          <span class="rating-value">{{ average_rating|number_format(1) }}</span>
         </div>
       {% endif %}
     </div>
@@ -67,16 +64,25 @@
     {# Right Column - Action Buttons #}
     <div class="book-actions-column">
       <button class="action-btn read-later-btn" data-book-id="{{ node.id() }}">
-        <span class="btn-icon">📖</span>
+        <span class="btn-icon-circle">
+          <img src="/themes/custom/storyfulls/images/readlatericon.png" alt="Read Later" class="btn-icon-img">
+        </span>
         <span class="btn-text">Read Later</span>
       </button>
       <button class="action-btn already-read-btn" data-book-id="{{ node.id }}">
-        <span class="btn-icon">✓</span>
+        <span class="btn-icon-circle">
+          <img src="/themes/custom/storyfulls/images/alreadyreadicon.png" alt="Already Read" class="btn-icon-img">
+        </span>
         <span class="btn-text">Already Read</span>
       </button>
       <a href="/books" class="action-btn books-btn">
-        <span class="btn-icon">📚</span>
-        <span class="btn-text">Books</span>
+        <span class="btn-icon-circle">
+          <img src="/themes/custom/storyfulls/images/inclusivity-books-icon.png" alt="More Inclusivity Books" class="btn-icon-img">
+        </span>
+        <span class="btn-text btn-text-multiline">
+          <span class="text-line-1">More Inclusivity</span>
+          <span class="text-line-2">Books</span>
+        </span>
       </a>
     </div>
 
@@ -93,10 +99,8 @@
           <div class="detail-icon">
             <img src="/themes/custom/storyfulls/images/author-icon.png" alt="Author" onerror="this.style.display='none'">
           </div>
-          <div class="detail-content">
-            <div class="detail-label">Author</div>
-            <div class="detail-value">{{ author_label }}</div>
-          </div>
+          <div class="detail-label">Author</div>
+          <div class="detail-value">{{ author_label }}</div>
         </a>
       {% endif %}
 
@@ -106,10 +110,8 @@
           <div class="detail-icon">
             <img src="/themes/custom/storyfulls/images/illustrator-icon.png" alt="Illustrator" onerror="this.style.display='none'">
           </div>
-          <div class="detail-content">
-            <div class="detail-label">Illustrator</div>
-            <div class="detail-value">{{ illustrator_label }}</div>
-          </div>
+          <div class="detail-label">Illustrator</div>
+          <div class="detail-value">{{ illustrator_label }}</div>
         </a>
       {% endif %}
 
@@ -117,12 +119,10 @@
       {% if age_group_label %}
         <div class="detail-card">
           <div class="detail-icon">
-            <img src="/themes/custom/storyfulls/images/age-icon.png" alt="Age" onerror="this.style.display='none'">
+            <img src="/themes/custom/storyfulls/images/age-group-icono.png" alt="Age" onerror="this.style.display='none'">
           </div>
-          <div class="detail-content">
-            <div class="detail-label">Age</div>
-            <div class="detail-value">{{ age_group_label }}</div>
-          </div>
+          <div class="detail-label">Age group</div>
+          <div class="detail-value">{{ age_group_label }}</div>
         </div>
       {% endif %}
 
@@ -132,10 +132,8 @@
           <div class="detail-icon">
             <img src="/themes/custom/storyfulls/images/genre-icon.png" alt="Genre" onerror="this.style.display='none'">
           </div>
-          <div class="detail-content">
-            <div class="detail-label">Genre</div>
-            <div class="detail-value">{{ genere_label }}</div>
-          </div>
+          <div class="detail-label">Genre</div>
+          <div class="detail-value">{{ genere_label }}</div>
         </div>
       {% endif %}
 
@@ -145,10 +143,8 @@
           <div class="detail-icon">
             <img src="/themes/custom/storyfulls/images/publisher-icon.png" alt="Publisher" onerror="this.style.display='none'">
           </div>
-          <div class="detail-content">
-            <div class="detail-label">Publisher</div>
-            <div class="detail-value">{{ publisher_label }}</div>
-          </div>
+          <div class="detail-label">Publisher</div>
+          <div class="detail-value">{{ publisher_label }}</div>
         </div>
       {% endif %}
 
@@ -169,7 +165,32 @@
 
   {# Reviews Section #}
   <div class="book-reviews-section">
-    <h2 class="section-title">Reviews ({{ review_count|default(0) }})</h2>
+    <div class="reviews-header-wrapper">
+      <h2 class="section-title reviews-title">Reviews</h2>
+    </div>
+    
+    <div class="reviews-button-wrapper">
+      {# Write Review Button - Always show, but handle differently based on user state #}
+      {% if user_is_logged_in and user_already_reviewed %}
+        <button class="write-review-btn already-reviewed-btn" data-already-reviewed="true">
+          <img src="/themes/custom/storyfulls/images/writeareviewbutton-icon.png" alt="" class="write-review-icon-left">
+          <span class="write-review-text">Write a Review</span>
+          <img src="/themes/custom/storyfulls/images/writeareviewdesign-icon.png" alt="" class="write-review-icon-right">
+        </button>
+      {% elseif user_is_logged_in %}
+        <a href="{{ write_review_url }}" class="write-review-btn">
+          <img src="/themes/custom/storyfulls/images/writeareviewbutton-icon.png" alt="" class="write-review-icon-left">
+          <span class="write-review-text">Write a Review</span>
+          <img src="/themes/custom/storyfulls/images/writeareviewdesign-icon.png" alt="" class="write-review-icon-right">
+        </a>
+      {% else %}
+        <a href="/user/login?destination={{ current_path }}" class="write-review-btn">
+          <img src="/themes/custom/storyfulls/images/writeareviewbutton-icon.png" alt="" class="write-review-icon-left">
+          <span class="write-review-text">Write a Review</span>
+          <img src="/themes/custom/storyfulls/images/writeareviewdesign-icon.png" alt="" class="write-review-icon-right">
+        </a>
+      {% endif %}
+    </div>
     
     {# Custom success message banner #}
     {% if review_just_submitted %}
@@ -185,45 +206,39 @@
     <div class="reviews-list">
       {% if reviews %}
         {% for review in reviews %}
-          <div class="review-item">
-            <div class="review-author-info">
-              <strong class="review-author">{{ review.author_name }}</strong>
-              {% if review.rating %}
-                <div class="review-rating">
-                  {% for i in 1..5 %}
-                    <span class="star">{{ i <= review.rating ? '★' : '☆' }}</span>
-                  {% endfor %}
-                </div>
+          <div class="review-card">
+            <div class="review-avatar">
+              {% if review.author_avatar %}
+                <img src="{{ review.author_avatar }}" alt="{{ review.author_name }}">
+              {% else %}
+                <div class="avatar-placeholder">{{ review.author_name|slice(0, 1)|upper }}</div>
               {% endif %}
             </div>
-            <p class="review-text">{{ review.review_text }}</p>
-            <div class="review-date">{{ review.created|format_date('custom', 'F j, Y') }}</div>
+            
+            {% if review.rating %}
+              <div class="review-rating">
+                <span class="star-icon">★</span>
+                <span class="rating-value">{{ review.rating }}.0</span>
+              </div>
+            {% endif %}
+            
+            <div class="review-card-content">
+              <div class="review-text-wrapper">
+                <p class="review-text" data-review-id="{{ review.id }}">{{ review.review_text }}</p>
+                <a href="/user/{{ review.author_id }}/reviews" class="review-read-more" style="display: none;">Read more</a>
+                <div class="review-author">-{{ review.author_name }}</div>
+              </div>
+              
+              <div class="review-footer">
+                <span class="review-date">{{ review.created|format_date('custom', 'j F, Y') }}</span>
+              </div>
+            </div>
           </div>
         {% endfor %}
       {% else %}
         <p class="no-reviews">No reviews yet. Be the first to review this book!</p>
       {% endif %}
     </div>
-    
-    {# Write Review Button Section #}
-    {% if user_is_logged_in and not user_already_reviewed %}
-      <div class="review-action-section">
-        <a href="{{ write_review_url }}" class="write-review-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="currentColor"/>
-          </svg>
-          Write a Review
-        </a>
-      </div>
-    {% elseif not user_is_logged_in %}
-      <div class="review-login-prompt">
-        <p>Please <a href="/user/login?destination={{ current_path }}">log in</a> to write a review.</p>
-      </div>
-    {% elseif user_already_reviewed %}
-      <div class="review-already-submitted">
-        <p>✓ You've already reviewed this book. Thank you for your feedback!</p>
-      </div>
-    {% endif %}
   </div>
 
   {# You Might Also Like Section - Will be implemented later with a custom view #}

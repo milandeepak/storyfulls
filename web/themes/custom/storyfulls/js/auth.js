@@ -8,6 +8,21 @@
       var $registerForm = $('.user-register-form', context);
       
       if ($registerForm.length) {
+
+        // Managed by Parents / Show profile to public – sync checked state for tick visibility
+        function syncToggleSwitchChecked() {
+          $('.toggle-switch-wrapper', context).each(function() {
+            var $wrapper = $(this);
+            var $input = $wrapper.find('input[type="checkbox"]');
+            if ($input.length && $input.is(':checked')) {
+              $wrapper.addClass('is-checked');
+            } else {
+              $wrapper.removeClass('is-checked');
+            }
+          });
+        }
+        syncToggleSwitchChecked();
+        $(context).on('change', '.toggle-switch-wrapper input[type="checkbox"]', syncToggleSwitchChecked);
         
         // Tab Switching Logic
         $('.register-tab', context).off('click.registertab').on('click.registertab', function(e) {
@@ -46,7 +61,7 @@
           e.stopPropagation();
           
           if (authorFieldCount >= 5) {
-            alert('You can only add up to 5 favorite authors.');
+            alert('You can only add up to 5 favourite authors.');
             return;
           }
           
@@ -107,7 +122,7 @@
           e.stopPropagation();
           
           if (bookFieldCount >= 5) {
-            alert('You can only add up to 5 favorite books.');
+            alert('You can only add up to 5 favourite books.');
             return;
           }
           

@@ -30,25 +30,25 @@
       </div>
 
       {# Stories & Poetry Card #}
-      <div class="yw-card">
-        <a href="/young-writers/stories-poetry" class="card-link">
+      <div class="yw-card" id="stories-poetry-card">
+        <div class="card-link" data-reveal-target="stories-poetry-reveal">
           <div class="card-icon">
             <img src="/themes/custom/storyfulls/images/storyandpoetrycardyoungwritepage.png" alt="Stories & Poetry">
           </div>
           <h2 class="card-title">Stories & Poetry</h2>
           <p class="card-description">Calling all young wordsmiths! Share your magic with words here</p>
-        </a>
+        </div>
       </div>
 
       {# Junior Artists Card #}
-      <div class="yw-card">
-        <a href="/young-writers/junior-artists" class="card-link">
+      <div class="yw-card" id="junior-artists-card">
+        <div class="card-link" data-reveal-target="junior-artists-reveal">
           <div class="card-icon">
             <img src="/themes/custom/storyfulls/images/juniorartistcardyoungwriterpage.png" alt="Junior Artists">
           </div>
           <h2 class="card-title">Junior Artists</h2>
           <p class="card-description">To all future illustrators, showcase your artwork inspired by your favourite books</p>
-        </a>
+        </div>
       </div>
     </div>
   </div>
@@ -77,6 +77,68 @@
         </svg>
       </button>
       <button class="nav-arrow nav-next" id="reviewers-next">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  {# Stories & Poetry Reveal Section #}
+  <div id="stories-poetry-reveal" class="reviewers-reveal-section" style="display: none;">
+    {# Action Bar #}
+    <div class="reviewers-action-bar">
+      <button class="share-your-work-btn" data-type="story_poetry">Share your work</button>
+      <div class="reviewers-search">
+        <input type="text" id="story-writer-search" placeholder="EX- Nicola Edwards" class="reviewer-search-input">
+      </div>
+    </div>
+
+    {# User Grid #}
+    <div class="reviewers-grid stories-poetry-grid" id="stories-poetry-grid">
+      {# Grid will be populated dynamically via JavaScript #}
+      <div class="loading-spinner">Loading writers...</div>
+    </div>
+
+    {# Navigation Arrows #}
+    <div class="reviewers-navigation">
+      <button class="nav-arrow nav-prev" id="writers-prev" disabled>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="nav-arrow nav-next" id="writers-next">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  {# Junior Artists Reveal Section #}
+  <div id="junior-artists-reveal" class="reviewers-reveal-section" style="display: none;">
+    {# Action Bar #}
+    <div class="reviewers-action-bar">
+      <button class="share-your-work-btn" data-type="junior_artist">Share your work</button>
+      <div class="reviewers-search">
+        <input type="text" id="artist-search" placeholder="EX- Nicola Edwards" class="reviewer-search-input">
+      </div>
+    </div>
+
+    {# User Grid #}
+    <div class="reviewers-grid junior-artists-grid" id="junior-artists-grid">
+      {# Grid will be populated dynamically via JavaScript #}
+      <div class="loading-spinner">Loading artists...</div>
+    </div>
+
+    {# Navigation Arrows #}
+    <div class="reviewers-navigation">
+      <button class="nav-arrow nav-prev" id="artists-prev" disabled>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="nav-arrow nav-next" id="artists-next">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
           <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>

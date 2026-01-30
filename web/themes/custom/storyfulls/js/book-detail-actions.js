@@ -12,6 +12,16 @@
       const buttons = once('read-later-click', '.read-later-btn', context);
       console.log('Found buttons:', buttons.length);
       
+      // Handle "Write a Review" button when user already reviewed
+      const reviewButtons = once('already-reviewed-click', '.already-reviewed-btn', context);
+      console.log('Found already-reviewed buttons:', reviewButtons.length);
+      
+      $(reviewButtons).on('click', function(e) {
+        e.preventDefault();
+        console.log('Already reviewed button clicked!');
+        showToast('✓ You\'ve already reviewed this book. Thank you for your feedback!', 'info');
+      });
+      
       // Read Later button
       $(buttons).on('click', function(e) {
         e.preventDefault();

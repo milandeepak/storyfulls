@@ -8,8 +8,11 @@ global-styling:
       css/book-detail.css: {}
       css/community-picks.css: {}
       css/interested-section.css: {}
+      css/fact-section.css: {}
       css/books-by-genres.css: {}
       css/book-of-season.css: {}
+      css/fun-facts.css: {}
+      css/featured-users-month.css: {}
       css/user-dropdown.css: {}
   js:
     js/main.js: {}
@@ -19,6 +22,7 @@ global-styling:
     js/book-detail.js: {}
     js/book-detail-actions.js: {}
     js/user-dropdown.js: {}
+    js/fact-section.js: {}
   dependencies:
     - core/jquery
     - core/drupal
@@ -67,6 +71,7 @@ young-writers:
   css:
     theme:
       css/young-writers.css: {}
+      css/stories-poetry-grid.css: {}
   js:
     js/young-writers.js: {}
   dependencies:

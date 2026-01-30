@@ -1,0 +1,36 @@
+{#
+/**
+ * @file
+ * Template for Fun Facts Section paragraph.
+ */
+#}
+
+<section class="fun-facts-section">
+  <div class="container">
+    <div class="fun-facts-item">
+      {# Book Details Content Box (Left, with gradient background) #}
+      <div class="fun-facts-content">
+        {% if fun_facts_title %}
+          <h2 class="fun-facts-content-title">{{ fun_facts_title }}</h2>
+        {% else %}
+          <h2 class="fun-facts-content-title">Fun Facts</h2>
+        {% endif %}
+        
+        {% if fun_facts_text %}
+          <div class="fun-facts-description">
+            {{ fun_facts_text|raw }}
+          </div>
+        {% endif %}
+      </div>
+
+      {# Circular Feature Image (Right, overlapping) #}
+      <div class="fun-facts-image-circle">
+        {% if fun_facts_image_url %}
+          <img src="{{ fun_facts_image_url }}" alt="{{ fun_facts_title|default('Fun Facts') }}" class="fun-facts-image-img">
+        {% else %}
+          <div class="fun-facts-placeholder">Fun Facts Image</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>

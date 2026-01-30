@@ -3,7 +3,7 @@
 .edit-favorites-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #FFF9E6 0%, #FFF4D6 50%, #FFE8CC 100%);
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
 }
 
 /* Main Container */
@@ -131,7 +131,7 @@
   border: 2px solid #E0E0E0;
   border-radius: 8px;
   font-size: 16px;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   color: #2C3E50;
   transition: all 0.3s ease;
 }
@@ -330,7 +330,7 @@
   border: 2px solid #E0E0E0;
   border-radius: 12px;
   font-size: 16px;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   background: #fff;
   transition: all 0.3s ease;
 }
@@ -507,6 +507,34 @@
 
 .favorites-hint svg {
   flex-shrink: 0;
+}
+
+/* Edit Week's Pick form fields */
+.edit-weeks-pick-page .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.edit-weeks-pick-page .form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #2C3E50;
+  font-size: 16px;
+}
+
+.edit-weeks-pick-page .form-input.favorite-input {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border: 2px solid #E0E0E0;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.edit-weeks-pick-page .form-input.favorite-input:focus {
+  outline: none;
+  border-color: #4DD0E1;
+  box-shadow: 0 0 0 3px rgba(77, 208, 225, 0.2);
 }
 
 /* Form Actions */

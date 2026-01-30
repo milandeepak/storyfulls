@@ -51,7 +51,7 @@
 }
 
 .review-book-author {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   font-size: 18px;
   color: #7F8C8D;
   margin: 0;
@@ -86,7 +86,7 @@
 }
 
 .form-label {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   font-size: 18px;
   font-weight: 600;
   color: #E74C3C;
@@ -145,13 +145,13 @@
 .rating-error {
   color: #E74C3C;
   font-size: 14px;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   margin: 0.25rem 0 0 0;
 }
 
 /* Textarea */
 .form-textarea {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   font-size: 16px;
   line-height: 1.6;
   color: #2C3E50;
@@ -175,7 +175,7 @@
 }
 
 .form-help-text {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   font-size: 14px;
   color: #7F8C8D;
   margin: 0;
@@ -191,7 +191,7 @@
 }
 
 .btn-submit-review {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   font-size: 18px;
   font-weight: 600;
   color: #fff;

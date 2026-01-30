@@ -1,0 +1,60 @@
+{#
+/**
+ * @file
+ * Template for Featured Users of the Month Section paragraph.
+ */
+#}
+
+<section class="featured-users-section">
+  <div class="container">
+    <div class="featured-users-grid">
+      
+      {# Children Author of the Month #}
+      <div class="featured-user-card">
+        <h2 class="featured-user-title">Children Authors</h2>
+        
+        <div class="featured-user-content">
+          {% if author_avatar %}
+            <div class="user-avatar">
+              <img src="{{ author_avatar }}" alt="{{ author_name|default('Author') }}">
+            </div>
+          {% else %}
+            <div class="user-avatar user-avatar-placeholder">
+              <div class="avatar-circle"></div>
+            </div>
+          {% endif %}
+          
+          {% if author_name %}
+            <div class="user-name">{{ author_name }}</div>
+          {% else %}
+            <div class="user-name user-name-empty">No name</div>
+          {% endif %}
+        </div>
+      </div>
+
+      {# Reviewer of the Month #}
+      <div class="featured-user-card">
+        <h2 class="featured-user-title">Reviewer of the Month</h2>
+        
+        <div class="featured-user-content">
+          {% if reviewer_avatar %}
+            <div class="user-avatar">
+              <img src="{{ reviewer_avatar }}" alt="{{ reviewer_name|default('Reviewer') }}">
+            </div>
+          {% else %}
+            <div class="user-avatar user-avatar-placeholder">
+              <div class="avatar-circle"></div>
+            </div>
+          {% endif %}
+          
+          {% if reviewer_name %}
+            <div class="user-name">{{ reviewer_name }}</div>
+          {% else %}
+            <div class="user-name user-name-empty">No name</div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

@@ -17,9 +17,7 @@
 
   {# Share Your Work Button #}
   {% if is_owner %}
-    <div class="share-work-section-centered">
-      <a href="/node/add/story_poetry" class="share-work-btn-large">Share your work</a>
-    </div>
+    {# Removed Share your work button as per requirement #}
   {% endif %}
 
   {# Posts List #}
@@ -37,13 +35,17 @@
               <div class="post-image-container">
                 <img src="{{ post.image }}" alt="{{ post.title }}" class="post-image">
                 <div class="post-actions-overlay">
-                  <button class="action-btn like-btn">
-                    <img src="/themes/custom/storyfulls/images/heart-icon.png" alt="Like">
-                    <span>126</span>
+                  <button class="action-btn like-btn {% if post.is_liked %}liked{% endif %}" data-id="{{ post.id }}">
+                    {% if post.is_liked %}
+                       <img src="/themes/custom/storyfulls/images/heart-icon-red.png" alt="Liked" class="like-icon">
+                    {% else %}
+                       <img src="/themes/custom/storyfulls/images/heart-icon.png" alt="Like" class="like-icon">
+                    {% endif %}
+                    <span class="like-count">{{ post.like_count }}</span>
                   </button>
-                  <button class="action-btn share-btn">
+                  <button class="action-btn share-btn" data-url="{{ post.share_url }}">
                     <img src="/themes/custom/storyfulls/images/share-icon.png" alt="Share">
-                    <span>12</span>
+                    <span>Share</span>
                   </button>
                 </div>
               </div>

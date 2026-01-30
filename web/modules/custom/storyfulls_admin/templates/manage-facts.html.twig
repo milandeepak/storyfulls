@@ -1,0 +1,223 @@
+<div class="manage-page">
+  <h1 class="page-title">Manage Did You Know? Facts</h1>
+  
+  <div class="facts-editor">
+    <form method="post" action="/admin/dashboard/manage-facts" enctype="multipart/form-data">
+      
+      <div class="form-group">
+        <label for="question">Question <span class="required">*</span></label>
+        <input type="text" name="question" id="question" class="form-control" value="{{ question }}" placeholder="Did you know...?" required>
+        <small class="form-text">Enter your "Did You Know?" question.</small>
+      </div>
+
+      <div class="form-group">
+        <label>Answer Options <span class="required">*</span></label>
+        <p class="form-text">Enter 2-4 answer choices. Mark the correct answer below.</p>
+        
+        <div class="options-list">
+          {% for i in 0..3 %}
+            <div class="option-row">
+              <span class="option-label">Option {{ i + 1 }}</span>
+              <input 
+                type="text" 
+                name="options[{{ i }}]" 
+                id="option-{{ i }}" 
+                class="form-control" 
+                value="{{ options[i] }}" 
+                placeholder="Enter answer option {{ i + 1 }}"
+                {% if i < 2 %}required{% endif %}>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="correct_answer">Correct Answer <span class="required">*</span></label>
+        <select name="correct_answer" id="correct_answer" class="form-select" required>
+          <option value="">-- Select correct answer --</option>
+          {% for i in 0..3 %}
+            <option value="{{ i }}" {% if i == correct_answer %}selected{% endif %}>Option {{ i + 1 }}</option>
+          {% endfor %}
+        </select>
+        <small class="form-text">Select which option is the correct answer.</small>
+      </div>
+
+      <div class="form-group">
+        <label for="image">Side Image</label>
+        {% if image %}
+          <div class="current-image">
+            <img src="{{ image.url }}" alt="Current Image" style="max-width: 200px; height: auto; margin-bottom: 10px; border-radius: 8px;">
+            <input type="hidden" name="image" value="{{ image.fid }}">
+          </div>
+        {% endif %}
+        <input type="file" name="image_upload" id="image_upload" class="form-control" accept="image/*">
+        <small class="form-text">Upload an image for the left side of the fact section. Leave empty to use default image.</small>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Update Fact</button>
+        <a href="/admin/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+.facts-editor {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.facts-editor .form-group {
+  margin-bottom: 2rem;
+}
+
+.facts-editor label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #2C3E50;
+  font-size: 16px;
+}
+
+.facts-editor .required {
+  color: #dc3545;
+}
+
+.facts-editor .form-control,
+.facts-editor .form-select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.facts-editor .form-control:focus,
+.facts-editor .form-select:focus {
+  outline: none;
+  border-color: #4A90E2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.facts-editor .form-text {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 13px;
+  color: #666;
+}
+
+.options-list {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.option-row:last-child {
+  margin-bottom: 0;
+}
+
+.option-label {
+  font-weight: 600;
+  color: #4A90E2;
+  min-width: 80px;
+  font-size: 14px;
+}
+
+.option-row .form-control {
+  flex: 1;
+}
+
+.current-image {
+  margin-bottom: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #e0e0e0;
+}
+
+.btn {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background: #4A90E2;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #357ABD;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #5a6268;
+}
+
+@media (max-width: 768px) {
+  .option-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .option-label {
+    min-width: auto;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+</style>
+
+<script>
+(function() {
+  document.addEventListener('DOMContentLoaded', function() {
+    // Auto-update correct answer dropdown when options change
+    const optionInputs = document.querySelectorAll('input[name^="options"]');
+    const correctAnswerSelect = document.getElementById('correct_answer');
+    
+    optionInputs.forEach(function(input, index) {
+      input.addEventListener('input', function() {
+        const optionValue = this.value.trim();
+        const selectOption = correctAnswerSelect.options[index + 1];
+        
+        if (optionValue) {
+          selectOption.text = 'Option ' + (index + 1) + ': ' + optionValue.substring(0, 30) + (optionValue.length > 30 ? '...' : '');
+        } else {
+          selectOption.text = 'Option ' + (index + 1);
+        }
+      });
+    });
+  });
+})();
+</script>

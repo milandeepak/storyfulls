@@ -513,4 +513,429 @@ class AdminDashboardController extends ControllerBase {
     return new RedirectResponse('/admin/dashboard/manage-users');
   }
 
+  /**
+   * Fun Facts page.
+   */
+  public function funFacts(Request $request) {
+    // Handle form submission
+    if ($request->isMethod('POST')) {
+      $title = $request->request->get('title');
+      $content = $request->request->get('content');
+      $image_fid = $request->request->get('image');
+      
+      // Load homepage node
+      $homepage = \Drupal::entityTypeManager()->getStorage('node')->load(16);
+      if ($homepage && $homepage->hasField('field_content_sections')) {
+        $paragraphs = $homepage->get('field_content_sections')->referencedEntities();
+        foreach ($paragraphs as $paragraph) {
+          if ($paragraph->bundle() == 'fun_facts') {
+            $paragraph->set('field_title', $title);
+            $paragraph->set('field_content', $content);
+            if ($image_fid) {
+              $paragraph->set('field_featured_image', $image_fid);
+            }
+            $paragraph->save();
+            \Drupal::messenger()->addMessage('Fun Facts updated successfully.');
+            break;
+          }
+        }
+      }
+    }
+
+    // Get current fun facts data
+    $current_title = '';
+    $current_content = '';
+    $current_image = NULL;
+    $homepage = \Drupal::entityTypeManager()->getStorage('node')->load(16);
+    if ($homepage && $homepage->hasField('field_content_sections')) {
+      $paragraphs = $homepage->get('field_content_sections')->referencedEntities();
+      foreach ($paragraphs as $paragraph) {
+        if ($paragraph->bundle() == 'fun_facts') {
+          if ($paragraph->hasField('field_title') && !$paragraph->get('field_title')->isEmpty()) {
+            $current_title = $paragraph->get('field_title')->value;
+          }
+          if ($paragraph->hasField('field_content') && !$paragraph->get('field_content')->isEmpty()) {
+            $current_content = $paragraph->get('field_content')->value;
+          }
+          if ($paragraph->hasField('field_featured_image') && !$paragraph->get('field_featured_image')->isEmpty()) {
+            $file = $paragraph->get('field_featured_image')->entity;
+            if ($file) {
+              $current_image = [
+                'fid' => $file->id(),
+                'url' => \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri()),
+              ];
+            }
+          }
+          break;
+        }
+      }
+    }
+
+    return [
+      '#theme' => 'fun_facts',
+      '#title' => $current_title,
+      '#content' => $current_content,
+      '#image' => $current_image,
+      '#attached' => [
+        'library' => [
+          'storyfulls/admin-dashboard',
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * Featured Users of the Month page.
+   */
+  public function featuredUsersMonth(Request $request) {
+    // Handle form submission
+    if ($request->isMethod('POST')) {
+      $author_uid = $request->request->get('author');
+      $reviewer_uid = $request->request->get('reviewer');
+      
+      // Load homepage node
+      $homepage = \Drupal::entityTypeManager()->getStorage('node')->load(16);
+      if ($homepage && $homepage->hasField('field_content_sections')) {
+        $paragraphs = $homepage->get('field_content_sections')->referencedEntities();
+        foreach ($paragraphs as $paragraph) {
+          if ($paragraph->bundle() == 'featured_users_month') {
+            if ($author_uid) {
+              $paragraph->set('field_featured_author', $author_uid);
+            }
+            if ($reviewer_uid) {
+              $paragraph->set('field_featured_reviewer', $reviewer_uid);
+            }
+            $paragraph->save();
+            \Drupal::messenger()->addMessage('Featured users updated successfully.');
+            break;
+          }
+        }
+      }
+    }
+
+    // Get current featured users
+    $current_author_uid = NULL;
+    $current_reviewer_uid = NULL;
+    $homepage = \Drupal::entityTypeManager()->getStorage('node')->load(16);
+    if ($homepage && $homepage->hasField('field_content_sections')) {
+      $paragraphs = $homepage->get('field_content_sections')->referencedEntities();
+      foreach ($paragraphs as $paragraph) {
+        if ($paragraph->bundle() == 'featured_users_month') {
+          if ($paragraph->hasField('field_featured_author') && !$paragraph->get('field_featured_author')->isEmpty()) {
+            $current_author_uid = $paragraph->get('field_featured_author')->target_id;
+          }
+          if ($paragraph->hasField('field_featured_reviewer') && !$paragraph->get('field_featured_reviewer')->isEmpty()) {
+            $current_reviewer_uid = $paragraph->get('field_featured_reviewer')->target_id;
+          }
+          break;
+        }
+      }
+    }
+
+    // Load all active users (excluding admin user 1)
+    $user_storage = \Drupal::entityTypeManager()->getStorage('user');
+    $query = $user_storage->getQuery()
+      ->condition('uid', 1, '!=')
+      ->condition('status', 1)
+      ->accessCheck(TRUE)
+      ->sort('name', 'ASC');
+
+    $uids = $query->execute();
+    $users = $user_storage->loadMultiple($uids);
+
+    $user_list = [];
+    foreach ($users as $user) {
+      $user_list[] = [
+        'name' => $user->getDisplayName(),
+        'uid' => $user->id(),
+      ];
+    }
+
+    return [
+      '#theme' => 'featured_users_month',
+      '#users' => $user_list,
+      '#current_author_uid' => $current_author_uid,
+      '#current_reviewer_uid' => $current_reviewer_uid,
+      '#attached' => [
+        'library' => [
+          'storyfulls/admin-dashboard',
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * Manage Homepage sections.
+   */
+  public function manageHomepage(Request $request) {
+    // Handle section deletion
+    if ($request->query->get('delete')) {
+      $paragraph_id = $request->query->get('delete');
+      $this->deleteHomepageSection($paragraph_id);
+      return new RedirectResponse('/admin/dashboard/manage-homepage');
+    }
+
+    // Handle reordering
+    if ($request->isMethod('POST') && $request->request->get('action') === 'reorder') {
+      $order = $request->request->get('section_order');
+      if ($order) {
+        $this->reorderHomepageSections($order);
+        \Drupal::messenger()->addMessage('Homepage sections reordered successfully.');
+      }
+      return new RedirectResponse('/admin/dashboard/manage-homepage');
+    }
+
+    // Load homepage node
+    $homepage = \Drupal::entityTypeManager()->getStorage('node')->load(16);
+    $sections = [];
+
+    if ($homepage && $homepage->hasField('field_content_sections')) {
+      $paragraphs = $homepage->get('field_content_sections')->referencedEntities();
+      
+      foreach ($paragraphs as $index => $paragraph) {
+        $section_info = [
+          'id' => $paragraph->id(),
+          'type' => $paragraph->bundle(),
+          'type_label' => $this->getParagraphTypeLabel($paragraph->bundle()),
+          'position' => $index + 1,
+          'edit_url' => $this->getSectionEditUrl($paragraph),
+          'can_delete' => TRUE, // All sections can be deleted
+        ];
+        
+        $sections[] = $section_info;
+      }
+    }
+
+    return [
+      '#theme' => 'manage_homepage',
+      '#sections' => $sections,
+      '#attached' => [
+        'library' => [
+          'storyfulls/admin-dashboard',
+          'core/drupal.ajax',
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * Get paragraph type label.
+   */
+  private function getParagraphTypeLabel($bundle) {
+    $labels = [
+      'books_by_age_section' => 'Books by Age Section',
+      'community_picks' => 'Community Picks',
+      'interested_section' => 'Interested Section (Young Readers/Writers/Events)',
+      'fact_section' => 'Did You Know? Facts',
+      'books_by_genres_section' => 'Books by Genres Section',
+      'book_of_season' => 'Book of the Season',
+      'fun_facts' => 'Fun Facts',
+      'featured_users_month' => 'Featured Users of the Month',
+    ];
+    
+    return $labels[$bundle] ?? ucwords(str_replace('_', ' ', $bundle));
+  }
+
+  /**
+   * Get edit URL for a section.
+   */
+  private function getSectionEditUrl($paragraph) {
+    $bundle = $paragraph->bundle();
+    
+    // Special admin pages for specific sections
+    $admin_pages = [
+      'book_of_season' => '/admin/dashboard/book-of-season',
+      'fun_facts' => '/admin/dashboard/fun-facts',
+      'featured_users_month' => '/admin/dashboard/featured-users-month',
+      'fact_section' => '/admin/dashboard/manage-facts',
+    ];
+    
+    if (isset($admin_pages[$bundle])) {
+      return $admin_pages[$bundle];
+    }
+    
+    // Default to node edit page
+    return '/node/16/edit';
+  }
+
+  /**
+   * Delete a homepage section.
+   */
+  private function deleteHomepageSection($paragraph_id) {
+    $homepage = \Drupal::entityTypeManager()->getStorage('node')->load(16);
+    
+    if ($homepage && $homepage->hasField('field_content_sections')) {
+      $current_sections = $homepage->get('field_content_sections')->getValue();
+      $new_sections = [];
+      
+      foreach ($current_sections as $section) {
+        if ($section['target_id'] != $paragraph_id) {
+          $new_sections[] = $section;
+        }
+      }
+      
+      $homepage->set('field_content_sections', $new_sections);
+      $homepage->save();
+      
+      // Delete the paragraph entity
+      $paragraph = \Drupal::entityTypeManager()->getStorage('paragraph')->load($paragraph_id);
+      if ($paragraph) {
+        $paragraph->delete();
+      }
+      
+      \Drupal::messenger()->addMessage('Section deleted successfully.');
+    }
+  }
+
+  /**
+   * Reorder homepage sections.
+   */
+  private function reorderHomepageSections($order) {
+    $homepage = \Drupal::entityTypeManager()->getStorage('node')->load(16);
+    
+    if ($homepage && $homepage->hasField('field_content_sections')) {
+      $current_sections = $homepage->get('field_content_sections')->getValue();
+      $paragraph_map = [];
+      
+      // Create a map of paragraph IDs to their data
+      foreach ($current_sections as $section) {
+        $paragraph_map[$section['target_id']] = $section;
+      }
+      
+      // Reorder based on the new order
+      $new_sections = [];
+      $order_array = explode(',', $order);
+      
+      foreach ($order_array as $paragraph_id) {
+        if (isset($paragraph_map[$paragraph_id])) {
+          $new_sections[] = $paragraph_map[$paragraph_id];
+        }
+      }
+      
+      $homepage->set('field_content_sections', $new_sections);
+      $homepage->save();
+    }
+  }
+
+  /**
+   * Manage Did You Know Facts page.
+   */
+  public function manageFacts(Request $request) {
+    // Handle form submission
+    if ($request->isMethod('POST')) {
+      $question = $request->request->get('question');
+      $options = $request->request->get('options');
+      $correct_answer = $request->request->get('correct_answer');
+      $image_fid = $request->request->get('image');
+      
+      // Load homepage node
+      $homepage = \Drupal::entityTypeManager()->getStorage('node')->load(16);
+      if ($homepage && $homepage->hasField('field_content_sections')) {
+        $paragraphs = $homepage->get('field_content_sections')->referencedEntities();
+        foreach ($paragraphs as $paragraph) {
+          if ($paragraph->bundle() == 'fact_section') {
+            // Update question
+            if ($question) {
+              $paragraph->set('field_fact_question', $question);
+            }
+            
+            // Update options (remove empty options and format properly)
+            if ($options && is_array($options)) {
+              $options_values = array_filter($options, function($value) {
+                return !empty(trim($value));
+              });
+              
+              // Format options for Drupal field
+              $formatted_options = [];
+              foreach ($options_values as $option_value) {
+                $formatted_options[] = ['value' => $option_value];
+              }
+              
+              $paragraph->set('field_fact_options', $formatted_options);
+            }
+            
+            // Update correct answer index
+            if ($correct_answer !== null && $correct_answer !== '') {
+              $paragraph->set('field_correct_answer_index', $correct_answer);
+            }
+            
+            // Update image if provided
+            if ($image_fid) {
+              $paragraph->set('field_fact_image', $image_fid);
+            }
+            
+            $paragraph->save();
+            \Drupal::messenger()->addMessage('Did You Know? fact updated successfully.');
+            
+            // Redirect to prevent form resubmission
+            return new RedirectResponse('/admin/dashboard/manage-facts');
+          }
+        }
+      }
+    }
+
+    // Get current fact data
+    $current_question = '';
+    $current_options = ['', '', '', ''];
+    $current_correct_answer = 0;
+    $current_image = NULL;
+    
+    $homepage = \Drupal::entityTypeManager()->getStorage('node')->load(16);
+    if ($homepage && $homepage->hasField('field_content_sections')) {
+      $paragraphs = $homepage->get('field_content_sections')->referencedEntities();
+      foreach ($paragraphs as $paragraph) {
+        if ($paragraph->bundle() == 'fact_section') {
+          // Get question
+          if ($paragraph->hasField('field_fact_question') && !$paragraph->get('field_fact_question')->isEmpty()) {
+            $current_question = $paragraph->get('field_fact_question')->value;
+          }
+          
+          // Get options
+          if ($paragraph->hasField('field_fact_options') && !$paragraph->get('field_fact_options')->isEmpty()) {
+            $options_items = $paragraph->get('field_fact_options')->getValue();
+            $current_options = [];
+            foreach ($options_items as $option) {
+              $current_options[] = $option['value'];
+            }
+            // Ensure we have at least 4 options
+            while (count($current_options) < 4) {
+              $current_options[] = '';
+            }
+          }
+          
+          // Get correct answer index
+          if ($paragraph->hasField('field_correct_answer_index') && !$paragraph->get('field_correct_answer_index')->isEmpty()) {
+            $current_correct_answer = $paragraph->get('field_correct_answer_index')->value;
+          }
+          
+          // Get image
+          if ($paragraph->hasField('field_fact_image') && !$paragraph->get('field_fact_image')->isEmpty()) {
+            $file = $paragraph->get('field_fact_image')->entity;
+            if ($file) {
+              $current_image = [
+                'fid' => $file->id(),
+                'url' => \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri()),
+              ];
+            }
+          }
+          
+          break;
+        }
+      }
+    }
+
+    return [
+      '#theme' => 'manage_facts',
+      '#question' => $current_question,
+      '#options' => $current_options,
+      '#correct_answer' => $current_correct_answer,
+      '#image' => $current_image,
+      '#attached' => [
+        'library' => [
+          'storyfulls/admin-dashboard',
+        ],
+      ],
+    ];
+  }
+
 }

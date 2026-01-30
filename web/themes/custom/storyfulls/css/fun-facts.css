@@ -1,0 +1,173 @@
+/* Fun Facts Section */
+.fun-facts-section {
+  padding: 4rem 2rem;
+  background: #fff;
+  position: relative;
+}
+
+.fun-facts-section .container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Fun Facts Item Container */
+.fun-facts-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+/* Content Box (Left side, blue gradient) */
+.fun-facts-content {
+  flex: 1;
+  background: linear-gradient(135deg, #E3F5FC 0%, #B3E5FC 100%);
+  border-radius: 24px;
+  padding: 2rem 195px 2rem 3rem; /* Right padding for circle overlap (175px + 20px) */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  position: relative;
+  z-index: 1;
+  transition: transform 0.2s, box-shadow 0.2s;
+  height: 280px; /* Keep original height, smaller than circle */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.fun-facts-content:hover {
+  transform: translateX(-8px); /* Slide left on hover (opposite direction) */
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Content Title - "Fun Facts" */
+.fun-facts-content-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin: 0 0 1rem 0;
+  line-height: 1.3;
+}
+
+/* Fun Facts Description */
+.fun-facts-description {
+  font-family: 'Roboto Slab', serif;
+  font-size: 16px;
+  color: #2C3E50;
+  line-height: 1.7;
+  margin: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.fun-facts-description p {
+  margin: 0 0 0.5rem 0;
+}
+
+.fun-facts-description p:last-child {
+  margin-bottom: 0;
+}
+
+/* Circular Feature Image (Right side, overlapping) */
+.fun-facts-image-circle {
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #FFEAA7 0%, #FDCB6E 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  margin-left: -175px; /* Overlap with content box (half the circle width) */
+}
+
+.fun-facts-image-img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.fun-facts-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Roboto Slab', serif;
+  font-size: 16px;
+  color: #999;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .fun-facts-section {
+    padding: 3rem 1.5rem;
+  }
+
+  .fun-facts-item {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .fun-facts-image-circle {
+    width: 280px;
+    height: 280px;
+    padding: 15px;
+    margin-left: 0;
+    margin-bottom: -100px; /* Overlap vertically instead */
+    margin-right: 2rem;
+  }
+
+  .fun-facts-content {
+    padding: 110px 2rem 2rem 2rem; /* Top padding for circle overlap */
+    width: 100%;
+    height: auto;
+    min-height: 280px;
+  }
+
+  .fun-facts-content-title {
+    font-size: 22px;
+  }
+
+  .fun-facts-description {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 640px) {
+  .fun-facts-section {
+    padding: 2rem 1rem;
+  }
+
+  .fun-facts-image-circle {
+    width: 240px;
+    height: 240px;
+    padding: 12px;
+    margin-bottom: -80px;
+    margin-right: 1rem;
+  }
+
+  .fun-facts-content {
+    padding: 90px 1.5rem 1.5rem 1.5rem;
+    min-height: 240px;
+  }
+
+  .fun-facts-content-title {
+    font-size: 20px;
+    margin-bottom: 0.75rem;
+  }
+
+  .fun-facts-description {
+    font-size: 14px;
+  }
+}

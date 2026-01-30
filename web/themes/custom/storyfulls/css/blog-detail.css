@@ -5,7 +5,7 @@
   min-height: 100vh;
   padding: 3rem 0 5rem;
   color: #1F2937;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
 }
 
 .blog-detail-container {
@@ -15,7 +15,7 @@
 }
 
 .blog-detail-title {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Slab', serif;
   font-size: 28px;
   font-weight: 400;
   text-align: center;

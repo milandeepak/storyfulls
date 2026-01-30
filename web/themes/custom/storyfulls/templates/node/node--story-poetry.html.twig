@@ -1,0 +1,51 @@
+{#
+/**
+ * @file
+ * Theme implementation to display a story or poetry node.
+ */
+#}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+    'story-poetry-full-node',
+  ]
+%}
+{{ attach_library('storyfulls/young-writers') }}
+
+<article{{ attributes.addClass(classes) }}>
+  <div class="story-poetry-container">
+    <div class="story-left-column">
+      {% if content.field_featured_image %}
+        <div class="story-image-wrapper">
+          {{ content.field_featured_image }}
+          <div class="story-actions-overlay">
+            <button class="action-btn like-btn {% if is_liked %}liked{% endif %}" data-id="{{ node.id }}">
+              {% if is_liked %}
+                 <img src="/themes/custom/storyfulls/images/heart-icon-red.png" alt="Liked" class="like-icon">
+              {% else %}
+                 <img src="/themes/custom/storyfulls/images/heart-icon.png" alt="Like" class="like-icon">
+              {% endif %}
+              <span class="like-count">{{ like_count }}</span>
+            </button>
+            <button class="action-btn share-btn" data-url="{{ url('entity.node.canonical', {'node': node.id}) }}">
+               <img src="/themes/custom/storyfulls/images/share-icon.png" alt="Share">
+               <span>Share</span>
+            </button>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="story-right-column">
+      <h1 class="story-title">✧ {{ label }} ✧</h1>
+      <div class="story-content">
+        {{ content.body }}
+      </div>
+    </div>
+  </div>
+</article>

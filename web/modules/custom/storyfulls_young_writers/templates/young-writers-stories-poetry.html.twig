@@ -30,13 +30,13 @@
       <div class="reviewers-grid">
         {% for writer in writers %}
           <div class="reviewer-card">
-            <div class="reviewer-card-inner">
-              <a href="/young-writers/stories-poetry/user/{{ writer.id }}" class="reviewer-avatar-link">
-                <div class="reviewer-avatar" style="background-image: url('{{ writer.picture }}');"></div>
-              </a>
-              
-              <div class="reviewer-info">
-                <h3 class="reviewer-name">{{ writer.name }}</h3>
+              <div class="reviewer-card-inner">
+                <a href="/young-writers/stories-poetry/user/{{ writer.id }}" class="reviewer-avatar-link">
+                  <div class="reviewer-avatar" style="background-image: url('{{ writer.picture }}');"></div>
+                </a>
+                
+                <div class="reviewer-info">
+                  <h3 class="reviewer-name">{{ writer.name }}</h3>
                 <p class="reviewer-age">{{ writer.age }}</p>
                 <div class="reviewer-stats">
                   <span class="stat-count">{{ writer.post_count }}</span>
