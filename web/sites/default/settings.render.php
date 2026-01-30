@@ -181,6 +181,9 @@ if (!empty($r2_access_key) && !empty($r2_secret_key) && !empty($r2_bucket) && !e
 
   // Don't use path-style URLs (R2 prefers virtual-hosted-style)
   $config['s3fs.settings']['use_path_style_endpoint'] = FALSE;
+  
+  // CRITICAL: Disable object versioning - R2 doesn't support ListObjectVersions
+  $config['s3fs.settings']['use_versioning'] = FALSE;
 
   // Cache settings
   $config['s3fs.settings']['cache_control_header'] = 'public, max-age=31536000';
