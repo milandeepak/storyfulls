@@ -18,6 +18,18 @@ chown -R www-data:www-data /tmp/drupal-sync /tmp/private 2>/dev/null || true
 
 # Run Drupal deploy (config import, updates) if DB is available; ignore failure on first deploy
 if [ -n "$DATABASE_URL" ] || [ -n "$DB_HOST" ]; then
+  echo "Waiting for database connection..."
+  
+  # Wait up to 30 seconds for database to be ready
+  for i in {1..30}; do
+    if ./vendor/bin/drush sqlq "SELECT 1" 2>/dev/null | grep -q "1"; then
+      echo "✓ Database connection established"
+      break
+    fi
+    echo "Waiting for database... attempt $i/30"
+    sleep 1
+  done
+  
   echo "Checking Drupal bootstrap status..."
   if ./vendor/bin/drush status bootstrap 2>/dev/null | grep -q "Successful"; then
     echo "✓ Drupal bootstrapped successfully"
