@@ -12,6 +12,10 @@ cd /var/www/html
 mkdir -p web/sites/default/files
 chown -R www-data:www-data web/sites/default/files 2>/dev/null || true
 
+# Create required writable directories in /tmp for ephemeral storage
+mkdir -p /tmp/drupal-sync /tmp/private
+chown -R www-data:www-data /tmp/drupal-sync /tmp/private 2>/dev/null || true
+
 # Run Drupal deploy (config import, updates) if DB is available; ignore failure on first deploy
 if [ -n "$DATABASE_URL" ] || [ -n "$DB_HOST" ]; then
   if ./vendor/bin/drush status bootstrap 2>/dev/null | grep -q "Successful"; then

@@ -96,8 +96,15 @@ if ($custom = getenv('TRUSTED_HOST_PATTERNS')) {
 }
 
 // Hash salt from env (generate with: openssl rand -hex 32)
+// CRITICAL: Hash salt is required for Drupal to work. If not set via env var,
+// generate one automatically (though it will change on each deploy without persistence)
 if ($salt = getenv('DRUPAL_HASH_SALT')) {
   $settings['hash_salt'] = $salt;
+}
+else {
+  // Fallback: generate from app name or use a static default
+  // WARNING: Use DRUPAL_HASH_SALT env var in production for stability
+  $settings['hash_salt'] = hash('sha256', 'storyfulls-render-' . ($db_host ?: 'fallback'));
 }
 
 // Base URL for HTTPS (avoids mixed content for links and file URLs)
@@ -107,11 +114,17 @@ if ($base_url = getenv('DRUPAL_BASE_URL')) {
   $settings['file_public_base_url'] = $base_url . '/sites/default/files';
 }
 
-// Config sync directory
-$settings['config_sync_directory'] = 'sites/default/files/sync';
+// Config sync directory (writable location)
+$settings['config_sync_directory'] = '/tmp/drupal-sync';
+
+// Temp directory (must be writable on Render)
+$settings['file_temp_path'] = '/tmp';
 
 // Skip permissions hardening in container
 $settings['skip_permissions_hardening'] = TRUE;
+
+// File paths - use /tmp for private files since filesystem is ephemeral
+$settings['file_private_path'] = '/tmp/private';
 
 // --- S3FS / Cloudflare R2 Configuration -------------------------------------
 // Set these environment variables in Render:
