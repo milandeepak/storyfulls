@@ -19,7 +19,7 @@
 /drush/contrib
 
 # Local config and uploads (not for image)
-/web/sites/*/settings.php
+# NOTE: settings.php is now included in image - it reads env vars from Render
 /web/sites/*/settings.local.php
 /web/sites/*/files
 /web/sites/*/private
