@@ -36,3 +36,8 @@
 # ngrok (local tunnel)
 /ngrok-url.txt
 /ngrok.log
+
+# Environment files with credentials
+.env
+.env.*
+!.env.example

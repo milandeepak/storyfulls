@@ -1,61 +1,57 @@
-# Render Blueprint: Drupal 11 (Storyfulls) + MySQL
+# Render Blueprint: Drupal 11 (Storyfulls) - Free Plan with Cloudflare R2 + TiDB
 # Deploy from repo root; creates:
-# - Private MySQL 8 service (with persistent disk)
-# - Drupal web service (Docker)
+# - Drupal web service (Docker) - FREE plan, no persistent disk
 #
-# See RENDER_DEPLOY.md for step-by-step instructions, including importing your DB/files.
+# IMPORTANT: This configuration uses:
+# - TiDB Cloud Serverless (free MySQL-compatible database)
+# - Cloudflare R2 (free object storage for files)
+#
+# See RENDER_DEPLOY.md for step-by-step instructions.
 
 services:
-  # MySQL database (private service, internal-only)
-  - type: pserv
-    name: storyfulls-mysql
-    runtime: image
-    image:
-      url: mysql:8.0
-    envVars:
-      - key: MYSQL_DATABASE
-        value: storyfulls
-      - key: MYSQL_USER
-        value: storyfulls
-      - key: MYSQL_PASSWORD
-        sync: false
-      - key: MYSQL_ROOT_PASSWORD
-        generateValue: true
-    disk:
-      name: mysql-data
-      mountPath: /var/lib/mysql
-      sizeGB: 10
-
-  # Drupal web service
+  # Drupal web service (FREE tier - no disk)
   - type: web
     name: storyfulls
     runtime: docker
     plan: free
     region: oregon
     envVars:
+      # TiDB Cloud Database Configuration
+      # Get these values from your TiDB Cloud Serverless cluster:
+      # 1. Go to https://tidbcloud.com
+      # 2. Create a Serverless cluster (free tier)
+      # 3. Get connection details from "Connect" button
       - key: DB_HOST
-        fromService:
-          name: storyfulls-mysql
-          type: pserv
-          property: host
+        sync: false  # Set to your TiDB gateway (e.g., gateway01.us-west-2.prod.aws.tidbcloud.com)
       - key: DB_PORT
-        value: "3306"
+        value: "4000"  # TiDB default port
       - key: DB_NAME
-        value: storyfulls
+        sync: false  # Set to your database name (e.g., storyfulls)
       - key: DB_USER
-        value: storyfulls
+        sync: false  # Set to your TiDB username
       - key: DB_PASS
-        fromService:
-          name: storyfulls-mysql
-          type: pserv
-          envVarKey: MYSQL_PASSWORD
+        sync: false  # Set to your TiDB password
+      - key: DB_USE_SSL
+        value: "true"  # TiDB requires SSL
+      
+      # Drupal settings
       - key: DRUPAL_HASH_SALT
         generateValue: true
-      # Optional: set after first deploy to fix mixed content (use your Render URL)
+      # Set this to your Render URL after first deploy
       # - key: DRUPAL_BASE_URL
       #   value: https://storyfulls.onrender.com
-    disk:
-      name: drupal-files
-      mountPath: /var/www/html/web/sites/default/files
-      sizeGB: 5
+      
+      # Cloudflare R2 Configuration (set these in Render dashboard)
+      - key: R2_ACCESS_KEY_ID
+        sync: false  # Set manually - your Cloudflare R2 Access Key ID
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false  # Set manually - your Cloudflare R2 Secret Access Key
+      - key: R2_BUCKET
+        sync: false  # Set manually - e.g., "storyfulls-files"
+      - key: R2_ENDPOINT
+        sync: false  # Set manually - e.g., "https://YOUR_ACCOUNT_ID.r2.cloudflarestorage.com"
+      - key: R2_PUBLIC_URL
+        sync: false  # Set manually - your public bucket URL or custom domain
+    
+    # No disk needed - files stored in Cloudflare R2
     healthCheckPath: /
