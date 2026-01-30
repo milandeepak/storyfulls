@@ -21,6 +21,19 @@ if [ -n "$DATABASE_URL" ] || [ -n "$DB_HOST" ]; then
   if ./vendor/bin/drush status bootstrap 2>/dev/null | grep -q "Successful"; then
     echo "Running drush deploy..."
     ./vendor/bin/drush deploy -y 2>/dev/null || true
+    
+    # Enable S3FS module if not already enabled
+    if ! ./vendor/bin/drush pm:list --status=enabled --type=module 2>/dev/null | grep -q "s3fs"; then
+      echo "Enabling S3FS module..."
+      ./vendor/bin/drush pm:enable s3fs -y 2>/dev/null || true
+    fi
+    
+    # Configure S3FS if R2 credentials are available
+    if [ -n "$R2_BUCKET" ] && [ -n "$R2_ENDPOINT" ]; then
+      echo "Configuring S3FS for Cloudflare R2..."
+      ./vendor/bin/drush s3fs-refresh-cache 2>/dev/null || true
+    fi
+    
     ./vendor/bin/drush cr 2>/dev/null || true
   fi
 fi
