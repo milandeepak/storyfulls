@@ -18,23 +18,40 @@ chown -R www-data:www-data /tmp/drupal-sync /tmp/private 2>/dev/null || true
 
 # Run Drupal deploy (config import, updates) if DB is available; ignore failure on first deploy
 if [ -n "$DATABASE_URL" ] || [ -n "$DB_HOST" ]; then
+  echo "Checking Drupal bootstrap status..."
   if ./vendor/bin/drush status bootstrap 2>/dev/null | grep -q "Successful"; then
+    echo "✓ Drupal bootstrapped successfully"
+    
     echo "Running drush deploy..."
     ./vendor/bin/drush deploy -y 2>/dev/null || true
     
     # Enable S3FS module if not already enabled
+    echo "Checking S3FS module status..."
     if ! ./vendor/bin/drush pm:list --status=enabled --type=module 2>/dev/null | grep -q "s3fs"; then
       echo "Enabling S3FS module..."
-      ./vendor/bin/drush pm:enable s3fs -y 2>/dev/null || true
+      ./vendor/bin/drush pm:enable s3fs -y || echo "Failed to enable S3FS module"
+    else
+      echo "✓ S3FS module already enabled"
     fi
     
-    # Configure S3FS if R2 credentials are available
+    # Refresh S3FS cache if R2 credentials are available
     if [ -n "$R2_BUCKET" ] && [ -n "$R2_ENDPOINT" ]; then
-      echo "Configuring S3FS for Cloudflare R2..."
-      ./vendor/bin/drush s3fs-refresh-cache 2>/dev/null || true
+      echo "Refreshing S3FS file cache from R2 bucket: $R2_BUCKET..."
+      ./vendor/bin/drush s3fs-refresh-cache -y || echo "Failed to refresh S3FS cache (module may need to be enabled first)"
+      
+      # Check cache status
+      FILE_COUNT=$(./vendor/bin/drush sqlq "SELECT COUNT(*) FROM s3fs_file" 2>/dev/null || echo "0")
+      echo "S3FS cache contains $FILE_COUNT files"
+    else
+      echo "⚠ R2 credentials not set, skipping S3FS cache refresh"
     fi
     
+    echo "Clearing Drupal cache..."
     ./vendor/bin/drush cr 2>/dev/null || true
+    
+    echo "✓ Drupal setup complete"
+  else
+    echo "⚠ Drupal bootstrap failed, skipping setup steps"
   fi
 fi
 
