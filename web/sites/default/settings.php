@@ -1,6 +1,7 @@
 <?php
 
 // phpcs:ignoreFile
+// Updated: 2026-01-30 - Added Render.com settings support
 
 // DDEV-created Drupal 11 settings.php from upstream default.settings.php
 
