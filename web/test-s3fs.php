@@ -4,20 +4,20 @@
  * Access this at: https://storyfulls-1.onrender.com/test-s3fs.php
  */
 
+use Drupal\Core\DrupalKernel;
+use Symfony\Component\HttpFoundation\Request;
+
 echo "<h1>S3FS Configuration Test</h1>\n";
 echo "<pre>\n";
 
 // Check if Drupal can bootstrap
-require_once __DIR__ . '/autoload.php';
+$autoloader = require_once __DIR__ . '/autoload.php';
 
 try {
-  $kernel = \Drupal\Core\DrupalKernel::createFromRequest(
-    \Symfony\Component\HttpFoundation\Request::createFromGlobals(),
-    \Drupal::classResolver()->getInstanceFromDefinition(\Drupal\Core\Autoloader::class),
-    'prod'
-  );
+  $request = Request::createFromGlobals();
+  $kernel = DrupalKernel::createFromRequest($request, $autoloader, 'prod');
   $kernel->boot();
-  $kernel->prepareLegacyRequest(\Symfony\Component\HttpFoundation\Request::createFromGlobals());
+  $kernel->prepareLegacyRequest($request);
   
   echo "✓ Drupal bootstrapped successfully\n\n";
   
