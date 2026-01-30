@@ -3,12 +3,8 @@ set -e
 
 cd /var/www/html
 
-# Generate settings.php for Render (from default.settings.php + Render include)
-if { [ -n "$DATABASE_URL" ] || [ -n "$DB_HOST" ]; } && [ ! -f web/sites/default/settings.php ]; then
-  echo "Generating settings.php for Render..."
-  cp web/sites/default/default.settings.php web/sites/default/settings.php
-  printf '\n<?php\n// Render.com environment\nif (getenv("DATABASE_URL") || getenv("DB_HOST")) { include __DIR__ . "/settings.render.php"; }\n' >> web/sites/default/settings.php
-fi
+# Settings.php is now managed in Git and includes settings.render.php automatically
+# No need to generate it dynamically anymore
 
 # Dependencies are installed in Dockerfile so the container can listen on PORT quickly
 
