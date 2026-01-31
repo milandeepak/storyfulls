@@ -78,6 +78,15 @@ young-writers:
     - core/jquery
     - core/drupal
 
+young-artists:
+  css:
+    theme:
+      css/young-artists.css: {}
+  js:
+    js/young-artists.js: {}
+  dependencies:
+    - core/drupal
+
 admin-dashboard:
   css:
     theme:

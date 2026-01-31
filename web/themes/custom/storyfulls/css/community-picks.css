@@ -36,7 +36,7 @@
 .community-picks-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 2.5rem;
+  gap: 3.5rem;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -167,8 +167,8 @@
   /* Become visible with playful pop */
   opacity: 1;
   visibility: visible;
-  /* Vertical fan: slight left rotation (-10deg), move left (-20%), RISE UP (-30px) */
-  transform: translateX(-50%) translateX(-20%) rotateZ(-10deg) translateY(-30px);
+  /* Vertical fan: slight left rotation (-10deg), move left (-20%), RISE UP (-50px) */
+  transform: translateX(-50%) translateX(-20%) rotateZ(-10deg) translateY(-50px);
   /* Intensified shadow - casts darkness onto card behind */
   box-shadow: 3px 6px 16px rgba(0, 0, 0, 0.28);
 }
@@ -186,8 +186,8 @@
   /* Become visible with playful pop */
   opacity: 1;
   visibility: visible;
-  /* Vertical fan: slight right rotation (10deg), move right (20%), RISE UP (-30px) */
-  transform: translateX(-50%) translateX(20%) rotateZ(10deg) translateY(-30px);
+  /* Vertical fan: slight right rotation (10deg), move right (20%), RISE UP (-50px) */
+  transform: translateX(-50%) translateX(20%) rotateZ(10deg) translateY(-50px);
   /* Intensified shadow - casts darkness onto card behind */
   box-shadow: -3px 6px 16px rgba(0, 0, 0, 0.28);
 }

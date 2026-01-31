@@ -1,52 +1,210 @@
 {#
 /**
  * @file
- * Template for Junior Artists page.
+ * Template for Young Artists page with 3D Coverflow Carousel.
  */
 #}
 
-<div class="young-writers-junior-artists-page">
-  {# Banner Section #}
-  <div class="young-writers-banner">
-    <img src="/themes/custom/storyfulls/images/juniorartistspagebanner.jpg" alt="Junior Artists" class="banner-image">
-    <div class="banner-overlay">
-      <h1 class="banner-title">Junior Artists</h1>
-      <p class="banner-subtitle">Calling all young artists! Share your masterpieces here</p>
+<div class="young-artists-page">
+  {# Hero Section #}
+  <section class="hero-section">
+    <div class="hero-image-container">
+      <img src="/themes/custom/storyfulls/images/youngwriterbanner.png" alt="Young Artists Creating Art" class="hero-image">
     </div>
-  </div>
+    <div class="hero-title-container">
+      <h1 class="hero-title">Young Hands, Bright Imagination – A Journey Through Art and Creativity</h1>
+    </div>
+    
+    {# Decorative vines #}
+    <div class="vine-decoration vine-left"></div>
+    <div class="vine-decoration vine-right"></div>
+  </section>
 
-  {# Share Your Work Button #}
-  <div class="share-work-section-centered">
-    <a href="/node/add/junior_artist" class="share-work-btn-large">Share your work</a>
-  </div>
-
-  {# Artists List #}
-  <div class="writers-grid-section">
-    {% if artists is empty %}
-      <div class="no-content-message">
-        <p>No artwork shared yet. Be the first to share your creativity!</p>
-      </div>
-    {% else %}
-      <div class="reviewers-grid">
-        {% for artist in artists %}
-          <div class="reviewer-card">
-            <div class="reviewer-card-inner">
-              <a href="/young-writers/junior-artists/user/{{ artist.id }}" class="reviewer-avatar-link">
-                <div class="reviewer-avatar" style="background-image: url('{{ artist.picture }}');"></div>
-              </a>
-              
-              <div class="reviewer-info">
-                <h3 class="reviewer-name">{{ artist.name }}</h3>
-                <p class="reviewer-age">{{ artist.age }}</p>
-                <div class="reviewer-stats">
-                  <span class="stat-count">{{ artist.post_count }}</span>
-                  <span class="stat-label">Artworks</span>
+  {# Illustrations Section #}
+  <section class="gallery-section illustrations-section">
+    <h2 class="section-title">Illustrations</h2>
+    
+    <div class="coverflow-container" id="illustrations-carousel">
+      <div class="coverflow-wrapper">
+        {% if illustrations is not empty %}
+          {% for illustration in illustrations %}
+            <div class="coverflow-card" data-index="{{ loop.index0 }}">
+              <div class="card-image-container">
+                {% if illustration.image_url %}
+                  <img src="{{ illustration.image_url }}" alt="{{ illustration.title }}" class="card-image">
+                {% else %}
+                  <div class="card-placeholder">No Image</div>
+                {% endif %}
+              </div>
+              <div class="card-overlay">
+                <div class="card-stats">
+                  <span class="stat-item">
+                    <svg class="icon icon-heart" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                    <span class="stat-count">{{ illustration.likes|default(0) }}</span>
+                  </span>
+                  <span class="stat-item">
+                    <svg class="icon icon-comment" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                    </svg>
+                    <span class="stat-count">{{ illustration.comments|default(0) }}</span>
+                  </span>
                 </div>
               </div>
             </div>
-          </div>
-        {% endfor %}
+          {% endfor %}
+        {% else %}
+          {# Placeholder cards for demo #}
+          {% for i in 0..6 %}
+            <div class="coverflow-card" data-index="{{ i }}">
+              <div class="card-image-container">
+                <div class="card-placeholder">Illustration {{ i + 1 }}</div>
+              </div>
+              <div class="card-overlay">
+                <div class="card-stats">
+                  <span class="stat-item">
+                    <svg class="icon icon-heart" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                    <span class="stat-count">{{ random(10, 150) }}</span>
+                  </span>
+                  <span class="stat-item">
+                    <svg class="icon icon-comment" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                    </svg>
+                    <span class="stat-count">{{ random(5, 45) }}</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
       </div>
-    {% endif %}
-  </div>
+    </div>
+    
+    {# Carousel Navigation #}
+    <div class="carousel-controls">
+      <button class="carousel-btn carousel-prev" data-carousel="illustrations-carousel" aria-label="Previous">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <button class="carousel-btn carousel-next" data-carousel="illustrations-carousel" aria-label="Next">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  {# Art & Craft Section #}
+  <section class="gallery-section art-craft-section">
+    <h2 class="section-title">Art & Craft</h2>
+    
+    <div class="coverflow-container" id="artcraft-carousel">
+      <div class="coverflow-wrapper">
+        {% if art_craft is not empty %}
+          {% for artwork in art_craft %}
+            <div class="coverflow-card" data-index="{{ loop.index0 }}">
+              <div class="card-image-container">
+                {% if artwork.image_url %}
+                  <img src="{{ artwork.image_url }}" alt="{{ artwork.title }}" class="card-image">
+                {% else %}
+                  <div class="card-placeholder">No Image</div>
+                {% endif %}
+              </div>
+              <div class="card-overlay">
+                <div class="card-stats">
+                  <span class="stat-item">
+                    <svg class="icon icon-heart" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                    <span class="stat-count">{{ artwork.likes|default(0) }}</span>
+                  </span>
+                  <span class="stat-item">
+                    <svg class="icon icon-comment" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                    </svg>
+                    <span class="stat-count">{{ artwork.comments|default(0) }}</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          {# Placeholder cards for demo #}
+          {% for i in 0..6 %}
+            <div class="coverflow-card" data-index="{{ i }}">
+              <div class="card-image-container">
+                <div class="card-placeholder">Art & Craft {{ i + 1 }}</div>
+              </div>
+              <div class="card-overlay">
+                <div class="card-stats">
+                  <span class="stat-item">
+                    <svg class="icon icon-heart" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                    <span class="stat-count">{{ random(10, 150) }}</span>
+                  </span>
+                  <span class="stat-item">
+                    <svg class="icon icon-comment" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                    </svg>
+                    <span class="stat-count">{{ random(5, 45) }}</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+    
+    {# Carousel Navigation #}
+    <div class="carousel-controls">
+      <button class="carousel-btn carousel-prev" data-carousel="artcraft-carousel" aria-label="Previous">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <button class="carousel-btn carousel-next" data-carousel="artcraft-carousel" aria-label="Next">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  {# Featured Artist Section #}
+  <section class="featured-artist-section">
+    <div class="featured-artist-container">
+      {% if featured_artist %}
+        <div class="artist-avatar">
+          <img src="{{ featured_artist.avatar }}" alt="{{ featured_artist.name }}" class="avatar-image">
+        </div>
+        <div class="artist-info">
+          <h3 class="artist-name">{{ featured_artist.name }}</h3>
+          <p class="artist-age">{{ featured_artist.age }}</p>
+        </div>
+        <div class="artist-actions">
+          <button class="btn btn-follow">Follow</button>
+          <a href="/young-writers/junior-artists/user/{{ featured_artist.id }}" class="btn btn-view-profile">View Profile</a>
+        </div>
+      {% else %}
+        {# Default featured artist #}
+        <div class="artist-avatar">
+          <img src="/themes/custom/storyfulls/images/elephantavatar.png" alt="Featured Artist" class="avatar-image">
+        </div>
+        <div class="artist-info">
+          <h3 class="artist-name">Emily Blinks</h3>
+          <p class="artist-age">10 years</p>
+        </div>
+        <div class="artist-actions">
+          <button class="btn btn-follow">Follow</button>
+          <a href="/young-writers/junior-artists" class="btn btn-view-profile">View Profile</a>
+        </div>
+      {% endif %}
+    </div>
+  </section>
 </div>

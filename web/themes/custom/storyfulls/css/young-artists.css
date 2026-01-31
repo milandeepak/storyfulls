@@ -1,0 +1,576 @@
+/* ============================================
+   YOUNG ARTISTS PAGE - 3D COVERFLOW CAROUSEL
+   ============================================ */
+
+/* Global Styles */
+.young-artists-page {
+  background: linear-gradient(180deg, #F8F9FA 0%, #FFFFFF 50%, #F8F9FA 100%);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+.hero-section {
+  position: relative;
+  padding: 0;
+  margin-bottom: 3rem;
+  background: #FFFFFF;
+}
+
+.hero-image-container {
+  width: 100%;
+  max-height: 400px;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  max-height: 400px;
+}
+
+.hero-title-container {
+  background: linear-gradient(90deg, #E8F4F8 0%, #F3E8FF 100%);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.hero-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: #2C3E50;
+  margin: 0;
+  line-height: 1.4;
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* Decorative Vines */
+.vine-decoration {
+  position: absolute;
+  width: 80px;
+  height: 300px;
+  background-image: url('/themes/custom/storyfulls/images/vine-decoration.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.6;
+  z-index: 1;
+}
+
+.vine-left {
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.vine-right {
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) scaleX(-1);
+}
+
+/* ============================================
+   GALLERY SECTIONS
+   ============================================ */
+.gallery-section {
+  padding: 4rem 2rem;
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-family: 'Roboto Slab', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #2C3E50;
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #A78BFA 0%, #F472B6 100%);
+  margin: 1rem auto 0;
+  border-radius: 2px;
+}
+
+/* ============================================
+   3D COVERFLOW CAROUSEL - CRITICAL COMPONENT
+   ============================================ */
+
+.coverflow-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 4rem 0;
+  position: relative;
+  /* CREATE 3D SPACE */
+  perspective: 2000px;
+  perspective-origin: center center;
+}
+
+.coverflow-wrapper {
+  position: relative;
+  width: 100%;
+  height: 450px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Enable 3D transformations on children */
+  transform-style: preserve-3d;
+}
+
+/* Individual Carousel Card */
+.coverflow-card {
+  position: absolute;
+  width: 280px;
+  height: 380px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #FFFFFF;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  /* Enable smooth transitions */
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* 3D transform properties */
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+/* Card Image Container */
+.card-image-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.card-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #E8F4F8 0%, #F3E8FF 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Roboto Slab', serif;
+  font-size: 18px;
+  color: #94A3B8;
+}
+
+/* Card Overlay - Stats (Likes & Comments) */
+.card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  padding: 1.5rem 1rem 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.card-stats {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #FFFFFF;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.icon-heart {
+  color: #FF6B6B;
+}
+
+.icon-comment {
+  color: #A78BFA;
+}
+
+/* ============================================
+   3D COVERFLOW POSITIONS
+   ============================================ */
+
+/* CENTER CARD (Active) - Position 0 */
+.coverflow-card[data-position="0"] {
+  /* Center position */
+  transform: translateX(0) translateZ(0) rotateY(0deg) scale(1.1);
+  opacity: 1;
+  z-index: 100;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.coverflow-card[data-position="0"] .card-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.coverflow-card[data-position="0"]:hover .card-image {
+  transform: scale(1.05);
+}
+
+/* LEFT SIDE - Position -1 */
+.coverflow-card[data-position="-1"] {
+  transform: translateX(-350px) translateZ(-200px) rotateY(35deg) scale(0.85);
+  opacity: 0.7;
+  z-index: 50;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* RIGHT SIDE - Position +1 */
+.coverflow-card[data-position="1"] {
+  transform: translateX(350px) translateZ(-200px) rotateY(-35deg) scale(0.85);
+  opacity: 0.7;
+  z-index: 50;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* FAR LEFT - Position -2 */
+.coverflow-card[data-position="-2"] {
+  transform: translateX(-650px) translateZ(-350px) rotateY(45deg) scale(0.7);
+  opacity: 0.4;
+  z-index: 25;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* FAR RIGHT - Position +2 */
+.coverflow-card[data-position="2"] {
+  transform: translateX(650px) translateZ(-350px) rotateY(-45deg) scale(0.7);
+  opacity: 0.4;
+  z-index: 25;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* VERY FAR LEFT - Position -3 */
+.coverflow-card[data-position="-3"] {
+  transform: translateX(-900px) translateZ(-500px) rotateY(50deg) scale(0.6);
+  opacity: 0.2;
+  z-index: 10;
+}
+
+/* VERY FAR RIGHT - Position +3 */
+.coverflow-card[data-position="3"] {
+  transform: translateX(900px) translateZ(-500px) rotateY(-50deg) scale(0.6);
+  opacity: 0.2;
+  z-index: 10;
+}
+
+/* HIDDEN CARDS - Beyond visible range */
+.coverflow-card[data-position]:not([data-position="0"]):not([data-position="1"]):not([data-position="-1"]):not([data-position="2"]):not([data-position="-2"]):not([data-position="3"]):not([data-position="-3"]) {
+  transform: translateX(0) translateZ(-1000px) scale(0.3);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================
+   CAROUSEL NAVIGATION CONTROLS
+   ============================================ */
+
+.carousel-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  margin-top: 3rem;
+}
+
+.carousel-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #A78BFA 0%, #F472B6 100%);
+  border: none;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(167, 139, 250, 0.4);
+}
+
+.carousel-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(167, 139, 250, 0.6);
+}
+
+.carousel-btn:active {
+  transform: scale(0.95);
+}
+
+.carousel-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ============================================
+   FEATURED ARTIST SECTION
+   ============================================ */
+
+.featured-artist-section {
+  padding: 3rem 2rem;
+  margin: 4rem auto 2rem;
+  max-width: 700px;
+}
+
+.featured-artist-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+  background: #FFFFFF;
+  border: 2px dashed #E0E7FF;
+  border-radius: 16px;
+  gap: 2rem;
+}
+
+.artist-avatar {
+  flex-shrink: 0;
+}
+
+.avatar-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #A78BFA;
+  box-shadow: 0 4px 12px rgba(167, 139, 250, 0.3);
+}
+
+.artist-info {
+  flex-grow: 1;
+}
+
+.artist-name {
+  font-family: 'Roboto Slab', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #2C3E50;
+  margin: 0 0 0.5rem 0;
+}
+
+.artist-age {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  color: #64748B;
+  margin: 0;
+}
+
+.artist-actions {
+  display: flex;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  border: none;
+}
+
+.btn-follow {
+  background: #E0E7FF;
+  color: #6366F1;
+}
+
+.btn-follow:hover {
+  background: #C7D2FE;
+  transform: translateY(-2px);
+}
+
+.btn-view-profile {
+  background: linear-gradient(135deg, #A78BFA 0%, #6366F1 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.btn-view-profile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablets (768px - 1024px) */
+@media (max-width: 1024px) {
+  .hero-title {
+    font-size: 26px;
+  }
+  
+  .coverflow-wrapper {
+    height: 400px;
+  }
+  
+  .coverflow-card {
+    width: 240px;
+    height: 340px;
+  }
+  
+  /* Adjust positions for smaller screens */
+  .coverflow-card[data-position="-1"] {
+    transform: translateX(-280px) translateZ(-180px) rotateY(35deg) scale(0.8);
+  }
+  
+  .coverflow-card[data-position="1"] {
+    transform: translateX(280px) translateZ(-180px) rotateY(-35deg) scale(0.8);
+  }
+  
+  .coverflow-card[data-position="-2"],
+  .coverflow-card[data-position="2"],
+  .coverflow-card[data-position="-3"],
+  .coverflow-card[data-position="3"] {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .vine-decoration {
+    width: 60px;
+    height: 200px;
+  }
+}
+
+/* Mobile (up to 767px) */
+@media (max-width: 767px) {
+  .hero-title {
+    font-size: 20px;
+    padding: 0 1rem;
+  }
+  
+  .hero-title-container {
+    padding: 2rem 1rem;
+  }
+  
+  .gallery-section {
+    padding: 2rem 1rem;
+  }
+  
+  .section-title {
+    font-size: 22px;
+    margin-bottom: 2rem;
+  }
+  
+  /* Simplify carousel to single card view on mobile */
+  .coverflow-container {
+    perspective: 1000px;
+    padding: 2rem 0;
+  }
+  
+  .coverflow-wrapper {
+    height: 380px;
+  }
+  
+  .coverflow-card {
+    width: 260px;
+    height: 360px;
+  }
+  
+  .coverflow-card[data-position="0"] {
+    transform: translateX(0) translateZ(0) rotateY(0deg) scale(1);
+  }
+  
+  /* Hide side cards on mobile - show only center */
+  .coverflow-card[data-position="-1"],
+  .coverflow-card[data-position="1"] {
+    transform: translateX(-400px) scale(0.5);
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .coverflow-card[data-position="1"] {
+    transform: translateX(400px) scale(0.5);
+  }
+  
+  .coverflow-card[data-position]:not([data-position="0"]) {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .carousel-controls {
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .carousel-btn {
+    width: 48px;
+    height: 48px;
+  }
+  
+  /* Featured Artist Section - Stack on mobile */
+  .featured-artist-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+  }
+  
+  .artist-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+  
+  /* Hide vine decorations on mobile */
+  .vine-decoration {
+    display: none;
+  }
+}
+
+/* Extra small mobile (up to 480px) */
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 18px;
+  }
+  
+  .coverflow-card {
+    width: 220px;
+    height: 320px;
+  }
+  
+  .section-title {
+    font-size: 20px;
+  }
+}

@@ -402,10 +402,45 @@ class YoungWritersController extends ControllerBase {
    * Display Junior Artists page.
    */
   public function juniorArtists() {
-    // Get all users who have posted artwork
-    $database = \Drupal::database();
+    // Get artwork for carousel displays
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
     
-    // Query to get users with junior_artist content
+    // Fetch Illustrations
+    $illustrations_query = $node_storage->getQuery()
+      ->condition('type', 'junior_artist')
+      ->condition('status', 1)
+      ->condition('field_art_category', 'illustration', '=')
+      ->sort('created', 'DESC')
+      ->range(0, 10)
+      ->accessCheck(TRUE);
+    
+    $illustration_nids = $illustrations_query->execute();
+    $illustration_nodes = $node_storage->loadMultiple($illustration_nids);
+    
+    $illustrations = [];
+    foreach ($illustration_nodes as $node) {
+      $illustrations[] = $this->formatArtworkData($node);
+    }
+    
+    // Fetch Art & Craft
+    $artcraft_query = $node_storage->getQuery()
+      ->condition('type', 'junior_artist')
+      ->condition('status', 1)
+      ->condition('field_art_category', 'art_craft', '=')
+      ->sort('created', 'DESC')
+      ->range(0, 10)
+      ->accessCheck(TRUE);
+    
+    $artcraft_nids = $artcraft_query->execute();
+    $artcraft_nodes = $node_storage->loadMultiple($artcraft_nids);
+    
+    $art_craft = [];
+    foreach ($artcraft_nodes as $node) {
+      $art_craft[] = $this->formatArtworkData($node);
+    }
+    
+    // Get featured artist (user with most artworks)
+    $database = \Drupal::database();
     $query = $database->select('node_field_data', 'n')
       ->fields('n', ['uid'])
       ->condition('n.type', 'junior_artist')
@@ -414,69 +449,112 @@ class YoungWritersController extends ControllerBase {
     
     $user_ids = $query->execute()->fetchCol();
     
-    // Load user data
-    $user_storage = \Drupal::entityTypeManager()->getStorage('user');
-    $users = $user_storage->loadMultiple($user_ids);
-    
-    $users_data = [];
-    $avatars = ['elephantavatar.png', 'tigeravatar.png', 'rhinoavatar.png'];
-    
-    foreach ($users as $user) {
-      if ($user->id() == 0) continue; // Skip anonymous
+    $featured_artist = NULL;
+    if (!empty($user_ids)) {
+      $user_storage = \Drupal::entityTypeManager()->getStorage('user');
+      $users = $user_storage->loadMultiple($user_ids);
       
-      // Get post count
-      $post_query = \Drupal::entityTypeManager()->getStorage('node')->getQuery()
-        ->condition('type', 'junior_artist')
-        ->condition('uid', $user->id())
-        ->condition('status', 1)
-        ->accessCheck(TRUE);
+      $max_posts = 0;
+      $avatars = ['elephantavatar.png', 'tigeravatar.png', 'rhinoavatar.png'];
       
-      $post_count = $post_query->count()->execute();
-      
-      // Get avatar
-      $user_picture = '';
-      if ($user->hasField('field_avatar') && !$user->get('field_avatar')->isEmpty()) {
-        $avatar_filename = $user->get('field_avatar')->value;
-        $user_picture = '/themes/custom/storyfulls/images/' . $avatar_filename;
-      } else {
-        $avatar_index = ($user->id() - 1) % count($avatars);
-        $user_picture = '/themes/custom/storyfulls/images/' . $avatars[$avatar_index];
-      }
-      
-      // Get Age
-      $user_age = 'Age not available';
-      if ($user->hasField('field_date_of_birth') && !$user->get('field_date_of_birth')->isEmpty()) {
-        $dob = $user->get('field_date_of_birth')->value;
-        if ($dob) {
-          $birthDate = new \DateTime($dob);
-          $today = new \DateTime();
-          $age = $today->diff($birthDate)->y;
-          $user_age = $age . ' years';
+      foreach ($users as $user) {
+        if ($user->id() == 0) continue;
+        
+        $post_query = $node_storage->getQuery()
+          ->condition('type', 'junior_artist')
+          ->condition('uid', $user->id())
+          ->condition('status', 1)
+          ->accessCheck(TRUE);
+        
+        $post_count = $post_query->count()->execute();
+        
+        if ($post_count > $max_posts) {
+          $max_posts = $post_count;
+          
+          // Get avatar
+          $user_picture = '';
+          if ($user->hasField('field_avatar') && !$user->get('field_avatar')->isEmpty()) {
+            $avatar_filename = $user->get('field_avatar')->value;
+            $user_picture = '/themes/custom/storyfulls/images/' . $avatar_filename;
+          } else {
+            $avatar_index = ($user->id() - 1) % count($avatars);
+            $user_picture = '/themes/custom/storyfulls/images/' . $avatars[$avatar_index];
+          }
+          
+          // Get age
+          $user_age = '10 years';
+          if ($user->hasField('field_date_of_birth') && !$user->get('field_date_of_birth')->isEmpty()) {
+            $dob = $user->get('field_date_of_birth')->value;
+            if ($dob) {
+              $birthDate = new \DateTime($dob);
+              $today = new \DateTime();
+              $age = $today->diff($birthDate)->y;
+              $user_age = $age . ' years';
+            }
+          }
+          
+          $featured_artist = [
+            'id' => $user->id(),
+            'name' => $user->getDisplayName(),
+            'avatar' => $user_picture,
+            'age' => $user_age,
+          ];
         }
       }
-      
-      $users_data[] = [
-        'id' => $user->id(),
-        'name' => $user->getDisplayName(),
-        'picture' => $user_picture,
-        'post_count' => $post_count,
-        'age' => $user_age,
-      ];
     }
-    
-    // Sort by post count
-    usort($users_data, function($a, $b) {
-      return $b['post_count'] - $a['post_count'];
-    });
 
     return [
       '#theme' => 'young_writers_junior_artists',
-      '#artists' => $users_data,
+      '#illustrations' => $illustrations,
+      '#art_craft' => $art_craft,
+      '#featured_artist' => $featured_artist,
       '#attached' => [
         'library' => [
-          'storyfulls/young-writers',
+          'storyfulls/young-artists',
         ],
       ],
+    ];
+  }
+  
+  /**
+   * Helper function to format artwork data for carousel.
+   */
+  private function formatArtworkData($node) {
+    $image_url = NULL;
+    $likes = 0;
+    $comments = 0;
+    
+    // Get image
+    if ($node->hasField('field_featured_image') && !$node->get('field_featured_image')->isEmpty()) {
+      $file = $node->get('field_featured_image')->entity;
+      if ($file) {
+        $image_url = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+      }
+    }
+    
+    // Get likes count using flag module
+    $flag_service = \Drupal::service('flag.count');
+    if ($flag_service) {
+      $flag = \Drupal::service('flag')->getFlagById('like_content');
+      if ($flag) {
+        $likes = $flag_service->getEntityFlagCounts($node);
+      }
+    }
+    
+    // Get comments count
+    if ($node->hasField('field_comments')) {
+      $comments_field = $node->get('field_comments');
+      if (!$comments_field->isEmpty()) {
+        $comments = $comments_field->comment_count ?? 0;
+      }
+    }
+    
+    return [
+      'nid' => $node->id(),
+      'title' => $node->getTitle(),
+      'image_url' => $image_url,
+      'likes' => $likes,
+      'comments' => $comments,
     ];
   }
 
