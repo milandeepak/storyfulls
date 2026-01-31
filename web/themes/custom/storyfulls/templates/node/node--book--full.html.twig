@@ -79,7 +79,7 @@
           {% endif %}
         </span>
       </button>
-      <button class="action-btn already-read-btn" data-book-id="{{ node.id }}"
+      <button class="action-btn already-read-btn" data-book-id="{{ node.id() }}"
         {% if in_wishlist or in_books_read or user_already_reviewed %}disabled{% endif %}
         {% if in_wishlist %}data-reason="in-wishlist"{% endif %}
         {% if in_books_read %}data-reason="already-in-list"{% endif %}
