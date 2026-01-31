@@ -169,6 +169,16 @@ storyfulls_profile.edit_favorite_books:
   options:
     no_cache: TRUE
 
+storyfulls_profile.edit_favorite_genres:
+  path: '/user/edit-favorite-genres'
+  defaults:
+    _controller: '\Drupal\storyfulls_profile\Controller\EditFavoritesController::editGenres'
+    _title: 'Edit Favorite Genres'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  options:
+    no_cache: TRUE
+
 storyfulls_profile.edit_weeks_pick:
   path: '/user/edit-weeks-pick'
   defaults:
