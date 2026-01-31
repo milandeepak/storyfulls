@@ -146,6 +146,11 @@ if (!empty($r2_access_key) && !empty($r2_secret_key) && !empty($r2_bucket) && !e
   $settings['s3fs.secret_key'] = $r2_secret_key;
   $settings['s3fs.bucket'] = $r2_bucket;
   $settings['s3fs.region'] = 'auto'; // R2 uses 'auto' for region
+  
+  // CRITICAL: Use S3FS stream wrappers for public/private files
+  // These must be set via $settings (not $config) to trigger service provider override
+  $settings['s3fs.use_s3_for_public'] = TRUE;
+  $settings['s3fs.use_s3_for_private'] = TRUE;
 
   // Custom endpoint for Cloudflare R2
   $config['s3fs.settings']['use_customhost'] = TRUE;
