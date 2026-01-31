@@ -90,6 +90,10 @@
         <span class="btn-text">
           {% if in_books_read %}
             Already Marked as Read
+          {% elseif in_wishlist %}
+            In Read Later List
+          {% elseif user_already_reviewed %}
+            Already Reviewed
           {% else %}
             Already Read
           {% endif %}
