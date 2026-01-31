@@ -22,6 +22,10 @@
 # NOTE: settings.php is now included in image - it reads env vars from Render
 /web/sites/*/settings.local.php
 /web/sites/*/files
+# But include static uploaded images that are committed to git
+!/web/sites/default/files/book_covers
+!/web/sites/default/files/blogindividualpagefeatureimage.png
+!/web/sites/default/files/hero-images
 /web/sites/*/private
 
 # Logs and temp
