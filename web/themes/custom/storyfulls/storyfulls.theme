@@ -901,6 +901,10 @@ function storyfulls_preprocess_node__book(&$variables) {
       $books_read_ids = array_column($user->get('field_books_read')->getValue(), 'target_id');
       $variables['in_books_read'] = in_array($node->id(), $books_read_ids);
     }
+    
+    // Add cache tags to invalidate when user data changes
+    $variables['#cache']['tags'][] = 'user:' . $current_user->id();
+    $variables['#cache']['contexts'][] = 'user';
   }
   
   // Generate write review URL using route system (respects aliases)
