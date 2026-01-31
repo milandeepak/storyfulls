@@ -217,7 +217,7 @@
   padding: 1.25rem; /* Further reduced padding from 1.5rem */
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   position: relative;
-  height: 250px; /* Fixed height */
+  height: 280px; /* Increased from 250px to fit all books */
   width: 100%;
   transition: transform 0.2s, box-shadow 0.2s;
   display: flex;
@@ -271,8 +271,9 @@
   flex-direction: row;
   gap: 1rem;
   flex: 1;
-  overflow: hidden;
+  overflow: visible; /* Changed from hidden to allow scrollbar visibility */
   align-items: flex-start;
+  min-height: 0; /* Ensures flex children can shrink properly */
 }
 
 .favorite-side-image {
