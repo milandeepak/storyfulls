@@ -278,6 +278,19 @@
   border-color: #666;
 }
 
+.action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #F5F5F5;
+  border-color: #CCCCCC;
+}
+
+.action-btn:disabled:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: #CCCCCC;
+}
+
 .read-later-btn,
 .already-read-btn,
 .books-btn {

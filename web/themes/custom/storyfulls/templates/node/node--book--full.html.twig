@@ -63,17 +63,37 @@
 
     {# Right Column - Action Buttons #}
     <div class="book-actions-column">
-      <button class="action-btn read-later-btn" data-book-id="{{ node.id() }}">
+      <button class="action-btn read-later-btn" data-book-id="{{ node.id() }}"
+        {% if in_wishlist or in_books_read or user_already_reviewed %}disabled{% endif %}
+        {% if in_wishlist %}data-reason="already-in-wishlist"{% endif %}
+        {% if in_books_read %}data-reason="already-read"{% endif %}
+        {% if user_already_reviewed %}data-reason="already-reviewed"{% endif %}>
         <span class="btn-icon-circle">
           <img src="/themes/custom/storyfulls/images/readlatericon.png" alt="Read Later" class="btn-icon-img">
         </span>
-        <span class="btn-text">Read Later</span>
+        <span class="btn-text">
+          {% if in_wishlist %}
+            Already in Read Later
+          {% else %}
+            Read Later
+          {% endif %}
+        </span>
       </button>
-      <button class="action-btn already-read-btn" data-book-id="{{ node.id }}">
+      <button class="action-btn already-read-btn" data-book-id="{{ node.id }}"
+        {% if in_wishlist or in_books_read or user_already_reviewed %}disabled{% endif %}
+        {% if in_wishlist %}data-reason="in-wishlist"{% endif %}
+        {% if in_books_read %}data-reason="already-in-list"{% endif %}
+        {% if user_already_reviewed %}data-reason="already-reviewed"{% endif %}>
         <span class="btn-icon-circle">
           <img src="/themes/custom/storyfulls/images/alreadyreadicon.png" alt="Already Read" class="btn-icon-img">
         </span>
-        <span class="btn-text">Already Read</span>
+        <span class="btn-text">
+          {% if in_books_read %}
+            Already Marked as Read
+          {% else %}
+            Already Read
+          {% endif %}
+        </span>
       </button>
       <a href="/books" class="action-btn books-btn">
         <span class="btn-icon-circle">
@@ -171,8 +191,10 @@
     
     <div class="reviews-button-wrapper">
       {# Write Review Button - Always show, but handle differently based on user state #}
-      {% if user_is_logged_in and user_already_reviewed %}
-        <button class="write-review-btn already-reviewed-btn" data-already-reviewed="true">
+      {% if user_is_logged_in and (user_already_reviewed or in_wishlist) %}
+        <button class="write-review-btn already-reviewed-btn" 
+          data-already-reviewed="{{ user_already_reviewed ? 'true' : 'false' }}"
+          data-in-wishlist="{{ in_wishlist ? 'true' : 'false' }}">
           <img src="/themes/custom/storyfulls/images/writeareviewbutton-icon.png" alt="" class="write-review-icon-left">
           <span class="write-review-text">Write a Review</span>
           <img src="/themes/custom/storyfulls/images/writeareviewdesign-icon.png" alt="" class="write-review-icon-right">

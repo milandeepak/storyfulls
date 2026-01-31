@@ -37,9 +37,32 @@
       };
       
       // Read Later Button
-      $('.read-later-btn', context).once('read-later').on('click', function() {
+      $('.read-later-btn', context).once('read-later').on('click', function(e) {
         const $button = $(this);
         const bookId = $(this).data('book-id');
+        
+        // Check if button is disabled and show appropriate message
+        if ($button.prop('disabled')) {
+          const reason = $button.data('reason');
+          let message = '';
+          
+          switch(reason) {
+            case 'already-in-wishlist':
+              message = 'This book is already in your Read Later list.';
+              break;
+            case 'already-read':
+              message = 'You cannot add this book to Read Later because you have already marked it as read.';
+              break;
+            case 'already-reviewed':
+              message = 'You cannot add this book to Read Later because you have already reviewed it.';
+              break;
+            default:
+              message = 'This action is not available for this book.';
+          }
+          
+          showToast(message, 'info');
+          return;
+        }
         
         if (!bookId) {
           console.error('Book ID not found');
@@ -59,9 +82,11 @@
             if (response.success) {
               showToast(response.message, 'success');
               // Update button state
-              $button.html('<span class="btn-icon">✓</span><span class="btn-text">Added to Read Later</span>');
+              $button.html('<span class="btn-icon-circle"><img src="/themes/custom/storyfulls/images/readlatericon.png" alt="Read Later" class="btn-icon-img"></span><span class="btn-text">Already in Read Later</span>');
             } else {
-              if (response.already_added) {
+              if (response.conflict) {
+                showToast(response.message, 'error');
+              } else if (response.already_added) {
                 showToast(response.message, 'info');
               } else {
                 showToast(response.message, 'error');
@@ -81,9 +106,32 @@
       });
       
       // Already Read Button
-      $('.already-read-btn', context).once('already-read').on('click', function() {
+      $('.already-read-btn', context).once('already-read').on('click', function(e) {
         const $button = $(this);
         const bookId = $(this).data('book-id');
+        
+        // Check if button is disabled and show appropriate message
+        if ($button.prop('disabled')) {
+          const reason = $button.data('reason');
+          let message = '';
+          
+          switch(reason) {
+            case 'in-wishlist':
+              message = 'You cannot mark this book as read because it is in your Read Later list. Please remove it from Read Later first.';
+              break;
+            case 'already-in-list':
+              message = 'This book is already in your Books I\'ve Read list.';
+              break;
+            case 'already-reviewed':
+              message = 'This book is already marked as read (you have reviewed it).';
+              break;
+            default:
+              message = 'This action is not available for this book.';
+          }
+          
+          showToast(message, 'info');
+          return;
+        }
         
         if (!bookId) {
           console.error('Book ID not found');
@@ -102,10 +150,12 @@
           success: function(response) {
             if (response.success) {
               showToast(response.message, 'success');
-              // Optionally update button state
-              $button.html('<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M15 5L7 13L3 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Added to Books Read');
+              // Update button state
+              $button.html('<span class="btn-icon-circle"><img src="/themes/custom/storyfulls/images/alreadyreadicon.png" alt="Already Read" class="btn-icon-img"></span><span class="btn-text">Already Marked as Read</span>');
             } else {
-              if (response.already_added) {
+              if (response.conflict) {
+                showToast(response.message, 'error');
+              } else if (response.already_added) {
                 showToast(response.message, 'info');
               } else {
                 showToast(response.message, 'error');
@@ -145,7 +195,14 @@
       // Handle "Write a Review" button click when user has already reviewed
       $('.already-reviewed-btn', context).once('already-reviewed').on('click', function(e) {
         e.preventDefault();
-        showToast('✓ You\'ve already reviewed this book. Thank you for your feedback!', 'info');
+        const alreadyReviewed = $(this).data('already-reviewed');
+        const inWishlist = $(this).data('in-wishlist');
+        
+        if (alreadyReviewed === true || alreadyReviewed === 'true') {
+          showToast('✓ You\'ve already reviewed this book. Thank you for your feedback!', 'info');
+        } else if (inWishlist === true || inWishlist === 'true') {
+          showToast('You cannot review this book while it is in your Read Later list. Please mark it as read first.', 'info');
+        }
       });
       
     }

@@ -883,6 +883,26 @@ function storyfulls_preprocess_node__book(&$variables) {
   $user_review = $rating_service->getUserReview($node->id(), $current_user->id());
   $variables['user_already_reviewed'] = !empty($user_review);
   
+  // Check if book is in user's wishlist (Read Later)
+  $variables['in_wishlist'] = FALSE;
+  $variables['in_books_read'] = FALSE;
+  
+  if ($current_user->isAuthenticated()) {
+    $user = \Drupal\user\Entity\User::load($current_user->id());
+    
+    // Check wishlist
+    if ($user && $user->hasField('field_wishlist') && !$user->get('field_wishlist')->isEmpty()) {
+      $wishlist_ids = array_column($user->get('field_wishlist')->getValue(), 'target_id');
+      $variables['in_wishlist'] = in_array($node->id(), $wishlist_ids);
+    }
+    
+    // Check books read
+    if ($user && $user->hasField('field_books_read') && !$user->get('field_books_read')->isEmpty()) {
+      $books_read_ids = array_column($user->get('field_books_read')->getValue(), 'target_id');
+      $variables['in_books_read'] = in_array($node->id(), $books_read_ids);
+    }
+  }
+  
   // Generate write review URL using route system (respects aliases)
   $variables['write_review_url'] = \Drupal\Core\Url::fromRoute('storyfulls_profile.write_review', [
     'book' => $node->id()

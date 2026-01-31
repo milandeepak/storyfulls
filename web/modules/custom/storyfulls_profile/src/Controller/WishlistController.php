@@ -61,6 +61,34 @@ class WishlistController extends ControllerBase {
       ], 200);
     }
     
+    // Check if book is already in books read list
+    $books_read = [];
+    if ($user->hasField('field_books_read') && !$user->get('field_books_read')->isEmpty()) {
+      foreach ($user->get('field_books_read')->referencedEntities() as $read_book) {
+        $books_read[] = $read_book->id();
+      }
+    }
+    
+    if (in_array($book_id, $books_read)) {
+      return new JsonResponse([
+        'success' => false, 
+        'message' => 'You cannot add this book to Read Later because you have already marked it as read.',
+        'conflict' => 'books_read'
+      ], 200);
+    }
+    
+    // Check if user has reviewed this book
+    $rating_service = \Drupal::service('storyfulls_profile.book_rating');
+    $user_review = $rating_service->getUserReview($book_id, $current_user->id());
+    
+    if (!empty($user_review)) {
+      return new JsonResponse([
+        'success' => false, 
+        'message' => 'You cannot add this book to Read Later because you have already reviewed it.',
+        'conflict' => 'reviewed'
+      ], 200);
+    }
+    
     // Add book to wishlist
     $wishlist[] = $book_id;
     $user->set('field_wishlist', $wishlist);
@@ -181,6 +209,22 @@ class WishlistController extends ControllerBase {
         'success' => false, 
         'message' => 'This book is already in your reading list.',
         'already_added' => true
+      ], 200);
+    }
+    
+    // Check if book is in wishlist (Read Later)
+    $wishlist = [];
+    if ($user->hasField('field_wishlist') && !$user->get('field_wishlist')->isEmpty()) {
+      foreach ($user->get('field_wishlist')->referencedEntities() as $wishlist_book) {
+        $wishlist[] = $wishlist_book->id();
+      }
+    }
+    
+    if (in_array($book_id, $wishlist)) {
+      return new JsonResponse([
+        'success' => false, 
+        'message' => 'You cannot mark this book as read because it is in your Read Later list. Please remove it from Read Later first.',
+        'conflict' => 'wishlist'
       ], 200);
     }
     
