@@ -189,7 +189,7 @@
                 <div class="favorite-list">
                   {% if favorite_authors %}
                     {% for author in favorite_authors %}
-                      <div class="favorite-item">{{ author }}</div>
+                      {{ author }}
                     {% endfor %}
                   {% else %}
                     <p class="no-favorites">No favourite authors yet</p>
@@ -213,7 +213,7 @@
                 <div class="favorite-list">
                   {% if favorite_books %}
                     {% for book in favorite_books %}
-                      <div class="favorite-item">{{ book }}</div>
+                      {{ book }}
                     {% endfor %}
                   {% else %}
                     <p class="no-favorites">No favourite books yet</p>
@@ -237,7 +237,7 @@
                 <div class="favorite-list genres-list">
                   {% if favorite_genres %}
                     {% for genre in favorite_genres %}
-                      <div class="genre-tag">{{ genre }}</div>
+                      {{ genre }}
                     {% endfor %}
                   {% else %}
                     <p class="no-favorites">No favourite genres yet</p>

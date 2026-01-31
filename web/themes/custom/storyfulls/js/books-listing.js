@@ -26,6 +26,7 @@
       const urlParams = new URLSearchParams(window.location.search);
       const ageFromUrl = urlParams.get('age');
       const searchFromUrl = urlParams.get('keys');
+      const genreFromUrl = urlParams.get('genre');
       
       if (ageFromUrl) {
         // Age group passed from homepage
@@ -46,12 +47,30 @@
         $('#book-search').val(searchFromUrl);
         console.log('Pre-filled search from URL:', searchFromUrl);
       }
+      
+      if (genreFromUrl) {
+        currentGenre = genreFromUrl;
+        // Use setTimeout to ensure dropdown is fully rendered
+        setTimeout(function() {
+          $('#genre-filter').val(genreFromUrl);
+          console.log('Pre-selected genre from URL:', genreFromUrl);
+          console.log('Genre dropdown value after setting:', $('#genre-filter').val());
+          console.log('Genre dropdown options:', $('#genre-filter option').length);
+          
+          // Trigger filter after setting genre
+          filterBooks();
+        }, 100);
+      } else {
+        console.log('No genre parameter in URL');
+      }
 
       console.log('Initial currentAge:', currentAge);
       console.log('Age group items found:', $('.age-group-item').length);
 
-      // Initial filter on page load
-      filterBooks();
+      // Initial filter on page load (skip if genre from URL, will filter in setTimeout)
+      if (!genreFromUrl) {
+        filterBooks();
+      }
 
       // Age group filter - use direct event delegation on document
       $(document).off('click.ageFilter').on('click.ageFilter', '.age-group-item', function(e) {
@@ -155,8 +174,18 @@
           }
 
           // Filter by genre
-          if (currentGenre && !bookGenres.includes(currentGenre)) {
-            showBook = false;
+          if (currentGenre && currentGenre !== '') {
+            // Convert genre IDs to strings for comparison
+            const genreIdsAsStrings = bookGenres.map(g => String(g).trim());
+            const currentGenreStr = String(currentGenre).trim();
+            
+            if (!genreIdsAsStrings.includes(currentGenreStr)) {
+              showBook = false;
+            }
+            
+            if (index < 3) {
+              console.log('Genre check - Book genres:', genreIdsAsStrings, 'Current:', currentGenreStr, 'Match:', genreIdsAsStrings.includes(currentGenreStr));
+            }
           }
 
           // Filter by search

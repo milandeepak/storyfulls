@@ -402,106 +402,105 @@ function storyfulls_preprocess_paragraph__books_by_genres_section(&$variables) {
 function storyfulls_preprocess_paragraph__community_picks(&$variables) {
   $paragraph = $variables['paragraph'];
   
-  // Get number of books to display from field
-  $number_of_books = 4; // default
-  if ($paragraph->hasField('field_number_of_items') && !$paragraph->get('field_number_of_items')->isEmpty()) {
-    $number_of_books = (int) $paragraph->get('field_number_of_items')->value;
-  }
-  
-  // Check if admin has manually selected books
-  $books = [];
-  if ($paragraph->hasField('field_featured_books') && !$paragraph->get('field_featured_books')->isEmpty()) {
-    // Use manually selected books
-    $selected_nodes = $paragraph->get('field_featured_books')->referencedEntities();
-    $count = 0;
-    foreach ($selected_nodes as $node) {
-      if ($count >= $number_of_books) {
-        break;
-      }
-      
-      $book = [
-        'nid' => $node->id(),
-        'title' => $node->getTitle(),
-        'url' => $node->toUrl()->toString(),
-        'cover_url' => NULL,
-        'author' => NULL,
+  // Get the community pick cards
+  $cards = [];
+  if ($paragraph->hasField('field_pick_cards') && !$paragraph->get('field_pick_cards')->isEmpty()) {
+    $card_paragraphs = $paragraph->get('field_pick_cards')->referencedEntities();
+    
+    foreach ($card_paragraphs as $card_paragraph) {
+      $card = [
+        'route' => '#',
+        'image_url' => NULL,
+        'image_alt' => '',
+        'wing_books' => [],
       ];
       
-      // Get cover image
-      if ($node->hasField('field_featured_image') && !$node->get('field_featured_image')->isEmpty()) {
-        $file = $node->get('field_featured_image')->entity;
+      // Get card route
+      if ($card_paragraph->hasField('field_card_route') && !$card_paragraph->get('field_card_route')->isEmpty()) {
+        $card['route'] = $card_paragraph->get('field_card_route')->value;
+      }
+      
+      // Get card image
+      if ($card_paragraph->hasField('field_card_image') && !$card_paragraph->get('field_card_image')->isEmpty()) {
+        $image_field = $card_paragraph->get('field_card_image');
+        $file = $image_field->entity;
         if ($file) {
-          $book['cover_url'] = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+          $card['image_url'] = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+          $card['image_alt'] = $image_field->alt ?? 'Community Pick';
         }
       }
       
-      // Get author
-      if ($node->hasField('field_author') && !$node->get('field_author')->isEmpty()) {
-        $authors = [];
-        foreach ($node->get('field_author')->referencedEntities() as $author_term) {
-          $authors[] = $author_term->getName();
-        }
-        $book['author'] = implode(', ', $authors);
-      }
+      // Get wing books based on route
+      $card['wing_books'] = _get_wing_books_for_route($card['route']);
       
-      $books[] = $book;
-      $count++;
+      $cards[] = $card;
     }
-  } else {
-    // No manually selected books, load random community picks
-    // You could add logic here to select books based on criteria like:
-    // - Books with most reviews
-    // - Books marked as "community favorite"
-    // - Random selection
-    // For now, we'll just load random published books
+  }
+  
+  $variables['pick_cards'] = $cards;
+}
+
+/**
+ * Helper function to get wing books for a route.
+ */
+function _get_wing_books_for_route($route) {
+  $wing_books = [];
+  
+  // Map routes to config names
+  $route_config_map = [
+    '/inclusive-books' => 'storyfulls_books.inclusive_books',
+    '/latest-releases' => 'storyfulls_books.latest_releases',
+  ];
+  
+  $config_name = $route_config_map[$route] ?? NULL;
+  
+  if ($config_name) {
+    $config = \Drupal::config($config_name);
+    $book_ids = $config->get('featured_books') ?: [];
     
-    $query = \Drupal::entityQuery('node')
-      ->accessCheck(TRUE)
-      ->condition('type', 'book')
-      ->condition('status', 1)
-      ->range(0, $number_of_books * 2); // Get more than needed for random selection
-    
-    $nids = $query->execute();
-    
-    if (!empty($nids)) {
-      // Shuffle for random selection
-      $nids = array_values($nids);
-      shuffle($nids);
-      $nids = array_slice($nids, 0, $number_of_books);
+    // Get first 2 books for wings (left and right)
+    if (!empty($book_ids)) {
+      $books_to_load = array_slice($book_ids, 0, 2);
+      $books = \Drupal::entityTypeManager()
+        ->getStorage('node')
+        ->loadMultiple($books_to_load);
       
-      $nodes = Node::loadMultiple($nids);
-      foreach ($nodes as $node) {
-        $book = [
-          'nid' => $node->id(),
-          'title' => $node->getTitle(),
-          'url' => $node->toUrl()->toString(),
-          'cover_url' => NULL,
-          'author' => NULL,
-        ];
+      foreach ($books as $book) {
+        $book_cover = NULL;
         
-        // Get cover image
-        if ($node->hasField('field_featured_image') && !$node->get('field_featured_image')->isEmpty()) {
-          $file = $node->get('field_featured_image')->entity;
+        // Try field_book_cover first, then field_featured_image
+        if ($book->hasField('field_book_cover') && !$book->get('field_book_cover')->isEmpty()) {
+          $file = $book->get('field_book_cover')->entity;
           if ($file) {
-            $book['cover_url'] = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+            $book_cover = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+          }
+        }
+        elseif ($book->hasField('field_featured_image') && !$book->get('field_featured_image')->isEmpty()) {
+          $file = $book->get('field_featured_image')->entity;
+          if ($file) {
+            $book_cover = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
           }
         }
         
-        // Get author
-        if ($node->hasField('field_author') && !$node->get('field_author')->isEmpty()) {
-          $authors = [];
-          foreach ($node->get('field_author')->referencedEntities() as $author_term) {
-            $authors[] = $author_term->getName();
-          }
-          $book['author'] = implode(', ', $authors);
+        if ($book_cover) {
+          $wing_books[] = [
+            'cover_url' => $book_cover,
+            'title' => $book->label(),
+          ];
         }
-        
-        $books[] = $book;
       }
     }
   }
   
-  $variables['community_books'] = $books;
+  // If no books found, add placeholder wings
+  while (count($wing_books) < 2) {
+    $wing_books[] = [
+      'cover_url' => NULL,
+      'title' => 'Book Cover',
+    ];
+  }
+  
+  return $wing_books;
 }
 
 /**
@@ -1157,34 +1156,63 @@ function storyfulls_preprocess_page(&$variables) {
         ->condition('status', 1);
       $variables['art_count'] = count($query->execute());
       
-      // Get Favorite Authors
+      // Get Favorite Authors with URLs
       $favorite_authors = [];
       if ($user->hasField('field_favorite_authors') && !$user->get('field_favorite_authors')->isEmpty()) {
         foreach ($user->get('field_favorite_authors') as $item) {
           if ($term = $item->entity) {
-            $favorite_authors[] = $term->getName();
+            $author_name = html_entity_decode($term->getName(), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $favorite_authors[] = [
+              '#type' => 'container',
+              '#attributes' => ['class' => ['favorite-item-wrapper']],
+              'link' => [
+                '#type' => 'link',
+                '#title' => $author_name,
+                '#url' => \Drupal\Core\Url::fromUserInput('/books', ['query' => ['keys' => $author_name]]),
+                '#attributes' => ['class' => ['favorite-item', 'favorite-link']],
+              ],
+            ];
           }
         }
       }
       $variables['favorite_authors'] = $favorite_authors;
       
-      // Get Favorite Books
+      // Get Favorite Books with URLs
       $favorite_books = [];
       if ($user->hasField('field_favorite_books') && !$user->get('field_favorite_books')->isEmpty()) {
         foreach ($user->get('field_favorite_books') as $item) {
           if ($book = $item->entity) {
-            $favorite_books[] = $book->getTitle();
+            $favorite_books[] = [
+              '#type' => 'container',
+              '#attributes' => ['class' => ['favorite-item-wrapper']],
+              'link' => [
+                '#type' => 'link',
+                '#title' => html_entity_decode($book->getTitle(), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+                '#url' => $book->toUrl(),
+                '#attributes' => ['class' => ['favorite-item', 'favorite-link']],
+              ],
+            ];
           }
         }
       }
       $variables['favorite_books'] = $favorite_books;
       
-      // Get Favorite Genres
+      // Get Favorite Genres with URLs
       $favorite_genres = [];
       if ($user->hasField('field_favorite_genres') && !$user->get('field_favorite_genres')->isEmpty()) {
         foreach ($user->get('field_favorite_genres') as $item) {
           if ($term = $item->entity) {
-            $favorite_genres[] = $term->getName();
+            $genre_name = html_entity_decode($term->getName(), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $favorite_genres[] = [
+              '#type' => 'container',
+              '#attributes' => ['class' => ['genre-tag-wrapper']],
+              'link' => [
+                '#type' => 'link',
+                '#title' => $genre_name,
+                '#url' => \Drupal\Core\Url::fromUserInput('/books', ['query' => ['genre' => $term->id()]]),
+                '#attributes' => ['class' => ['genre-tag', 'genre-link']],
+              ],
+            ];
           }
         }
       }
@@ -1248,6 +1276,11 @@ function storyfulls_preprocess_page(&$variables) {
       $variables['debug_current_user_id'] = $current_user->id();
       $variables['debug_profile_user_id'] = $user->id();
       $variables['debug_is_admin'] = $is_admin ? 'YES' : 'NO';
+      
+      // Add cache metadata to ensure page refreshes when user data changes
+      $variables['#cache']['tags'][] = 'user:' . $user->id();
+      $variables['#cache']['contexts'][] = 'user';
+      $variables['#cache']['max-age'] = 0; // Disable caching for profile pages
     }
   }
 }

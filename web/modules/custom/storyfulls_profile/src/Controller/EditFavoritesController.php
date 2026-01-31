@@ -207,7 +207,7 @@ class EditFavoritesController extends ControllerBase {
       try {
         $user->save();
         
-        // Invalidate user cache
+        // Invalidate user cache tags - this will invalidate the profile page
         \Drupal::service('cache_tags.invalidator')->invalidateTags(['user:' . $user->id()]);
         
         $this->messenger()->addStatus($this->t('Your favorite authors have been updated.'));
@@ -241,7 +241,7 @@ class EditFavoritesController extends ControllerBase {
       try {
         $user->save();
         
-        // Invalidate user cache
+        // Invalidate user cache tags - this will invalidate the profile page
         \Drupal::service('cache_tags.invalidator')->invalidateTags(['user:' . $user->id()]);
         
         $this->messenger()->addStatus($this->t('Your favorite books have been updated.'));
@@ -274,7 +274,7 @@ class EditFavoritesController extends ControllerBase {
       try {
         $user->save();
         
-        // Invalidate user cache
+        // Invalidate user cache tags - this will invalidate the profile page
         \Drupal::service('cache_tags.invalidator')->invalidateTags(['user:' . $user->id()]);
         
         $this->messenger()->addStatus($this->t('Your favorite genres have been updated.'));

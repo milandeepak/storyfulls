@@ -35,53 +35,75 @@
 /* Community Picks Grid */
 .community-picks-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 2.5rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* Community Book Card */
-.community-book-card {
+/* Community Pick Wrapper - Vertical Fan Container */
+.community-pick-wrapper {
+  position: relative;
   display: flex;
-  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  /* Define fixed height to prevent layout collapse with absolute positioning */
+  min-height: 400px;
+  /* Maintain aspect ratio based on book cover dimensions */
+  aspect-ratio: 244 / 358;
+  /* Enable 3D transforms */
+  perspective: 1200px;
+  /* Minimal padding - cards stay tightly grouped */
+  padding: 0 1.5rem;
+}
+
+/* Community Pick Card - Center Card (Main) with Counter-Tilt */
+.community-pick-card {
+  /* Absolute positioning for layering control */
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  /* Subtle counter-tilt for organic look */
+  transform: translateX(-50%) rotateZ(-3deg);
+  /* Card dimensions */
+  width: 100%;
+  max-width: 244px;
+  /* Styling */
+  display: block;
   text-decoration: none;
-  color: inherit;
   cursor: pointer;
-  transition: transform 0.3s ease;
-  background: #fff;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  /* Shadow for depth */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  /* Highest z-index - appears on top */
+  z-index: 10;
+  /* Transform origin at bottom center for fanning effect */
+  transform-origin: bottom center;
+  /* Playful "back" easing with slight overshoot */
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.community-book-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+/* Main Card Hover State - Subtle lift with counter-tilt maintained */
+.community-pick-wrapper:hover .community-pick-card {
+  /* Minimal lift, keep counter-tilt, slight scale */
+  transform: translateX(-50%) translateY(-8px) rotateZ(-3deg) scale(1.03);
+  /* Enhanced shadow when lifted */
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
 }
 
-/* Book Cover Wrapper */
-.book-cover-wrapper {
+/* Pick Card Image */
+.community-pick-card .pick-card-image {
   width: 100%;
-  position: relative;
-  overflow: hidden;
-  background: #F5F5F5;
-}
-
-.community-book-card .book-cover {
-  width: 100%;
-  height: 350px;
+  height: auto;
+  aspect-ratio: 244 / 358;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  display: block;
 }
 
-.community-book-card:hover .book-cover {
-  transform: scale(1.05);
-}
-
-.community-book-card .book-cover-placeholder {
+.community-pick-card .pick-card-placeholder {
   width: 100%;
-  height: 350px;
+  aspect-ratio: 244 / 358;
   background: linear-gradient(135deg, #E0E0E0 0%, #F5F5F5 100%);
   display: flex;
   align-items: center;
@@ -91,37 +113,87 @@
   font-size: 18px;
 }
 
-/* Book Card Content */
-.book-card-content {
-  padding: 1.5rem;
-  background: #fff;
+/* Book Wings - Shared Styles (Vertical Fan Effect) */
+.book-wing {
+  /* Absolute positioning - stacked behind center card */
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  /* Same size as main card */
+  width: 100%;
+  max-width: 244px;
+  height: auto;
+  /* COMPLETELY HIDDEN by default - invisible until hover */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  /* Behind the main card */
+  z-index: 5;
+  /* Transform origin at bottom center - cards pivot from bottom */
+  transform-origin: bottom center;
+  /* Playful "back" easing creates slight overshoot/bounce */
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.community-book-card .book-card-title {
-  font-family: 'Roboto Slab', serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: #2C3E50;
-  margin: 0 0 0.5rem 0;
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.book-wing img,
+.book-wing .wing-placeholder {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 244 / 358;
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
 }
 
-.book-card-author {
-  font-family: 'Roboto Slab', serif;
-  font-size: 14px;
-  font-weight: 400;
-  color: #7F8C8D;
-  margin: 0;
-  font-style: italic;
+.book-wing .wing-placeholder {
+  background: linear-gradient(135deg, #BDBDBD 0%, #E0E0E0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-size: 12px;
 }
 
-/* No Books Message */
-.community-picks-section .no-books {
+/* Left Wing - Initial State (The "Hidden Stack") */
+.book-wing-left {
+  /* Perfectly centered and hidden behind main card */
+  transform: translateX(-50%) rotateZ(0deg) translateY(0);
+  /* Base shadow (invisible initially due to opacity: 0) */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Left Wing Hover State - The "Vertical Fan" Emerges */
+.community-pick-wrapper:hover .book-wing-left {
+  /* Become visible with playful pop */
+  opacity: 1;
+  visibility: visible;
+  /* Vertical fan: slight left rotation (-10deg), move left (-20%), RISE UP (-30px) */
+  transform: translateX(-50%) translateX(-20%) rotateZ(-10deg) translateY(-30px);
+  /* Intensified shadow - casts darkness onto card behind */
+  box-shadow: 3px 6px 16px rgba(0, 0, 0, 0.28);
+}
+
+/* Right Wing - Initial State (The "Hidden Stack") */
+.book-wing-right {
+  /* Perfectly centered and hidden behind main card */
+  transform: translateX(-50%) rotateZ(0deg) translateY(0);
+  /* Base shadow (invisible initially due to opacity: 0) */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Right Wing Hover State - The "Vertical Fan" Emerges */
+.community-pick-wrapper:hover .book-wing-right {
+  /* Become visible with playful pop */
+  opacity: 1;
+  visibility: visible;
+  /* Vertical fan: slight right rotation (10deg), move right (20%), RISE UP (-30px) */
+  transform: translateX(-50%) translateX(20%) rotateZ(10deg) translateY(-30px);
+  /* Intensified shadow - casts darkness onto card behind */
+  box-shadow: -3px 6px 16px rgba(0, 0, 0, 0.28);
+}
+
+/* No Picks Message */
+.community-picks-section .no-picks {
   text-align: center;
   font-family: 'Roboto Slab', serif;
   font-size: 18px;
@@ -145,8 +217,37 @@
 /* Responsive Design */
 @media (max-width: 1024px) {
   .community-picks-grid {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
+  }
+  
+  /* Adjust wrapper height for medium screens */
+  .community-pick-wrapper {
+    min-height: 350px;
+    padding: 0 1.5rem;
+  }
+  
+  /* Wings still hidden initially */
+  .book-wing-left,
+  .book-wing-right {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-50%) rotateZ(0deg) translateY(0);
+  }
+  
+  /* Maintain tight fan on medium screens */
+  .community-pick-wrapper:hover .book-wing-left {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateX(-10%) rotateZ(-7deg) translateY(-12px);
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.18);
+  }
+  
+  .community-pick-wrapper:hover .book-wing-right {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateX(10%) rotateZ(8deg) translateY(-12px);
+    box-shadow: -2px 4px 10px rgba(0, 0, 0, 0.18);
   }
 }
 
@@ -161,25 +262,43 @@
   }
 
   .community-picks-grid {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
   }
-
-  .community-book-card .book-cover,
-  .community-book-card .book-cover-placeholder {
-    height: 280px;
+  
+  /* Smaller wrapper height */
+  .community-pick-wrapper {
+    min-height: 300px;
+    padding: 0 1rem;
   }
-
-  .book-card-content {
-    padding: 1rem;
+  
+  /* Reduce card size on tablets */
+  .community-pick-card,
+  .book-wing {
+    max-width: 200px;
   }
-
-  .community-book-card .book-card-title {
-    font-size: 16px;
+  
+  /* Wings hidden initially */
+  .book-wing-left,
+  .book-wing-right {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-50%) rotateZ(0deg) translateY(0);
   }
-
-  .book-card-author {
-    font-size: 13px;
+  
+  /* Very subtle tight fan on tablets */
+  .community-pick-wrapper:hover .book-wing-left {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateX(-8%) rotateZ(-6deg) translateY(-10px);
+    box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .community-pick-wrapper:hover .book-wing-right {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateX(8%) rotateZ(7deg) translateY(-10px);
+    box-shadow: -2px 3px 8px rgba(0, 0, 0, 0.15);
   }
 }
 
@@ -196,21 +315,24 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
-
-  .community-book-card .book-cover,
-  .community-book-card .book-cover-placeholder {
-    height: 220px;
+  
+  /* Simplify on mobile - hide wings completely (no hover effect) */
+  .community-pick-wrapper {
+    min-height: 280px;
+    padding: 0;
   }
-
-  .book-card-content {
-    padding: 0.75rem;
+  
+  .book-wing {
+    display: none;
   }
-
-  .community-book-card .book-card-title {
-    font-size: 14px;
+  
+  /* Center card only on mobile */
+  .community-pick-card {
+    max-width: 180px;
+    transform: translateX(-50%) rotateZ(0deg);
   }
-
-  .book-card-author {
-    font-size: 12px;
+  
+  .community-pick-wrapper:hover .community-pick-card {
+    transform: translateX(-50%) translateY(-8px) rotateZ(0deg) scale(1.03);
   }
 }

@@ -12,32 +12,49 @@
       {% if content.field_section_title[0] %}
         <h2 class="section-title">{{ content.field_section_title[0]['#context'].value }}</h2>
       {% else %}
-        <h2 class="section-title">Discover books handpicked by a community of parents & bookworms.</h2>
+        <h2 class="section-title">Community Picks</h2>
       {% endif %}
     </div>
 
-    {# Books Grid #}
+    {# Cards Grid #}
     <div class="community-picks-grid">
-      {% if community_books %}
-        {% for book in community_books %}
-          <a href="{{ book.url }}" class="community-book-card">
-            <div class="book-cover-wrapper">
-              {% if book.cover_url %}
-                <img src="{{ book.cover_url }}" alt="{{ book.title }}" class="book-cover" loading="lazy">
+      {% if pick_cards %}
+        {% for card in pick_cards %}
+          <div class="community-pick-wrapper">
+            {# Left Wing #}
+            {% if card.wing_books[0] %}
+              <div class="book-wing book-wing-left">
+                {% if card.wing_books[0].cover_url %}
+                  <img src="{{ card.wing_books[0].cover_url }}" alt="{{ card.wing_books[0].title }}" loading="lazy">
+                {% else %}
+                  <div class="wing-placeholder"></div>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            {# Main Card #}
+            <a href="{{ card.route }}" class="community-pick-card">
+              {% if card.image_url %}
+                <img src="{{ card.image_url }}" alt="{{ card.image_alt }}" class="pick-card-image" loading="lazy">
               {% else %}
-                <div class="book-cover-placeholder">No Cover</div>
+                <div class="pick-card-placeholder">No Image</div>
               {% endif %}
-            </div>
-            <div class="book-card-content">
-              <h3 class="book-card-title">{{ book.title }}</h3>
-              {% if book.author %}
-                <p class="book-card-author">{{ book.author }}</p>
-              {% endif %}
-            </div>
-          </a>
+            </a>
+
+            {# Right Wing #}
+            {% if card.wing_books[1] %}
+              <div class="book-wing book-wing-right">
+                {% if card.wing_books[1].cover_url %}
+                  <img src="{{ card.wing_books[1].cover_url }}" alt="{{ card.wing_books[1].title }}" loading="lazy">
+                {% else %}
+                  <div class="wing-placeholder"></div>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
         {% endfor %}
       {% else %}
-        <p class="no-books">No community picks available yet.</p>
+        <p class="no-picks">No community picks configured yet.</p>
       {% endif %}
     </div>
   </div>

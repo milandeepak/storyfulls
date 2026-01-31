@@ -316,6 +316,26 @@
   line-height: 1.2; /* Tighter line height */
 }
 
+/* Wrapper containers for render arrays */
+.favorite-item-wrapper,
+.genre-tag-wrapper {
+  display: block;
+}
+
+/* Clickable favorite links */
+.favorite-link {
+  text-decoration: none;
+  color: #2C3E50;
+  display: block;
+  transition: color 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+
+.favorite-link:hover {
+  color: #FF6B6B;
+  transform: translateX(4px);
+}
+
 .genres-list {
   display: flex;
   flex-direction: column;
@@ -330,6 +350,20 @@
   padding: 0.35rem 0; /* Further reduced from 0.5rem */
   text-align: left;
   line-height: 1.2; /* Tighter line height */
+}
+
+/* Clickable genre links */
+.genre-link {
+  text-decoration: none;
+  color: #2C3E50;
+  display: block;
+  transition: color 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+
+.genre-link:hover {
+  color: #FF6B6B;
+  transform: translateX(4px);
 }
 
 .no-favorites {
