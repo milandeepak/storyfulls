@@ -49,11 +49,21 @@ if [ -n "$DATABASE_URL" ] || [ -n "$DB_HOST" ]; then
     # Refresh S3FS cache if R2 credentials are available
     if [ -n "$R2_BUCKET" ] && [ -n "$R2_ENDPOINT" ]; then
       echo "Refreshing S3FS file cache from R2 bucket: $R2_BUCKET..."
+      
+      # Truncate and rebuild cache to ensure proper path mapping
+      echo "Truncating S3FS cache for clean rebuild..."
+      ./vendor/bin/drush sqlq "TRUNCATE TABLE s3fs_file" 2>/dev/null || echo "Failed to truncate cache"
+      
+      echo "Rebuilding S3FS cache from R2..."
       ./vendor/bin/drush s3fs-refresh-cache -y || echo "Failed to refresh S3FS cache (module may need to be enabled first)"
       
       # Check cache status
       FILE_COUNT=$(./vendor/bin/drush sqlq "SELECT COUNT(*) FROM s3fs_file" 2>/dev/null || echo "0")
       echo "S3FS cache contains $FILE_COUNT files"
+      
+      # Verify public:// URIs
+      PUBLIC_COUNT=$(./vendor/bin/drush sqlq "SELECT COUNT(*) FROM s3fs_file WHERE uri LIKE 'public://%'" 2>/dev/null || echo "0")
+      echo "Public files in cache: $PUBLIC_COUNT"
     else
       echo "⚠ R2 credentials not set, skipping S3FS cache refresh"
     fi
