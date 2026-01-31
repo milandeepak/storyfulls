@@ -168,9 +168,9 @@ if (!empty($r2_access_key) && !empty($r2_secret_key) && !empty($r2_bucket) && !e
   // Root folder in bucket (optional, keeps files organized)
   $config['s3fs.settings']['root_folder'] = 'drupal-files';
   
-  // Public folder - use default 's3fs-public' so public:// files are in drupal-files/s3fs-public/
+  // Public folder - explicitly set to 's3fs-public' (the default)
   // This way public://book-covers/1.jpg maps to drupal-files/s3fs-public/book-covers/1.jpg in R2
-  // Note: Don't override public_folder, let S3FS use its default value
+  $config['s3fs.settings']['public_folder'] = 's3fs-public';
 
   // Public file serving
   if (!empty($r2_public_url)) {
