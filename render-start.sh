@@ -37,36 +37,8 @@ if [ -n "$DATABASE_URL" ] || [ -n "$DB_HOST" ]; then
     echo "Running drush deploy..."
     ./vendor/bin/drush deploy -y 2>/dev/null || true
     
-    # Enable S3FS module if not already enabled
-    echo "Checking S3FS module status..."
-    if ! ./vendor/bin/drush pm:list --status=enabled --type=module 2>/dev/null | grep -q "s3fs"; then
-      echo "Enabling S3FS module..."
-      ./vendor/bin/drush pm:enable s3fs -y || echo "Failed to enable S3FS module"
-    else
-      echo "✓ S3FS module already enabled"
-    fi
-    
-    # Refresh S3FS cache if R2 credentials are available
-    if [ -n "$R2_BUCKET" ] && [ -n "$R2_ENDPOINT" ]; then
-      echo "Refreshing S3FS file cache from R2 bucket: $R2_BUCKET..."
-      
-      # Truncate and rebuild cache to ensure proper path mapping
-      echo "Truncating S3FS cache for clean rebuild..."
-      ./vendor/bin/drush sqlq "TRUNCATE TABLE s3fs_file" 2>/dev/null || echo "Failed to truncate cache"
-      
-      echo "Rebuilding S3FS cache from R2..."
-      ./vendor/bin/drush s3fs-refresh-cache -y || echo "Failed to refresh S3FS cache (module may need to be enabled first)"
-      
-      # Check cache status
-      FILE_COUNT=$(./vendor/bin/drush sqlq "SELECT COUNT(*) FROM s3fs_file" 2>/dev/null || echo "0")
-      echo "S3FS cache contains $FILE_COUNT files"
-      
-      # Verify public:// URIs
-      PUBLIC_COUNT=$(./vendor/bin/drush sqlq "SELECT COUNT(*) FROM s3fs_file WHERE uri LIKE 'public://%'" 2>/dev/null || echo "0")
-      echo "Public files in cache: $PUBLIC_COUNT"
-    else
-      echo "⚠ R2 credentials not set, skipping S3FS cache refresh"
-    fi
+    # S3FS has been disabled - now using local file storage
+    # Files are committed to GitHub repository instead of R2
     
     echo "Clearing Drupal cache..."
     ./vendor/bin/drush cr 2>/dev/null || true

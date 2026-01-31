@@ -127,79 +127,9 @@ $settings['skip_permissions_hardening'] = TRUE;
 $settings['file_private_path'] = '/tmp/private';
 
 // --- S3FS / Cloudflare R2 Configuration -------------------------------------
-// Set these environment variables in Render:
-// - R2_ACCESS_KEY_ID: Your Cloudflare R2 Access Key ID
-// - R2_SECRET_ACCESS_KEY: Your Cloudflare R2 Secret Access Key
-// - R2_BUCKET: Your R2 bucket name (e.g., "storyfulls-files")
-// - R2_ENDPOINT: Your R2 S3 endpoint (e.g., "https://<ACCOUNT_ID>.r2.cloudflarestorage.com")
-// - R2_PUBLIC_URL: Public URL for serving files (e.g., "https://files.yourdomain.com" or R2 public bucket URL)
+// DISABLED: Now using local file storage and committing files to GitHub
+// S3FS has been removed in favor of standard Drupal file system
 
-$r2_access_key = getenv('R2_ACCESS_KEY_ID');
-$r2_secret_key = getenv('R2_SECRET_ACCESS_KEY');
-$r2_bucket = getenv('R2_BUCKET');
-$r2_endpoint = getenv('R2_ENDPOINT');
-$r2_public_url = getenv('R2_PUBLIC_URL');
-
-if (!empty($r2_access_key) && !empty($r2_secret_key) && !empty($r2_bucket) && !empty($r2_endpoint)) {
-  // S3FS configuration for Cloudflare R2
-  $settings['s3fs.access_key'] = $r2_access_key;
-  $settings['s3fs.secret_key'] = $r2_secret_key;
-  $settings['s3fs.bucket'] = $r2_bucket;
-  $settings['s3fs.region'] = 'auto'; // R2 uses 'auto' for region
-  
-  // CRITICAL: Use S3FS stream wrappers for public/private files
-  // These must be set via $settings (not $config) to trigger service provider override
-  $settings['s3fs.use_s3_for_public'] = TRUE;
-  $settings['s3fs.use_s3_for_private'] = TRUE;
-
-  // Custom endpoint for Cloudflare R2
-  $config['s3fs.settings']['use_customhost'] = TRUE;
-  $config['s3fs.settings']['hostname'] = $r2_endpoint;
-
-  // Bucket name
-  $config['s3fs.settings']['bucket'] = $r2_bucket;
-
-  // Credentials
-  $config['s3fs.settings']['access_key'] = $r2_access_key;
-  $config['s3fs.settings']['secret_key'] = $r2_secret_key;
-
-  // Region (R2 uses 'auto')
-  $config['s3fs.settings']['region'] = 'auto';
-
-  // Use S3 for public and private files
-  $config['s3fs.settings']['use_s3_for_public'] = TRUE;
-  $config['s3fs.settings']['use_s3_for_private'] = TRUE;
-
-  // Root folder in bucket (optional, keeps files organized)
-  $config['s3fs.settings']['root_folder'] = 'drupal-files';
-  
-  // Public folder - explicitly set to 's3fs-public' (the default)
-  // This way public://book-covers/1.jpg maps to drupal-files/s3fs-public/book-covers/1.jpg in R2
-  $config['s3fs.settings']['public_folder'] = 's3fs-public';
-
-  // Public file serving
-  if (!empty($r2_public_url)) {
-    // Use custom domain for serving files (recommended)
-    $config['s3fs.settings']['use_cname'] = TRUE;
-    $config['s3fs.settings']['domain'] = $r2_public_url;
-  }
-  else {
-    // Fall back to presigned URLs if no public URL is set
-    $config['s3fs.settings']['presigned_urls'] = "60|.*";
-  }
-
-  // Don't use path-style URLs (R2 prefers virtual-hosted-style)
-  $config['s3fs.settings']['use_path_style_endpoint'] = FALSE;
-  
-  // CRITICAL: Disable object versioning - R2 doesn't support ListObjectVersions
-  $config['s3fs.settings']['use_versioning'] = FALSE;
-
-  // Cache settings
-  $config['s3fs.settings']['cache_control_header'] = 'public, max-age=31536000';
-
-  // File URL expiry for private files (in seconds)
-  $config['s3fs.settings']['presigned_urls'] = '';
-
-  // Disable CORS (handled at R2 bucket level)
-  $config['s3fs.settings']['use_cors'] = FALSE;
-}
+// Ensure S3FS is NOT used for public/private files
+$settings['s3fs.use_s3_for_public'] = FALSE;
+$settings['s3fs.use_s3_for_private'] = FALSE;
