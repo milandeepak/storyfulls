@@ -274,12 +274,15 @@
       if (contentType === 'story_poetry') {
          window.location.href = '/node/add/story_poetry';
          return;
+      } else if (contentType === 'junior_artist') {
+         window.location.href = '/node/add/junior_artist';
+         return;
       }
       
       // Fallback to URL detection or default behavior
-      if (window.location.pathname.includes('stories-poetry')) {
+      if (window.location.pathname.includes('stories-poetry') || window.location.pathname.includes('inner-thoughts')) {
         window.location.href = '/node/add/story_poetry';
-      } else if (window.location.pathname.includes('junior-artists')) {
+      } else if (window.location.pathname.includes('junior-artists') || window.location.pathname.includes('my-canvas')) {
         window.location.href = '/node/add/junior_artist';
       } else {
         // Default for main page or book reviews section
