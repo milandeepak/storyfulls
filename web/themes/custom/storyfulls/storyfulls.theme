@@ -420,13 +420,29 @@ function storyfulls_preprocess_paragraph__community_picks(&$variables) {
         $card['route'] = $card_paragraph->get('field_card_route')->value;
       }
       
-      // Get card image
+      // Get card image - first try uploaded file, then fall back to theme images
       if ($card_paragraph->hasField('field_card_image') && !$card_paragraph->get('field_card_image')->isEmpty()) {
         $image_field = $card_paragraph->get('field_card_image');
         $file = $image_field->entity;
         if ($file) {
           $card['image_url'] = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
           $card['image_alt'] = $image_field->alt ?? 'Community Pick';
+        }
+      }
+      
+      // If no uploaded image, use theme images based on route
+      if (!$card['image_url']) {
+        $theme_path = \Drupal::service('extension.list.theme')->getPath('storyfulls');
+        $base_url = \Drupal::request()->getSchemeAndHttpHost();
+        
+        $route_image_map = [
+          '/inclusive-books' => '/images/inclusivitybookscard.png',
+          '/latest-releases' => '/images/newreleasescard.jpg',
+        ];
+        
+        if (isset($route_image_map[$card['route']])) {
+          $card['image_url'] = $base_url . '/' . $theme_path . $route_image_map[$card['route']];
+          $card['image_alt'] = ucwords(str_replace(['/', '-'], [' ', ' '], trim($card['route'], '/')));
         }
       }
       
