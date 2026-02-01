@@ -82,6 +82,17 @@ storyfulls_young_writers.inner_thoughts:
   options:
     no_cache: TRUE
 
+storyfulls_young_writers.my_canvas:
+  path: '/user/{user}/my-canvas'
+  defaults:
+    _controller: '\Drupal\storyfulls_young_writers\Controller\YoungWritersController::myCanvas'
+    _title: 'My Canvas'
+  requirements:
+    _permission: 'access content'
+    user: \d+
+  options:
+    no_cache: TRUE
+
 storyfulls_young_writers.get_reviewers:
   path: '/young-writers/api/get-reviewers'
   defaults:

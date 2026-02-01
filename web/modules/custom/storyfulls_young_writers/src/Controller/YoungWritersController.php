@@ -709,6 +709,97 @@ class YoungWritersController extends ControllerBase {
   }
 
   /**
+   * Display My Canvas page for logged in user or specific user.
+   */
+  public function myCanvas(UserInterface $user) {
+    // Load artwork by this user
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    $query = $node_storage->getQuery()
+      ->condition('type', 'junior_artist')
+      ->condition('uid', $user->id())
+      ->condition('status', 1)
+      ->sort('created', 'DESC')
+      ->accessCheck(TRUE);
+      
+    $nids = $query->execute();
+    $nodes = $node_storage->loadMultiple($nids);
+    
+    $artworks = [];
+    foreach ($nodes as $node) {
+      $image_url = '';
+      if ($node->hasField('field_artwork_image') && !$node->get('field_artwork_image')->isEmpty()) {
+        $file = $node->get('field_artwork_image')->entity;
+        if ($file) {
+          $image_url = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+        }
+      }
+      
+      $description = '';
+      if ($node->hasField('field_artwork_description') && !$node->get('field_artwork_description')->isEmpty()) {
+        $description = $node->get('field_artwork_description')->value; 
+      }
+      
+      $category = '';
+      if ($node->hasField('field_art_category') && !$node->get('field_art_category')->isEmpty()) {
+        $category = $node->get('field_art_category')->value;
+      }
+      
+      // Get likes count
+      $likes_count = 0;
+      $flag_service = \Drupal::service('flag');
+      $flag = $flag_service->getFlagById('like_content');
+      if ($flag) {
+        $flagging_storage = \Drupal::entityTypeManager()->getStorage('flagging');
+        $flaggings = $flagging_storage->loadByProperties([
+          'flag_id' => 'like_content',
+          'entity_type' => 'node',
+          'entity_id' => $node->id(),
+        ]);
+        $likes_count = count($flaggings);
+      }
+      
+      // Get comments count
+      $comments_count = 0;
+      if (\Drupal::moduleHandler()->moduleExists('comment')) {
+        $comment_storage = \Drupal::entityTypeManager()->getStorage('comment');
+        $comments = $comment_storage->loadThread($node, 'comment', 1);
+        $comments_count = count($comments);
+      }
+
+      $artworks[] = [
+        'id' => $node->id(),
+        'title' => $node->getTitle(),
+        'image' => $image_url,
+        'description' => $description,
+        'category' => $category,
+        'created' => $node->getCreatedTime(),
+        'likes' => $likes_count,
+        'comments' => $comments_count,
+      ];
+    }
+    
+    // Check if current user is the owner
+    $current_user = \Drupal::currentUser();
+    $is_owner = ($current_user->id() == $user->id());
+    // Determine if current user can create junior_artist nodes.
+    $can_create_artwork = \Drupal\node\Entity\Node::create(['type' => 'junior_artist'])->access('create', $current_user);
+
+    return [
+      '#theme' => 'young_writers_my_canvas',
+      '#user_name' => $user->getDisplayName(),
+      '#artworks' => $artworks,
+      '#is_owner' => $is_owner,
+      '#is_authenticated' => $current_user->isAuthenticated(),
+      '#can_create_artwork' => $can_create_artwork,
+      '#attached' => [
+        'library' => [
+          'storyfulls/young-writers',
+        ],
+      ],
+    ];
+  }
+
+  /**
    * AJAX endpoint to get book reviewers data.
    */
   public function getBookReviewers() {

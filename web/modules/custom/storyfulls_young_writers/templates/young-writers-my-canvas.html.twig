@@ -1,0 +1,284 @@
+{#
+/**
+ * @file
+ * Template for My Canvas page (user's artwork collection).
+ */
+#}
+
+<div class="young-writers-page user-artwork-page my-canvas-page">
+  {# Header Section #}
+  <div class="user-artwork-header">
+    <div class="header-content">
+      <h1 class="page-title">My Canvas</h1>
+      <p class="page-subtitle">Artwork & Illustrations by {{ user_name }}</p>
+    </div>
+  </div>
+
+  {# Content Grid #}
+  <div class="artwork-grid-container">
+    {% if artworks %}
+      <div class="artwork-grid">
+        {% for artwork in artworks %}
+          <div class="artwork-card">
+            <div class="artwork-card-inner" style="background-image: url('/themes/custom/storyfulls/images/usercanvascard.png'); background-size: cover; background-position: center;">
+              
+              {# Artwork image in center #}
+              {% if artwork.image %}
+                <div class="artwork-preview">
+                  <img src="{{ artwork.image }}" alt="{{ artwork.title }}" loading="lazy">
+                </div>
+              {% endif %}
+              
+              {# Semicircle overlay at bottom with title and artist #}
+              <div class="artwork-card-content-overlay">
+                <div class="artwork-card-semicircle">
+                   <h3 class="artwork-title">{{ artwork.title }}</h3>
+                   <div class="artwork-artist">By<br>{{ user_name }}</div>
+                   {% if artwork.category %}
+                     <div class="artwork-category">{{ artwork.category|replace({'_': ' '})|title }}</div>
+                   {% endif %}
+                </div>
+              </div>
+              
+              {# Clickable Area #}
+              <a href="/node/{{ artwork.id }}" class="artwork-card-link">
+                <span class="visually-hidden">View {{ artwork.title }}</span>
+              </a>
+
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="no-content-message">
+        <p>{{ user_name }} hasn't shared any artwork yet.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  {# Share Button #}
+  <div class="share-work-container">
+    {# If user is authenticated link directly to node add, otherwise send to login with destination #}
+    {% if is_authenticated %}
+      {% if can_create_artwork %}
+        <a href="/node/add/junior_artist" data-type="junior_artist" class="share-your-work-btn">Share your artwork</a>
+      {% else %}
+        <button class="share-your-work-btn disabled" disabled title="You are not authorized to add artwork">Share your artwork</button>
+      {% endif %}
+    {% else %}
+      <a href="/user/login?destination=/node/add/junior_artist" data-type="junior_artist" class="share-your-work-btn">Share your artwork</a>
+    {% endif %}
+  </div>
+
+</div>
+
+<style>
+/* Scoped styles for My Canvas page layout */
+.my-canvas-page .user-artwork-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.my-canvas-page .page-title {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
+  font-size: 48px;
+  margin: 0 0 10px 0;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.my-canvas-page .page-subtitle {
+  font-size: 20px;
+  margin: 0;
+  opacity: 0.95;
+}
+
+.my-canvas-page .artwork-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 35px;
+  padding: 50px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.my-canvas-page .artwork-card {
+  aspect-ratio: 1 / 1.2; /* Slightly taller than square for canvas effect */
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+  background-color: #f5f5dc; /* Beige/canvas color fallback */
+}
+
+.my-canvas-page .artwork-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+
+.my-canvas-page .artwork-card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.my-canvas-page .artwork-preview {
+  width: 80%;
+  height: 60%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: auto;
+  margin-top: 10px;
+}
+
+.my-canvas-page .artwork-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.my-canvas-page .artwork-card-content-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.my-canvas-page .artwork-card-semicircle {
+  background-color: rgba(255, 255, 255, 0.95);
+  width: 200px;
+  height: 100px;
+  border-top-left-radius: 100px;
+  border-top-right-radius: 100px;
+  border: 3px solid #ff6b6b;
+  border-bottom: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px;
+  margin-bottom: 0;
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+}
+
+.my-canvas-page .artwork-title {
+  font-family: 'Georgia', serif;
+  font-size: 15px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
+  max-width: 95%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.my-canvas-page .artwork-artist {
+  font-family: 'Arial', sans-serif;
+  font-size: 11px;
+  color: #555;
+  line-height: 1.3;
+}
+
+.my-canvas-page .artwork-category {
+  font-family: 'Arial', sans-serif;
+  font-size: 9px;
+  color: #888;
+  text-transform: uppercase;
+  margin-top: 2px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.my-canvas-page .artwork-card-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.my-canvas-page .no-content-message {
+  text-align: center;
+  padding: 80px 20px;
+  font-size: 18px;
+  color: #666;
+}
+
+.my-canvas-page .share-work-container {
+  text-align: center;
+  padding: 50px 0 60px;
+}
+
+.my-canvas-page .share-your-work-btn {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 50px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+  transition: all 0.3s ease;
+}
+
+.my-canvas-page .share-your-work-btn:hover {
+  background: linear-gradient(135deg, #ff8e53 0%, #ff6b6b 100%);
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+}
+
+.my-canvas-page .share-your-work-btn.disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.my-canvas-page .share-your-work-btn.disabled:hover {
+  transform: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .my-canvas-page .page-title {
+    font-size: 36px;
+  }
+  
+  .my-canvas-page .artwork-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 30px 15px;
+  }
+  
+  .my-canvas-page .artwork-card-semicircle {
+    width: 160px;
+    height: 80px;
+    border-top-left-radius: 80px;
+    border-top-right-radius: 80px;
+  }
+  
+  .my-canvas-page .artwork-title {
+    font-size: 13px;
+  }
+}
+</style>
